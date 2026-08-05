@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChemX Direct — Style Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <style>
+    /* Styleguide-page-only presentation styles */
+    .sg-header {
+      background-color: var(--color-navy);
+      color: var(--color-white);
+      padding-block: var(--space-5);
+    }
+
+    .sg-header p {
+      color: var(--color-gray-100);
+      margin-top: var(--space-1);
+    }
+
+    .sg-section {
+      padding-block: var(--space-5);
+      border-bottom: 1px solid var(--color-gray-100);
+    }
+
+    .sg-section > .container > h2 {
+      margin-bottom: var(--space-4);
+    }
+
+    .sg-label {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-medium);
+      line-height: var(--leading-small);
+      color: var(--color-gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: var(--space-2);
+    }
+
+    .sg-subgroup + .sg-subgroup {
+      margin-top: var(--space-4);
+    }
+
+    /* Color swatches */
+    .sg-swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: var(--space-2);
+    }
+
+    .sg-swatch {
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+
+    .sg-swatch__chip {
+      height: 88px;
+    }
+
+    .sg-swatch__meta {
+      padding: var(--space-2);
+    }
+
+    .sg-swatch__name {
+      font-weight: var(--weight-body-medium);
+      font-size: var(--text-body);
+    }
+
+    .sg-swatch__hex {
+      font-size: var(--text-small);
+      color: var(--color-gray-500);
+    }
+
+    .sg-swatch__usage {
+      font-size: var(--text-small);
+      color: var(--color-gray-500);
+      margin-top: 4px;
+    }
+
+    /* Type scale */
+    .sg-type-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-block: var(--space-3);
+      border-bottom: 1px solid var(--color-gray-100);
+    }
+
+    .sg-type-row:last-child {
+      border-bottom: none;
+    }
+
+    .sg-type-row .sg-label {
+      margin-bottom: 0;
+    }
+
+    /* Component rows */
+    .sg-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .sg-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-2);
+    }
+
+    .sg-note {
+      font-size: var(--text-small);
+      color: var(--color-gray-500);
+      margin-top: var(--space-2);
+      max-width: 640px;
+    }
+
+    .sg-accordion-wrap {
+      max-width: 640px;
+    }
+  </style>
+</head>
+<body>
+  <header class="sg-header">
+    <div class="container">
+      <h1>ChemX Direct</h1>
+      <p class="text-body-lg">
+        Style guide — design tokens and components from brand-styleguide.md
+      </p>
+    </div>
+  </header>
+
+  <!-- ============ Colors ============ -->
+  <section class="sg-section">
+    <div class="container">
+      <h2>Colors</h2>
+
+      <div class="sg-subgroup">
+        <p class="sg-label">Brand</p>
+        <div class="sg-swatch-grid">
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-navy)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">Deep navy</div>
+              <div class="sg-swatch__hex">#162229 · --color-navy</div>
+              <div class="sg-swatch__usage">Headings, body text, dark sections</div>
+            </div>
+          </div>
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-steel)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">Steel blue</div>
+              <div class="sg-swatch__hex">#387498 · --color-steel</div>
+              <div class="sg-swatch__usage">Secondary UI, buttons, icons, tags</div>
+            </div>
+          </div>
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-sky)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">Bright sky</div>
+              <div class="sg-swatch__hex">#2A93D3 · --color-sky</div>
+              <div class="sg-swatch__usage">CTAs, links, active states — use sparingly</div>
+            </div>
+          </div>
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-white)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">White</div>
+              <div class="sg-swatch__hex">#ffffff · --color-white</div>
+              <div class="sg-swatch__usage">Base background</div>
+            </div>
+          </div>
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-gray-50)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">Gray 50</div>
+              <div class="sg-swatch__hex">#f4f6f7 · --color-gray-50</div>
+              <div class="sg-swatch__usage">Section backgrounds, subtle contrast</div>
+            </div>
+          </div>
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-gray-100)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">Gray 100</div>
+              <div class="sg-swatch__hex">#e2e5e7 · --color-gray-100</div>
+              <div class="sg-swatch__usage">Borders, dividers</div>
+            </div>
+          </div>
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-gray-500)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">Gray 500</div>
+              <div class="sg-swatch__hex">#6b7680 · --color-gray-500</div>
+              <div class="sg-swatch__usage">Secondary / muted text</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subgroup">
+        <p class="sg-label">Surface pairing — pale blue section + muted heading</p>
+        <div class="sg-swatch-grid">
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-surface-blue)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">Surface blue</div>
+              <div class="sg-swatch__hex">--color-surface-blue</div>
+              <div class="sg-swatch__usage">Section background — steel blue mixed 8% into white</div>
+            </div>
+          </div>
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-heading-muted)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">Heading muted</div>
+              <div class="sg-swatch__hex">--color-heading-muted</div>
+              <div class="sg-swatch__usage">Headings on surface blue — navy desaturated toward gray-500</div>
+            </div>
+          </div>
+        </div>
+        <div class="section section--blue" style="margin-top: var(--space-2); border-radius: var(--radius-card); padding: var(--space-4)">
+          <h3 style="margin: 0">Industrial water treatment</h3>
+          <p class="text-muted" style="margin-top: var(--space-1)">
+            Body copy stays the normal navy/muted-gray — only headings pick up the desaturated color on this surface.
+          </p>
+        </div>
+      </div>
+
+      <div class="sg-subgroup">
+        <p class="sg-label">Semantic — status, hazard flags, order states</p>
+        <div class="sg-swatch-grid">
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-success)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">Success</div>
+              <div class="sg-swatch__hex">#2f9e5c · --color-success</div>
+            </div>
+          </div>
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-warning)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">Warning</div>
+              <div class="sg-swatch__hex">#d99b1f · --color-warning</div>
+            </div>
+          </div>
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-danger)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">Danger / hazard</div>
+              <div class="sg-swatch__hex">#c94a3c · --color-danger</div>
+            </div>
+          </div>
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style="background-color: var(--color-info)"></div>
+            <div class="sg-swatch__meta">
+              <div class="sg-swatch__name">Info</div>
+              <div class="sg-swatch__hex">#2A93D3 · --color-info</div>
+            </div>
+          </div>
+        </div>
+        <p class="sg-note">
+          Accessibility: bright sky is 3.38:1 on white — fine for large text
+          (18px+/bold), icons, and UI elements, but never white-on-sky body
+          text or small sky text on white.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Typography ============ -->
+  <section class="sg-section">
+    <div class="container">
+      <h2>Type scale</h2>
+
+      <div class="sg-type-row">
+        <p class="sg-label">H1 hero · Barlow Condensed 800 · 70px / 1.05</p>
+        <h1>Water treatment, handled</h1>
+      </div>
+      <div class="sg-type-row">
+        <p class="sg-label">H2 section · Barlow Condensed 700 · 42px / 1.1</p>
+        <h2>Shop by category</h2>
+      </div>
+      <div class="sg-type-row">
+        <p class="sg-label">H3 subsection · Barlow Condensed 700 · 24px / 1.15</p>
+        <h3>Boiler water treatment</h3>
+      </div>
+      <div class="sg-type-row">
+        <p class="sg-label">Body large · Inter 400 · 18px / 1.6</p>
+        <p class="text-body-lg">
+          Industrial-grade water treatment chemicals, made simple enough to
+          manage yourself. We explain what each product does and why your
+          system needs it — in plain language.
+        </p>
+      </div>
+      <div class="sg-type-row">
+        <p class="sg-label">Body · Inter 400 · 16px / 1.6</p>
+        <p>
+          Scale and corrosion are the two problems every boiler system fights.
+          The right treatment program keeps heat-transfer surfaces clean, which
+          keeps your fuel bill down and your equipment alive longer.
+        </p>
+      </div>
+      <div class="sg-type-row">
+        <p class="sg-label">Small / caption · Inter 500 · 13px / 1.4</p>
+        <p class="text-small">Ships in 1–2 business days · Free SDS with every order</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Buttons ============ -->
+  <section class="sg-section">
+    <div class="container">
+      <h2>Buttons</h2>
+      <div class="sg-row">
+        <button class="btn btn--primary" type="button">Find my treatment plan</button>
+        <button class="btn btn--secondary" type="button">Browse all products</button>
+      </div>
+      <p class="sg-note">
+        Primary: sky background, white bold text, 8px radius. Secondary: steel
+        blue outline, navy text, transparent background. Sky backgrounds are
+        never paired with small or thin text.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Product cards ============ -->
+  <section class="sg-section section--gray">
+    <div class="container">
+      <h2>Product cards</h2>
+      <div class="sg-card-grid">
+        <div class="product-card">
+          <div class="product-card__media">
+            <img
+              src="images/product-drum.png"
+              onerror="this.onerror = null; this.src = 'images/product-drum.svg'"
+              alt="BWT 2000 — 55-gallon drum"
+            />
+          </div>
+          <div class="product-card__body">
+            <div class="product-card__tags">
+              <span class="badge">Boilers</span>
+              <span class="badge badge--success">In stock</span>
+            </div>
+            <h3>BWT 2000</h3>
+            <p class="product-card__desc">
+              Powder oxygen scavenger — protects boiler steel from oxygen
+              corrosion before it starts.
+            </p>
+            <div class="product-card__price-row">
+              <span class="product-card__price">$189</span>
+              <span class="product-card__unit">50-lb pail</span>
+            </div>
+            <button class="btn btn--primary product-card__cta" type="button">
+              Add to cart
+            </button>
+            <p class="text-small product-card__meta">Ships in 1–2 business days</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__media">
+            <img
+              src="images/product-drum.png"
+              onerror="this.onerror = null; this.src = 'images/product-drum.svg'"
+              alt="CWT 5000 — 55-gallon drum"
+            />
+          </div>
+          <div class="product-card__body">
+            <div class="product-card__tags">
+              <span class="badge">Cooling towers</span>
+              <span class="badge badge--success">In stock</span>
+            </div>
+            <h3>CWT 5000</h3>
+            <p class="product-card__desc">
+              Soft water treatment — scale and corrosion control for towers
+              running on softened makeup water.
+            </p>
+            <div class="product-card__price-row">
+              <span class="product-card__price">$249</span>
+              <span class="product-card__unit">5-gal pail</span>
+            </div>
+            <button class="btn btn--primary product-card__cta" type="button">
+              Add to cart
+            </button>
+            <p class="text-small product-card__meta">Ships in 1–2 business days</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__media">
+            <img
+              src="images/product-drum.png"
+              onerror="this.onerror = null; this.src = 'images/product-drum.svg'"
+              alt="BioBrom BT — 55-gallon drum"
+            />
+          </div>
+          <div class="product-card__body">
+            <div class="product-card__tags">
+              <span class="badge">Cooling towers</span>
+              <span class="badge badge--danger">Hazmat shipping</span>
+            </div>
+            <h3>BioBrom BT</h3>
+            <p class="product-card__desc">
+              Oxidizing biocide tablets — fast-acting control for algae and
+              bacteria in open systems.
+            </p>
+            <div class="product-card__price-row">
+              <span class="product-card__price">$164</span>
+              <span class="product-card__unit">25-lb bucket</span>
+            </div>
+            <button class="btn btn--primary product-card__cta" type="button">
+              Add to cart
+            </button>
+            <p class="text-small product-card__meta">Ships in 3–5 business days</p>
+          </div>
+        </div>
+      </div>
+      <p class="sg-note">
+        Image on gray-50 well, category + status badges, plain-language
+        one-liner, price with pack size, full-width add-to-cart. Prices are
+        sample data. Product names come from decision-tree.json.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Cards ============ -->
+  <section class="sg-section section--gray" style="padding-top: 0">
+    <div class="container">
+      <h2>Category cards</h2>
+      <div class="sg-card-grid">
+        <div class="card">
+          <span class="badge">Boiler systems</span>
+          <h3 style="margin-top: var(--space-2)">Scale &amp; corrosion inhibitor</h3>
+          <p class="text-muted" style="margin-top: var(--space-1)">
+            Keeps heat-transfer surfaces clean and protects steel from oxygen
+            attack. One product, both jobs.
+          </p>
+          <p class="text-small" style="margin-top: var(--space-2)">From $89 · 5-gal pail</p>
+        </div>
+        <div class="card">
+          <span class="badge">Cooling towers</span>
+          <h3 style="margin-top: var(--space-2)">Biocide tablets</h3>
+          <p class="text-muted" style="margin-top: var(--space-1)">
+            Slow-release control for algae and bacteria in open recirculating
+            systems. Drop in, done.
+          </p>
+          <p class="text-small" style="margin-top: var(--space-2)">From $64 · 25-lb bucket</p>
+        </div>
+      </div>
+      <p class="sg-note">
+        White background, 1px gray-100 border, 12px radius, 24px padding, no
+        drop shadows — flat, industrial-but-clean.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Accordion ============ -->
+  <section class="sg-section">
+    <div class="container">
+      <h2>Accordion</h2>
+      <div class="sg-accordion-wrap">
+        <div class="accordion">
+          <div class="accordion__item is-open">
+            <button class="accordion__trigger" type="button" aria-expanded="true">
+              How do I test my boiler water?
+              <svg class="accordion__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__panel">
+              <p>
+                Pull a sample from the blowdown line once it runs cool, then
+                test for pH, conductivity, and sulfite. Each takes under a
+                minute with the drop-count kit — we walk you through all three
+                in the included guide.
+              </p>
+            </div>
+          </div>
+          <div class="accordion__item">
+            <button class="accordion__trigger" type="button" aria-expanded="false">
+              How much should I dose?
+              <svg class="accordion__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__panel">
+              <p>
+                Dosage depends on your feedwater volume and test readings —
+                start with the baseline on the label, test after 24 hours, and
+                adjust. Your test kit tells you exactly where you stand.
+              </p>
+            </div>
+          </div>
+          <div class="accordion__item">
+            <button class="accordion__trigger" type="button" aria-expanded="false">
+              What safety gear do I need?
+              <svg class="accordion__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__panel">
+              <p>
+                Chemical-splash goggles and nitrile gloves cover most handling.
+                Anything that needs more than that is flagged on the product
+                page before you buy.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="sg-note">
+        Navy header text, steel blue expand icon, generous padding — these
+        carry real content weight on product pages.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Badges ============ -->
+  <section class="sg-section">
+    <div class="container">
+      <h2>Badges &amp; tags</h2>
+      <div class="sg-row">
+        <span class="badge">Boiler systems</span>
+        <span class="badge">Cooling towers</span>
+        <span class="badge">Refill available</span>
+        <span class="badge badge--success">In stock</span>
+        <span class="badge badge--warning">Low stock</span>
+        <span class="badge badge--danger">Hazmat shipping</span>
+      </div>
+      <p class="sg-note">
+        Steel-blue-tinted background, navy text, pill shape. Semantic tints for
+        status, hazard flags, and order states.
+      </p>
+    </div>
+  </section>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+@charset "UTF-8";
+/* ==========================================================================
+   ChemX Direct — Base styles
+   Resets, base typography, shared layout rules. References variables.css.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: var(--weight-body-regular);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-navy);
+  background-color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: var(--color-sky);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Headings ---- */
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: var(--text-h1);
+  font-weight: var(--weight-heading-extrabold);
+  line-height: var(--leading-h1);
+}
+
+h2 {
+  font-size: var(--text-h2);
+  font-weight: var(--weight-heading-bold);
+  line-height: var(--leading-h2);
+}
+
+h3 {
+  font-size: var(--text-h3);
+  font-weight: var(--weight-heading-bold);
+  line-height: var(--leading-h3);
+}
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: var(--text-h1-mobile);
+  }
+
+  h2 {
+    font-size: var(--text-h2-mobile);
+  }
+
+  h3 {
+    font-size: var(--text-h3-mobile);
+  }
+}
+
+/* ---- Text utilities ---- */
+
+.text-body-lg {
+  font-size: var(--text-body-lg);
+  line-height: var(--leading-body);
+}
+
+.text-small {
+  font-size: var(--text-small);
+  font-weight: var(--weight-body-medium);
+  line-height: var(--leading-small);
+}
+
+.text-muted {
+  color: var(--color-gray-500);
+}
+
+/* ---- Layout ---- */
+
+.container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--side-pad-mobile);
+}
+
+.section {
+  padding-block: var(--section-pad-mobile);
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding-block: var(--section-pad-desktop);
+  }
+}
+
+.section--gray {
+  background-color: var(--color-gray-50);
+}
+
+.section--navy {
+  background-color: var(--color-navy);
+  color: var(--color-white);
+}
+
+/* Pale blue-tinted surface — headings inside get the desaturated-navy
+   pairing instead of full-strength navy */
+.section--blue {
+  background-color: var(--color-surface-blue);
+}
+
+.section--blue h1,
+.section--blue h2,
+.section--blue h3 {
+  color: var(--color-heading-muted);
+}

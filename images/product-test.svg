@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 560" role="img" aria-label="Test equipment placeholder">
+  <!-- Placeholder standing in for a real test-kit photo -->
+  <!-- reagent bottle -->
+  <rect x="150" y="90" width="80" height="44" rx="8" fill="#d5dbde"/>
+  <rect x="140" y="134" width="100" height="36" rx="8" fill="#e2e5e7"/>
+  <path d="M140 170 h100 l26 70 v190 a24 24 0 0 1 -24 24 h-104 a24 24 0 0 1 -24 -24 v-190 z" fill="#f4f6f7" stroke="#e2e5e7" stroke-width="3"/>
+  <!-- liquid fill -->
+  <path d="M122 290 h144 v140 a24 24 0 0 1 -24 24 h-96 a24 24 0 0 1 -24 -24 z" fill="#2A93D3" opacity="0.25"/>
+  <!-- test tube -->
+  <path d="M330 140 h60 v250 a30 30 0 0 1 -60 0 z" fill="#ffffff" stroke="#e2e5e7" stroke-width="3"/>
+  <path d="M336 280 h48 v110 a24 24 0 0 1 -48 0 z" fill="#387498" opacity="0.35"/>
+  <!-- drop -->
+  <path d="M360 84 q16 24 0 38 q-16 -14 0 -38" fill="#2A93D3"/>
+</svg>

@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Claude Code local session config
+.claude/settings.local.json
+
+# Raw stock photo originals — optimized derivatives (hero-water.jpg,
+# industrial-tanks.jpg, water-sampling.jpg, ibc-totes.jpg,
+# treatment-plant-aerial.jpg) are committed and used by the site instead.
+images/AdobeStock_*.jpeg

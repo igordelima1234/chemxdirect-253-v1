@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 560" role="img" aria-label="Feed equipment placeholder">
+  <!-- Placeholder standing in for a real equipment photo -->
+  <!-- pump base -->
+  <rect x="120" y="380" width="260" height="60" rx="12" fill="#e2e5e7"/>
+  <rect x="150" y="440" width="40" height="40" rx="6" fill="#d5dbde"/>
+  <rect x="310" y="440" width="40" height="40" rx="6" fill="#d5dbde"/>
+  <!-- pump body -->
+  <rect x="140" y="220" width="220" height="170" rx="20" fill="#f4f6f7" stroke="#e2e5e7" stroke-width="3"/>
+  <!-- dome head -->
+  <path d="M170 220 a80 80 0 0 1 160 0 z" fill="#ffffff" stroke="#e2e5e7" stroke-width="3"/>
+  <!-- dial -->
+  <circle cx="250" cy="300" r="42" fill="#ffffff" stroke="#e2e5e7" stroke-width="3"/>
+  <line x1="250" y1="300" x2="278" y2="278" stroke="#2A93D3" stroke-width="6" stroke-linecap="round"/>
+  <!-- outlet pipe -->
+  <rect x="360" y="260" width="70" height="26" rx="8" fill="#e2e5e7"/>
+  <rect x="418" y="244" width="22" height="58" rx="8" fill="#d5dbde"/>
+  <!-- inlet tube -->
+  <path d="M140 330 H92 q-18 0 -18 18 v90" fill="none" stroke="#d5dbde" stroke-width="14" stroke-linecap="round"/>
+</svg>

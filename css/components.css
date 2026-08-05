@@ -1,0 +1,494 @@
+@charset "UTF-8";
+/* ==========================================================================
+   ChemX Direct — Components
+   Buttons, cards, badges, accordions. References variables.css.
+   ========================================================================== */
+
+/* ---- Glass pill (eyebrow label over photo backgrounds) ---- */
+
+.pill-glass {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-small);
+  font-weight: var(--weight-body-semibold);
+  line-height: var(--leading-small);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-pill);
+  padding: var(--space-1) var(--space-3);
+}
+
+/* ---- Outline pill (eyebrow label over plain/light backgrounds) ---- */
+
+.pill-outline {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-small);
+  font-weight: var(--weight-body-semibold);
+  line-height: var(--leading-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-navy);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--radius-pill);
+  padding: var(--space-1) var(--space-3);
+}
+
+/* Small sky dot preceding the label */
+.pill-glass::before {
+  content: "";
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-sky);
+}
+
+@media (max-width: 640px) {
+  .pill-glass {
+    padding: var(--space-1) var(--space-2);
+    letter-spacing: 0.04em;
+  }
+}
+
+/* ---- Buttons ---- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: var(--weight-body-semibold);
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-button);
+  border: 1px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease,
+    border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.btn:hover {
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-sky);
+  outline-offset: 2px;
+}
+
+/* Larger CTA size for hero / section-level calls to action */
+.btn--lg {
+  font-size: var(--text-body);
+  padding: var(--space-3) var(--space-5);
+}
+
+/* Trailing arrow for forward-motion CTAs */
+.btn--arrow::after {
+  content: "→";
+  font-size: 1.15em;
+  line-height: 1;
+  transition: transform 0.18s ease;
+}
+
+.btn--arrow:hover::after {
+  transform: translateX(3px);
+}
+
+/* Primary: sky background, white text, bold — sky is never paired with
+   small/thin text, so the weight stays bold here */
+.btn--primary {
+  background-color: var(--color-sky);
+  color: var(--color-white);
+  font-weight: var(--weight-heading-bold);
+  box-shadow: var(--shadow-btn);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-steel);
+  box-shadow: var(--shadow-btn-hover);
+}
+
+/* Secondary: outline, navy text, transparent background */
+.btn--secondary {
+  background-color: transparent;
+  color: var(--color-navy);
+  border-color: var(--color-steel);
+}
+
+.btn--secondary:hover {
+  background-color: var(--color-navy);
+  border-color: var(--color-navy);
+  color: var(--color-white);
+  box-shadow: var(--shadow-btn);
+}
+
+/* Ghost: for use on dark/photo backgrounds */
+.btn--ghost {
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  color: var(--color-white);
+  border-color: var(--color-border-light);
+}
+
+.btn--ghost:hover {
+  background-color: color-mix(in srgb, var(--color-white) 24%, transparent);
+  border-color: var(--color-white);
+}
+
+/* ---- Cards ---- */
+
+.card {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--radius-card);
+  padding: var(--space-3);
+  /* No drop shadows — flat, industrial-but-clean */
+}
+
+.card h3 {
+  margin-bottom: var(--space-1);
+}
+
+/* ---- Clickable card ---- */
+
+a.card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+a.card:hover {
+  border-color: var(--color-steel);
+  background-color: var(--color-gray-50);
+}
+
+/* ---- Numbered steps (how it works) ---- */
+
+.steps {
+  list-style: none;
+  counter-reset: step;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .steps {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}
+
+.steps li {
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step);
+  display: block;
+  font-family: var(--font-heading);
+  font-weight: var(--weight-heading-extrabold);
+  font-size: var(--text-h2);
+  line-height: var(--leading-h2);
+  color: var(--color-sky);
+  margin-bottom: var(--space-1);
+}
+
+.steps__label {
+  font-size: var(--text-body-lg);
+  font-weight: var(--weight-body-medium);
+}
+
+/* ---- Filter pill tabs (category switcher) ---- */
+
+.pill-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.pill-tab {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-weight: var(--weight-body-semibold);
+  line-height: var(--leading-small);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-navy);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--radius-pill);
+  padding: var(--space-1) var(--space-2);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.pill-tab:hover {
+  border-color: var(--color-steel);
+}
+
+.pill-tab.is-active {
+  background-color: var(--color-navy);
+  border-color: var(--color-navy);
+  color: var(--color-white);
+}
+
+.pill-tab:focus-visible {
+  outline: 2px solid var(--color-sky);
+  outline-offset: 2px;
+}
+
+/* ---- Horizontal product rail (scroll-snap carousel) ---- */
+
+.rail {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-block: var(--space-1);
+  /* hide scrollbar — arrows and touch/trackpad handle scrolling */
+  scrollbar-width: none;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.rail > * {
+  flex: 0 0 300px;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 640px) {
+  .rail > * {
+    flex-basis: 260px;
+  }
+}
+
+/* Circular prev/next buttons */
+.rail-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-gray-100);
+  background-color: var(--color-white);
+  color: var(--color-navy);
+  font-size: var(--text-body-lg);
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.rail-btn:hover {
+  background-color: var(--color-navy);
+  border-color: var(--color-navy);
+  color: var(--color-white);
+}
+
+.rail-btn:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.rail-btn:focus-visible {
+  outline: 2px solid var(--color-sky);
+  outline-offset: 2px;
+}
+
+/* ---- Product card (commerce) ---- */
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.product-card__media {
+  background-color: var(--color-gray-50);
+  padding: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-card__media img {
+  max-height: 220px;
+  object-fit: contain;
+}
+
+.product-card__body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: var(--space-1);
+  padding: var(--space-3);
+}
+
+.product-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.product-card__desc {
+  color: var(--color-gray-500);
+}
+
+.product-card__price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-2);
+}
+
+.product-card__price {
+  font-family: var(--font-heading);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-heading-bold);
+  line-height: var(--leading-h3);
+}
+
+.product-card__unit {
+  font-size: var(--text-small);
+  font-weight: var(--weight-body-medium);
+  color: var(--color-gray-500);
+}
+
+.product-card__cta {
+  width: 100%;
+  text-align: center;
+}
+
+/* Two-button row: Add to cart + Learn more */
+.product-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-top: var(--space-1);
+}
+
+/* Learn more — plain text link, not a second button */
+.product-card__link {
+  text-align: center;
+  font-size: var(--text-small);
+  font-weight: var(--weight-body-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-steel);
+  padding-block: 2px;
+}
+
+.product-card__link:hover {
+  color: var(--color-sky);
+  text-decoration: underline;
+}
+
+.product-card__meta {
+  text-align: center;
+  color: var(--color-gray-500);
+}
+
+/* ---- Badges / tags ---- */
+
+.badge {
+  display: inline-block;
+  font-size: var(--text-small);
+  font-weight: var(--weight-body-medium);
+  line-height: var(--leading-small);
+  color: var(--color-navy);
+  background-color: rgba(56, 116, 152, 0.14); /* steel-blue tint */
+  padding: 4px var(--space-2);
+  border-radius: var(--radius-pill);
+}
+
+/* Semantic badge variants (status, hazard flags, order states) */
+.badge--success {
+  background-color: rgba(47, 158, 92, 0.14);
+}
+
+.badge--warning {
+  background-color: rgba(217, 155, 31, 0.16);
+}
+
+.badge--danger {
+  background-color: rgba(201, 74, 60, 0.14);
+}
+
+/* ---- Accordions ---- */
+
+.accordion {
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.accordion__item + .accordion__item {
+  border-top: 1px solid var(--color-gray-100);
+}
+
+.accordion__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  color: var(--color-navy);
+  font-weight: var(--weight-body-medium);
+  font-size: var(--text-body-lg);
+  padding: var(--space-3);
+}
+
+.accordion__icon {
+  flex-shrink: 0;
+  color: var(--color-steel);
+  transition: transform 0.2s ease;
+}
+
+.accordion__item.is-open .accordion__icon {
+  transform: rotate(180deg);
+}
+
+.accordion__panel {
+  display: none;
+  padding: 0 var(--space-3) var(--space-3);
+  color: var(--color-navy);
+}
+
+.accordion__item.is-open .accordion__panel {
+  display: block;
+}

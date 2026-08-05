@@ -1,0 +1,116 @@
+{
+  "_notes": "Guided selector decision tree for ChemX Direct, modeled from Product_Flowsheet.png. Product handles are placeholders (bwt-2000, cwt-5000, etc.) — update once real Shopify product handles are created. Test and equipment names reference the keys in product-test-equipment-map.json.",
+
+  "start": "system_type",
+
+  "nodes": {
+
+    "system_type": {
+      "question": "What are you treating?",
+      "options": [
+        { "label": "Boiler", "next": "boiler_category" },
+        { "label": "Cooling tower", "next": "cooling_category" },
+        { "label": "Closed loop system", "result": "558T" }
+      ]
+    },
+
+    "boiler_category": {
+      "question": "What kind of boiler treatment do you need?",
+      "options": [
+        { "label": "Oxygen scavenger", "next": "boiler_oxygen_format" },
+        { "label": "Boiler water dispersant", "next": "boiler_dispersant_alkalinity" },
+        { "label": "Steam treatment", "next": "boiler_steam_runlength" },
+        { "label": "All-in-one boiler treatment", "next": "boiler_allinone_amine" }
+      ]
+    },
+
+    "boiler_oxygen_format": {
+      "question": "Powder or liquid?",
+      "options": [
+        { "label": "Powder", "result": "BWT2000" },
+        { "label": "Liquid", "result": "BWT2001" }
+      ]
+    },
+
+    "boiler_dispersant_alkalinity": {
+      "question": "What's your feedwater alkalinity?",
+      "options": [
+        { "label": "Low alkalinity", "result": "BWT6000" },
+        { "label": "Typical alkalinity", "result": "BWT6001" }
+      ]
+    },
+
+    "boiler_steam_runlength": {
+      "question": "How long does your boiler run continuously?",
+      "options": [
+        { "label": "Short run", "result": "BWT4001" },
+        { "label": "Medium run", "result": "BWT4000" },
+        { "label": "Long run", "result": "BWT4002" }
+      ]
+    },
+
+    "boiler_allinone_amine": {
+      "question": "With or without amine?",
+      "options": [
+        { "label": "With amine", "result": "BWT8000" },
+        { "label": "Without amine", "result": "BWT8001" }
+      ]
+    },
+
+    "cooling_category": {
+      "question": "What do you need for your cooling tower?",
+      "options": [
+        { "label": "Soft water treatment", "result": "CWT5000" },
+        { "label": "Hard water treatment", "result": "CWT9000" },
+        { "label": "Biocide", "next": "cooling_biocide_type" }
+      ]
+    },
+
+    "cooling_biocide_type": {
+      "question": "Fast-acting (oxidizing) or slower-acting (non-oxidizing)?",
+      "_note": "Flowchart shows these as separate branches, but many cooling programs rotate both types — confirm with client whether this should be single-select or a two-product program recommendation.",
+      "options": [
+        { "label": "Oxidizing (fast-acting)", "next": "cooling_biocide_oxidizing_format" },
+        { "label": "Non-oxidizing (slower-acting)", "next": "cooling_biocide_nonox_format" }
+      ]
+    },
+
+    "cooling_biocide_oxidizing_format": {
+      "question": "Tablet or liquid?",
+      "options": [
+        { "label": "Tablet", "result": "BioBrom_BT" },
+        { "label": "Liquid", "result": "Chlorine_12.5" }
+      ]
+    },
+
+    "cooling_biocide_nonox_format": {
+      "question": "Tablet or liquid?",
+      "options": [
+        { "label": "Tablet", "result": "DBNPA" },
+        { "label": "Liquid", "result": "GA15" }
+      ]
+    }
+  },
+
+  "products": {
+    "BWT2000": { "name": "BWT 2000", "handle_placeholder": "bwt-2000", "category": "Boilers", "subcategory": "Oxygen Scavenger", "tests": ["so3_test", "conductivity"] },
+    "BWT2001": { "name": "BWT 2001", "handle_placeholder": "bwt-2001", "category": "Boilers", "subcategory": "Oxygen Scavenger", "tests": ["so3_test", "conductivity"] },
+    "BWT6000": { "name": "BWT 6000", "handle_placeholder": "bwt-6000", "category": "Boilers", "subcategory": "Boiler Water Dispersant", "tests": ["ptsa_fluorescein", "conductivity"] },
+    "BWT6001": { "name": "BWT 6001", "handle_placeholder": "bwt-6001", "category": "Boilers", "subcategory": "Boiler Water Dispersant", "tests": ["ptsa_fluorescein", "conductivity"] },
+    "BWT4001": { "name": "BWT 4001", "handle_placeholder": "bwt-4001", "category": "Boilers", "subcategory": "Steam Treatment", "tests": ["ph_test", "conductivity"] },
+    "BWT4000": { "name": "BWT 4000", "handle_placeholder": "bwt-4000", "category": "Boilers", "subcategory": "Steam Treatment", "tests": ["ph_test", "conductivity"] },
+    "BWT4002": { "name": "BWT 4002", "handle_placeholder": "bwt-4002", "category": "Boilers", "subcategory": "Steam Treatment", "tests": ["ph_test", "conductivity"] },
+    "BWT8000": { "name": "BWT 8000", "handle_placeholder": "bwt-8000", "category": "Boilers", "subcategory": "All-in-one Boiler", "tests": ["so3_test", "ptsa_fluorescein", "conductivity"] },
+    "BWT8001": { "name": "BWT 8001", "handle_placeholder": "bwt-8001", "category": "Boilers", "subcategory": "All-in-one Boiler", "tests": ["so3_test", "ptsa_fluorescein", "conductivity"] },
+
+    "CWT5000": { "name": "CWT 5000", "handle_placeholder": "cwt-5000", "category": "Cooling Towers", "subcategory": "Soft Water", "tests": ["ptsa_fluorescein", "conductivity", "total_hardness", "ph_test"] },
+    "CWT9000": { "name": "CWT 9000", "handle_placeholder": "cwt-9000", "category": "Cooling Towers", "subcategory": "Hard Water", "tests": ["ptsa_fluorescein", "conductivity", "total_hardness", "ph_test"] },
+
+    "BioBrom_BT": { "name": "BioBrom BT", "handle_placeholder": "biobrom-bt", "category": "Cooling Towers", "subcategory": "Biocide - Oxidizing", "tests": ["total_chlorine"] },
+    "Chlorine_12.5": { "name": "Chlorine 12.5", "handle_placeholder": "chlorine-12-5", "category": "Cooling Towers", "subcategory": "Biocide - Oxidizing", "tests": ["total_chlorine"], "_note": "Flowchart only draws the test-kit arrow from BioBrom BT — confirm Chlorine 12.5 needs the same Total Chlorine test." },
+    "DBNPA": { "name": "DBNPA", "handle_placeholder": "dbnpa", "category": "Cooling Towers", "subcategory": "Biocide - Non-oxidizing", "tests": [], "_note": "No test connection shown in flowchart for this branch — confirm with client whether a test applies." },
+    "GA15": { "name": "GA15", "handle_placeholder": "ga15", "category": "Cooling Towers", "subcategory": "Biocide - Non-oxidizing", "tests": [], "_note": "No test connection shown in flowchart for this branch — confirm with client whether a test applies." },
+
+    "558T": { "name": "558T", "handle_placeholder": "558t", "category": "Closed Loop Systems", "subcategory": "Nitrite (Trace)", "tests": ["ptsa_fluorescein", "conductivity", "total_hardness", "ph_test"] }
+  }
+}

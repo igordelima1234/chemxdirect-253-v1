@@ -1,0 +1,92 @@
+@charset "UTF-8";
+/* ==========================================================================
+   ChemX Direct — Design tokens
+   Source of truth: brand-styleguide.md. Every color, font size, and spacing
+   value lives here — other stylesheets reference these variables only.
+   ========================================================================== */
+
+:root {
+  /* ---- Brand colors ---- */
+  --color-navy: #162229;      /* Deep navy — headings, body text, dark sections */
+  --color-steel: #387498;     /* Steel blue — secondary UI, buttons, icons, tags */
+  --color-sky: #2A93D3;       /* Bright sky — CTAs, links, active states (sparingly) */
+  --color-white: #ffffff;     /* Base background */
+  --color-gray-50: #f4f6f7;   /* Section backgrounds, subtle contrast */
+  --color-gray-100: #e2e5e7;  /* Borders, dividers */
+  --color-gray-500: #6b7680;  /* Secondary / muted text */
+
+  /* Divider on dark backgrounds (gray-100 is invisible on navy) */
+  --color-border-light: color-mix(in srgb, var(--color-white) 16%, transparent);
+
+  /* Desaturated blue surface pairing — pale blue-tinted section background
+     with a muted (grayed-down) navy for headings on top of it */
+  --color-surface-blue: color-mix(in srgb, var(--color-steel) 8%, var(--color-white));
+  --color-heading-muted: color-mix(in srgb, var(--color-navy) 80%, var(--color-gray-500));
+
+  /* ---- Semantic colors ---- */
+  --color-success: #2f9e5c;
+  --color-warning: #d99b1f;
+  --color-danger: #c94a3c;
+  --color-info: var(--color-sky);
+
+  /* ---- Typography ---- */
+  --font-heading: "Barlow Condensed", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  --weight-heading-bold: 700;
+  --weight-heading-extrabold: 800;
+  --weight-body-regular: 400;
+  --weight-body-medium: 500;
+  --weight-body-semibold: 600;  /* UI labels (nav, small caps) — see note in brand-styleguide.md */
+
+  /* Type scale (desktop) */
+  --text-h1: 70px;            /* H1 hero — Barlow Condensed 800 */
+  --text-h2: 42px;            /* H2 section — Barlow Condensed 700 */
+  --text-h3: 24px;            /* H3 subsection — Barlow Condensed 700 */
+  --text-body-lg: 18px;       /* Body large — Inter 400 */
+  --text-body: 16px;          /* Body — Inter 400 */
+  --text-small: 13px;         /* Small / caption — Inter 500 */
+
+  /* Line heights */
+  --leading-h1: 1.05;
+  --leading-h2: 1.1;
+  --leading-h3: 1.15;
+  --leading-body: 1.6;
+  --leading-small: 1.4;
+
+  /* Mobile heading scale (~60–70% of desktop) */
+  --text-h1-mobile: 45px;
+  --text-h2-mobile: 30px;
+  --text-h3-mobile: 19px;
+
+  /* ---- Spacing (8px base unit) ---- */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 48px;
+  --space-6: 64px;
+  --space-7: 96px;
+
+  /* Section vertical padding */
+  --section-pad-mobile: var(--space-6);   /* 64px */
+  --section-pad-desktop: var(--space-7);  /* 96px */
+
+  /* ---- Layout ---- */
+  --content-max-width: 1400px;
+  --side-pad-mobile: var(--space-3);      /* 24px */
+
+  /* ---- Radii ---- */
+  --radius-button: 8px;
+  --radius-card: 12px;
+  --radius-pill: 999px;
+
+  /* ---- Glass (translucent pills/overlays on photo backgrounds) ---- */
+  --glass-bg: color-mix(in srgb, var(--color-white) 14%, transparent);
+  --glass-blur: 12px;
+
+  /* ---- Elevation ----
+     Interactive elements only. Cards stay flat per brand-styleguide.md. */
+  --shadow-btn: 0 2px 6px color-mix(in srgb, var(--color-navy) 20%, transparent);
+  --shadow-btn-hover: 0 8px 20px color-mix(in srgb, var(--color-navy) 28%, transparent);
+}

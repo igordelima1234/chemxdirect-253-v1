@@ -1,0 +1,66 @@
+{
+  "_notes": "Reference map of test names used in decision-tree.json to their component products (from the client's Testing Equipment and Equipment lists). Components marked refill: true are consumables — good candidates for subscribe/reorder. Components marked refill: false are the durable device, typically a one-time purchase. Handles are placeholders until real Shopify products/variants exist.",
+
+  "tests": {
+    "conductivity": {
+      "name": "Conductivity",
+      "components": [
+        { "name": "Meter 4P", "handle_placeholder": "meter-4p", "refill": false }
+      ]
+    },
+    "ptsa_fluorescein": {
+      "name": "PTSA / Fluorescein",
+      "components": [
+        { "name": "Meter SP380", "handle_placeholder": "meter-sp380", "refill": false }
+      ]
+    },
+    "total_hardness": {
+      "name": "Total Hardness",
+      "components": [
+        { "name": "Hardness Buffer Solution", "handle_placeholder": "hardness-buffer-solution", "refill": true },
+        { "name": "Hardness Titrating Solution", "handle_placeholder": "hardness-titrating-solution", "refill": true }
+      ]
+    },
+    "ph_test": {
+      "name": "pH Test",
+      "components": [
+        { "name": "Cresol Red Indicator Solution", "handle_placeholder": "cresol-red-indicator-solution", "refill": true },
+        { "name": "Test Tube", "handle_placeholder": "ph-test-tube", "refill": false },
+        { "name": "Slide Viewer", "handle_placeholder": "ph-slide-viewer", "refill": false }
+      ]
+    },
+    "so3_test": {
+      "name": "SO3 Test",
+      "components": [
+        { "name": "Eye Drop Dispenser", "handle_placeholder": "eye-drop-dispenser", "refill": false },
+        { "name": "Phenolphthalein Indicator", "handle_placeholder": "phenolphthalein-indicator", "refill": true },
+        { "name": "Starch Acid Indicator", "handle_placeholder": "starch-acid-indicator", "refill": true },
+        { "name": "Potassium Iodide-Iodate", "handle_placeholder": "potassium-iodide-iodate", "refill": true }
+      ]
+    },
+    "total_chlorine": {
+      "name": "Total Chlorine",
+      "components": [
+        { "name": "Color Cube", "handle_placeholder": "chlorine-color-cube", "refill": false },
+        { "name": "DPD Total Chlorine Powder Pillows", "handle_placeholder": "dpd-total-chlorine-powder-pillows", "refill": true }
+      ]
+    }
+  },
+
+  "equipment": {
+    "_note": "General feed/dosing equipment — not mapped to specific chemicals in the source flowchart. Recommend surfacing as a 'you may also need' section by system type rather than a strict per-product pairing, unless the client confirms specific links.",
+    "items": [
+      { "name": "Advantage Controls - 30 GPD Chemical Feed Pump", "handle_placeholder": "advantage-controls-30-gpd-feed-pump" },
+      { "name": "Stainless Steel Injector", "handle_placeholder": "stainless-steel-injector" },
+      { "name": "Plastic Injector", "handle_placeholder": "plastic-injector" },
+      { "name": "Foot Valve", "handle_placeholder": "foot-valve" },
+      { "name": "3/8\" Suction & Discharge Tubing", "handle_placeholder": "suction-discharge-tubing-3-8" },
+      { "name": "Chemical Feed Pump Rebuild Kit (KOP Kit)", "handle_placeholder": "chemical-feed-pump-rebuild-kit" },
+      { "name": "Brominator", "handle_placeholder": "brominator" },
+      { "name": "5 Gallon Pot Feeder", "handle_placeholder": "5-gallon-pot-feeder" },
+      { "name": "Industrial Water Softener", "handle_placeholder": "industrial-water-softener" },
+      { "name": "Industrial RO (Reverse Osmosis)", "handle_placeholder": "industrial-ro" },
+      { "name": "Filter Bags", "handle_placeholder": "filter-bags" }
+    ]
+  }
+}
