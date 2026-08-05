@@ -1,5 +1,13 @@
 // ChemX Direct — shared interactions
 
+// Some test names in product-test-equipment-map.json already end in "Test"
+// (e.g. "pH Test", "SO3 Test"), so only append the word when it's missing.
+// Shared by the product rail and the Shop mega menu — they build the same
+// tag string and must agree for the menu's filtering to match.
+function chemxTestTag(name) {
+  return /\btest$/i.test(name) ? name : name + " test";
+}
+
 // Mobile nav toggle
 (function () {
   var toggle = document.querySelector("[data-nav-toggle]");
@@ -178,7 +186,7 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
         items.push({
           name: c.name,
           category: "Test Equipment",
-          tag: test.name + " test",
+          tag: chemxTestTag(test.name),
           desc: d[2],
           price: d[0],
           unit: d[1],
@@ -208,28 +216,44 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
 
   function init(items) {
     var active = "All";
+    var activeSub = null; // set by the Shop mega menu, cleared by the pills
 
     CATEGORIES.forEach(function (cat) {
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "pill-tab" + (cat === active ? " is-active" : "");
       btn.textContent = cat;
+      btn.setAttribute("data-pill", cat);
       btn.setAttribute("aria-pressed", cat === active ? "true" : "false");
       btn.addEventListener("click", function () {
-        active = cat;
-        tabsEl.querySelectorAll(".pill-tab").forEach(function (b) {
-          var on = b === btn;
-          b.classList.toggle("is-active", on);
-          b.setAttribute("aria-pressed", on ? "true" : "false");
-        });
-        render();
+        activeSub = null;
+        setActive(cat);
       });
       tabsEl.appendChild(btn);
     });
 
+    function setActive(cat) {
+      active = cat;
+      tabsEl.querySelectorAll(".pill-tab").forEach(function (b) {
+        var on = b.getAttribute("data-pill") === cat;
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      render();
+    }
+
+    // The Shop mega menu asks the rail to filter itself
+    document.addEventListener("chemx:filter", function (e) {
+      var d = e.detail || {};
+      activeSub = d.subcategory || null;
+      setActive(d.category || "All");
+    });
+
     function render() {
       var visible = items.filter(function (item) {
-        return active === "All" || item.category === active;
+        if (active !== "All" && item.category !== active) return false;
+        if (activeSub && item.tag !== activeSub) return false;
+        return true;
       });
       rail.innerHTML = visible.map(cardHTML).join("");
       rail.scrollTo({ left: 0, behavior: "instant" });
@@ -548,4 +572,226 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
       body.scrollTop = 0;
     });
   }
+})();
+
+// ---------------------------------------------------------------------------
+// Shop mega menu — built from the same catalog data as the product rail, so
+// the taxonomy and counts can never drift from what's actually in stock.
+// Clicking any entry filters the rail below and scrolls to it.
+// ---------------------------------------------------------------------------
+(function () {
+  var item = document.querySelector("[data-mega-item]");
+  var toggle = document.querySelector("[data-mega-toggle]");
+  var mega = document.querySelector("[data-mega]");
+  if (!item || !toggle || !mega) return;
+
+  // Which categories share a column. Presentation only — the entries
+  // themselves come from the data files.
+  var COLUMNS = [
+    ["Boilers"],
+    ["Cooling Towers"],
+    ["Closed Loop Systems", "Feed Equipment"],
+    ["Test Equipment"],
+  ];
+
+  var desktop = window.matchMedia("(min-width: 641px)");
+
+  Promise.all([
+    fetch("data/decision-tree.json").then(function (r) { return r.json(); }),
+    fetch("data/product-test-equipment-map.json").then(function (r) { return r.json(); }),
+  ])
+    .then(function (res) {
+      render(groupCatalog(res[0], res[1]));
+    })
+    .catch(function (err) {
+      console.error(err);
+    });
+
+  // category -> { total, subs: [{ name, count }] }
+  function groupCatalog(tree, map) {
+    var groups = {};
+
+    function add(category, sub) {
+      var g = (groups[category] = groups[category] || { total: 0, subs: [], index: {} });
+      g.total++;
+      if (g.index[sub] === undefined) {
+        g.index[sub] = g.subs.length;
+        g.subs.push({ name: sub, count: 0 });
+      }
+      g.subs[g.index[sub]].count++;
+    }
+
+    Object.keys(tree.products).forEach(function (key) {
+      var p = tree.products[key];
+      add(p.category, p.subcategory);
+    });
+
+    // Tags here must match the ones buildCatalog assigns, so the rail's
+    // subcategory filter lines up with what the menu links request.
+    Object.keys(map.tests).forEach(function (key) {
+      var t = map.tests[key];
+      t.components.forEach(function () {
+        add("Test Equipment", chemxTestTag(t.name));
+      });
+    });
+
+    map.equipment.items.forEach(function () {
+      add("Feed Equipment", "Dosing hardware");
+    });
+
+    return groups;
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function render(groups) {
+    var columns = COLUMNS.map(function (cats) {
+      var blocks = cats
+        .filter(function (cat) { return groups[cat]; })
+        .map(function (cat) {
+          var g = groups[cat];
+          var subs = g.subs
+            .map(function (s) {
+              return (
+                "<li>" +
+                '<button class="mega__link" type="button" data-cat="' + esc(cat) + '"' +
+                ' data-sub="' + esc(s.name) + '">' +
+                "<span>" + esc(s.name) + "</span>" +
+                '<span class="mega__count">' + s.count + "</span>" +
+                "</button></li>"
+              );
+            })
+            .join("");
+          return (
+            '<div class="mega__group">' +
+            '<button class="mega__cat" type="button" data-cat="' + esc(cat) + '">' +
+            "<span>" + esc(cat) + "</span>" +
+            '<span class="mega__count">' + g.total + "</span>" +
+            "</button>" +
+            '<ul class="mega__list">' + subs + "</ul>" +
+            "</div>"
+          );
+        })
+        .join("");
+      return "<div>" + blocks + "</div>";
+    }).join("");
+
+    mega.innerHTML =
+      '<div class="container"><div class="mega__grid">' +
+      columns +
+      '<div class="mega__promo">' +
+      '<p class="pill-outline">Not sure?</p>' +
+      "<h3>Let us match your system</h3>" +
+      "<p>Answer a few questions about what you're treating and we'll point you to the right product — plus the test kit for it.</p>" +
+      '<button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your product</button>' +
+      '<button class="mega__promo-link" type="button" data-cat="All">Browse all products <span aria-hidden="true">→</span></button>' +
+      "</div>" +
+      "</div></div>";
+
+    mega.querySelectorAll("[data-cat]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        document.dispatchEvent(
+          new CustomEvent("chemx:filter", {
+            detail: {
+              category: el.getAttribute("data-cat"),
+              subcategory: el.getAttribute("data-sub") || null,
+            },
+          })
+        );
+        close();
+        closeMobileNav();
+        var section = document.getElementById("products");
+        if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    // The quiz module bound its listeners before this markup existed, so
+    // wire the promo's CTA up to the same modal by hand.
+    var quizBtn = mega.querySelector("[data-open-quiz]");
+    if (quizBtn) {
+      quizBtn.addEventListener("click", function () {
+        close();
+        closeMobileNav();
+        var hero = document.querySelector(".hero [data-open-quiz]");
+        if (hero) hero.click();
+      });
+    }
+  }
+
+  // On phones the menu lives inside the hamburger overlay, which would
+  // otherwise stay open covering the results the user just filtered to.
+  // Reuse the nav's own toggle so its button/ARIA state stays in sync.
+  function closeMobileNav() {
+    var nav = document.getElementById("site-nav");
+    var navToggle = document.querySelector("[data-nav-toggle]");
+    if (nav && navToggle && nav.classList.contains("is-open")) navToggle.click();
+  }
+
+  // Opened by click ("pinned") stays put until dismissed deliberately;
+  // opened by hover closes again when the pointer leaves.
+  var pinned = false;
+
+  function open() {
+    item.classList.add("is-open");
+    toggle.setAttribute("aria-expanded", "true");
+  }
+
+  function close() {
+    pinned = false;
+    item.classList.remove("is-open");
+    toggle.setAttribute("aria-expanded", "false");
+  }
+
+  function isOpen() {
+    return item.classList.contains("is-open");
+  }
+
+  toggle.addEventListener("click", function () {
+    if (isOpen() && pinned) {
+      close();
+    } else {
+      pinned = true;
+      open();
+    }
+  });
+
+  // Hover intent on pointer devices only — the delay keeps the panel from
+  // flashing open when the cursor just passes over Shop on its way elsewhere.
+  var openTimer, closeTimer;
+
+  item.addEventListener("mouseenter", function () {
+    if (!desktop.matches) return;
+    clearTimeout(closeTimer);
+    openTimer = setTimeout(open, 120);
+  });
+
+  item.addEventListener("mouseleave", function () {
+    if (!desktop.matches || pinned) return;
+    clearTimeout(openTimer);
+    closeTimer = setTimeout(close, 180);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && isOpen()) {
+      close();
+      toggle.focus();
+    }
+  });
+
+  // Click outside / tab away
+  document.addEventListener("click", function (e) {
+    if (isOpen() && !item.contains(e.target)) close();
+  });
+
+  // Tabbing to something outside dismisses it. Ignore focus landing on
+  // <body>, which happens incidentally and isn't the user navigating away.
+  document.addEventListener("focusin", function (e) {
+    if (isOpen() && e.target !== document.body && !item.contains(e.target)) {
+      close();
+    }
+  });
+
+  desktop.addEventListener("change", close);
 })();
