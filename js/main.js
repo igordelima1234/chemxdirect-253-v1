@@ -68,9 +68,9 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
   ];
 
   var CATEGORY_IMAGES = {
-    "Boilers": "images/product-drum.svg",
-    "Cooling Towers": "images/product-drum.svg",
-    "Closed Loop Systems": "images/product-drum.svg",
+    "Boilers": "images/product-drum.png",
+    "Cooling Towers": "images/product-drum.png",
+    "Closed Loop Systems": "images/product-drum.png",
     "Feed Equipment": "images/product-equipment.svg",
     "Test Equipment": "images/product-test.svg",
   };
@@ -303,9 +303,9 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
   if (!modal || !body || !openBtns.length) return;
 
   var CATEGORY_IMAGES = {
-    "Boilers": "images/product-drum.svg",
-    "Cooling Towers": "images/product-drum.svg",
-    "Closed Loop Systems": "images/product-drum.svg",
+    "Boilers": "images/product-drum.png",
+    "Cooling Towers": "images/product-drum.png",
+    "Closed Loop Systems": "images/product-drum.png",
   };
 
   var SUBCATEGORY_DESC = {
@@ -487,7 +487,7 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
 
     var price = SUBCATEGORY_PRICE[product.subcategory] || ["$—", ""];
     var desc = SUBCATEGORY_DESC[product.subcategory] || "";
-    var image = CATEGORY_IMAGES[product.category] || "images/product-drum.svg";
+    var image = CATEGORY_IMAGES[product.category] || "images/product-drum.png";
 
     var testsHTML = product.tests.length
       ? '<p class="quiz-result__section-title">Testing equipment you\'ll need</p>' +
