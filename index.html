@@ -528,6 +528,289 @@
       color: var(--color-sky);
       text-decoration: none;
     }
+
+    /* ---- Guided selector quiz modal ---- */
+
+    .quiz-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      visibility: hidden;
+    }
+
+    .quiz-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background-color: color-mix(in srgb, var(--color-navy) 55%, transparent);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .quiz-modal__panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(480px, 100%);
+      background-color: var(--color-white);
+      box-shadow: -12px 0 32px color-mix(in srgb, var(--color-navy) 18%, transparent);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .quiz-modal.is-open {
+      visibility: visible;
+    }
+
+    .quiz-modal.is-open .quiz-modal__backdrop {
+      opacity: 1;
+    }
+
+    .quiz-modal.is-open .quiz-modal__panel {
+      transform: translateX(0);
+    }
+
+    .quiz-modal__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: var(--space-4) var(--space-4) var(--space-3);
+      border-bottom: 1px solid var(--color-gray-100);
+      flex-shrink: 0;
+    }
+
+    .quiz-modal__eyebrow {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-steel);
+    }
+
+    .quiz-modal__title {
+      margin-top: 4px;
+    }
+
+    .quiz-modal__close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--color-gray-100);
+      background: none;
+      color: var(--color-navy);
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .quiz-modal__close:hover {
+      background-color: var(--color-gray-50);
+      border-color: var(--color-steel);
+    }
+
+    .quiz-modal__body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-4);
+    }
+
+    @media (max-width: 640px) {
+      .quiz-modal__panel {
+        width: 100%;
+      }
+
+      .quiz-modal__header,
+      .quiz-modal__body {
+        padding-inline: var(--space-3);
+      }
+    }
+
+    /* Breadcrumb of already-answered steps */
+    .quiz-trail {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      margin-bottom: var(--space-3);
+    }
+
+    .quiz-trail__item {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-medium);
+      color: var(--color-gray-500);
+    }
+
+    .quiz-trail__item:not(:last-child)::after {
+      content: "/";
+      margin-left: var(--space-1);
+      color: var(--color-gray-100);
+    }
+
+    .quiz-step__label {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+      margin-bottom: var(--space-1);
+    }
+
+    .quiz-question {
+      margin-top: 0;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: var(--space-2);
+      margin-top: var(--space-4);
+    }
+
+    .quiz-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      width: 100%;
+      text-align: left;
+      font-family: var(--font-body);
+      font-size: var(--text-body-lg);
+      font-weight: var(--weight-body-medium);
+      color: var(--color-navy);
+      background-color: var(--color-white);
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-card);
+      padding: var(--space-3);
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease,
+        transform 0.15s ease;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--color-sky);
+      background-color: color-mix(in srgb, var(--color-sky) 6%, var(--color-white));
+      transform: translateX(2px);
+    }
+
+    .quiz-option::after {
+      content: "→";
+      color: var(--color-steel);
+      flex-shrink: 0;
+    }
+
+    .quiz-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-steel);
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-bottom: var(--space-3);
+      padding: 0;
+    }
+
+    .quiz-back:hover {
+      color: var(--color-sky);
+    }
+
+    /* Result view */
+    .quiz-result__badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      margin-bottom: var(--space-2);
+    }
+
+    .quiz-result__media {
+      background-color: var(--color-gray-50);
+      border-radius: var(--radius-card);
+      padding: var(--space-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-3);
+    }
+
+    .quiz-result__media img {
+      max-height: 160px;
+    }
+
+    .quiz-result__desc {
+      color: var(--color-gray-500);
+      margin-top: var(--space-1);
+    }
+
+    .quiz-result__price-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-top: var(--space-3);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--color-gray-100);
+    }
+
+    .quiz-result__price {
+      font-family: var(--font-heading);
+      font-weight: var(--weight-heading-extrabold);
+      font-size: var(--text-h3);
+      color: var(--color-navy);
+    }
+
+    .quiz-result__unit {
+      font-size: var(--text-small);
+      color: var(--color-gray-500);
+    }
+
+    .quiz-result__actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+
+    .quiz-result__section-title {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+      margin-top: var(--space-5);
+      margin-bottom: var(--space-2);
+    }
+
+    .quiz-test-list {
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .quiz-test {
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-card);
+      padding: var(--space-3);
+    }
+
+    .quiz-test__name {
+      font-weight: var(--weight-body-medium);
+    }
+
+    .quiz-test__components {
+      color: var(--color-gray-500);
+      margin-top: 4px;
+    }
+
+    .quiz-restart {
+      text-align: center;
+      margin-top: var(--space-5);
+    }
   </style>
 </head>
 <body>
@@ -584,7 +867,7 @@
           for a service visit you don't need.
         </p>
         <div class="hero__ctas">
-          <a class="btn btn--primary btn--lg btn--arrow" href="#">Find your product</a>
+          <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
           <a class="btn btn--ghost btn--lg" href="#products">Browse products</a>
         </div>
       </div>
@@ -761,10 +1044,10 @@
       <div class="site-footer__cta">
         <h2>Start with the right chemical.</h2>
         <p class="text-body-lg">
-          Answer four questions and we'll match your system to the product that
-          fits it — plus the test kit to prove it's working.
+          Answer a few quick questions and we'll match your system to the
+          product that fits it — plus the test kit to prove it's working.
         </p>
-        <a class="btn btn--primary btn--lg btn--arrow" href="#">Find your product</a>
+        <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
       </div>
 
       <div class="site-footer__grid">
@@ -809,6 +1092,32 @@
       </div>
     </div>
   </footer>
+
+  <!-- Guided selector — slide-out quiz modal, driven by data/decision-tree.json
+       and data/product-test-equipment-map.json. Content is filled in by
+       js/main.js once those files load. -->
+  <div class="quiz-modal" data-quiz-modal aria-hidden="true">
+    <div class="quiz-modal__backdrop" data-quiz-close></div>
+    <div
+      class="quiz-modal__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="quiz-modal-title"
+    >
+      <div class="quiz-modal__header">
+        <div>
+          <p class="quiz-modal__eyebrow">Guided selector</p>
+          <h2 class="quiz-modal__title" id="quiz-modal-title">Find your product</h2>
+        </div>
+        <button class="quiz-modal__close" type="button" data-quiz-close aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M2 2l14 14M16 2 2 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="quiz-modal__body" data-quiz-body></div>
+    </div>
+  </div>
 
   <script src="js/main.js"></script>
 </body>

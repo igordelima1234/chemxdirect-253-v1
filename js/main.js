@@ -288,3 +288,264 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
     render();
   }
 })();
+
+// ---------------------------------------------------------------------------
+// Guided selector — slide-out quiz modal walking data/decision-tree.json,
+// with results cross-referenced against data/product-test-equipment-map.json
+// for the tests each product needs. Prices/descriptions are SAMPLE DATA,
+// matching the placeholders used in the product rail above.
+// ---------------------------------------------------------------------------
+(function () {
+  var modal = document.querySelector("[data-quiz-modal]");
+  var body = document.querySelector("[data-quiz-body]");
+  var openBtns = document.querySelectorAll("[data-open-quiz]");
+  var closeEls = document.querySelectorAll("[data-quiz-close]");
+  if (!modal || !body || !openBtns.length) return;
+
+  var CATEGORY_IMAGES = {
+    "Boilers": "images/product-drum.svg",
+    "Cooling Towers": "images/product-drum.svg",
+    "Closed Loop Systems": "images/product-drum.svg",
+  };
+
+  var SUBCATEGORY_DESC = {
+    "Oxygen Scavenger": "Removes dissolved oxygen before it can corrode boiler steel.",
+    "Boiler Water Dispersant": "Keeps scale-forming minerals in suspension so blowdown carries them out.",
+    "Steam Treatment": "Protects steam and condensate lines from acidic attack.",
+    "All-in-one Boiler": "One product covering oxygen, scale, and condensate protection.",
+    "Soft Water": "Scale and corrosion control for towers on softened makeup water.",
+    "Hard Water": "Scale and corrosion control for towers running hard makeup water.",
+    "Biocide - Oxidizing": "Fast-acting control for algae and bacteria in open systems.",
+    "Biocide - Non-oxidizing": "Slower-acting biocide for rotation or stubborn growth.",
+    "Nitrite (Trace)": "Set-and-forget corrosion protection for closed loops.",
+  };
+
+  var SUBCATEGORY_PRICE = {
+    "Oxygen Scavenger": ["$189", "50-lb pail"],
+    "Boiler Water Dispersant": ["$219", "5-gal pail"],
+    "Steam Treatment": ["$199", "5-gal pail"],
+    "All-in-one Boiler": ["$259", "5-gal pail"],
+    "Soft Water": ["$249", "5-gal pail"],
+    "Hard Water": ["$249", "5-gal pail"],
+    "Biocide - Oxidizing": ["$164", "25-lb bucket"],
+    "Biocide - Non-oxidizing": ["$178", "5-gal pail"],
+    "Nitrite (Trace)": ["$189", "5-gal pail"],
+  };
+
+  var tree = null;
+  var testMap = null;
+  var loadError = null;
+  var history = []; // [{ nodeKey, label }]
+  var currentKey = null;
+  var lastFocused = null;
+
+  fetch("data/decision-tree.json")
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (json) {
+      tree = json;
+    })
+    .catch(function (err) {
+      loadError = err;
+      console.error(err);
+    });
+
+  fetch("data/product-test-equipment-map.json")
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (json) {
+      testMap = json;
+    })
+    .catch(function (err) {
+      loadError = err;
+      console.error(err);
+    });
+
+  function openModal() {
+    lastFocused = document.activeElement;
+    history = [];
+    currentKey = tree ? tree.start : null;
+    render();
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    var closeBtn = modal.querySelector(".quiz-modal__close");
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    if (lastFocused) lastFocused.focus();
+  }
+
+  openBtns.forEach(function (btn) {
+    btn.addEventListener("click", openModal);
+  });
+
+  closeEls.forEach(function (el) {
+    el.addEventListener("click", closeModal);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+  });
+
+  function render() {
+    if (loadError) {
+      body.innerHTML =
+        '<p class="text-muted">The selector couldn\'t load its question data. ' +
+        "If you opened this file directly, run it from a local server instead " +
+        "(e.g. <code>python3 -m http.server</code>).</p>";
+      return;
+    }
+
+    if (!tree || !testMap) {
+      body.innerHTML = '<p class="text-muted">Loading…</p>';
+      return;
+    }
+
+    var node = tree.nodes[currentKey];
+    if (node) renderQuestion(node);
+    else renderResult(currentKey);
+  }
+
+  function renderQuestion(node) {
+    var backHTML = history.length
+      ? '<button class="quiz-back" type="button" data-quiz-back>' +
+        '<span aria-hidden="true">←</span> Back</button>'
+      : "";
+
+    var trailHTML = history.length
+      ? '<div class="quiz-trail">' +
+        history
+          .map(function (step) {
+            return '<span class="quiz-trail__item">' + step.label + "</span>";
+          })
+          .join("") +
+        "</div>"
+      : "";
+
+    body.innerHTML =
+      backHTML +
+      trailHTML +
+      '<p class="quiz-step__label">Step ' + (history.length + 1) + "</p>" +
+      '<h3 class="quiz-question">' + node.question + "</h3>" +
+      '<div class="quiz-options">' +
+      node.options
+        .map(function (opt, i) {
+          return (
+            '<button class="quiz-option" type="button" data-quiz-option="' +
+            i +
+            '">' +
+            opt.label +
+            "</button>"
+          );
+        })
+        .join("") +
+      "</div>";
+
+    body.querySelectorAll("[data-quiz-option]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var opt = node.options[Number(btn.getAttribute("data-quiz-option"))];
+        history.push({ nodeKey: currentKey, label: opt.label });
+        currentKey = opt.next || opt.result;
+        render();
+        body.scrollTop = 0;
+      });
+    });
+
+    var backBtn = body.querySelector("[data-quiz-back]");
+    if (backBtn) {
+      backBtn.addEventListener("click", function () {
+        var prev = history.pop();
+        currentKey = prev.nodeKey;
+        render();
+        body.scrollTop = 0;
+      });
+    }
+  }
+
+  function renderResult(code) {
+    var product = tree.products[code];
+
+    var backHTML =
+      '<button class="quiz-back" type="button" data-quiz-back>' +
+      '<span aria-hidden="true">←</span> Back</button>';
+
+    var trailHTML =
+      '<div class="quiz-trail">' +
+      history
+        .map(function (step) {
+          return '<span class="quiz-trail__item">' + step.label + "</span>";
+        })
+        .join("") +
+      "</div>";
+
+    var price = SUBCATEGORY_PRICE[product.subcategory] || ["$—", ""];
+    var desc = SUBCATEGORY_DESC[product.subcategory] || "";
+    var image = CATEGORY_IMAGES[product.category] || "images/product-drum.svg";
+
+    var testsHTML = product.tests.length
+      ? '<p class="quiz-result__section-title">Testing equipment you\'ll need</p>' +
+        '<div class="quiz-test-list">' +
+        product.tests
+          .map(function (testKey) {
+            var test = testMap.tests[testKey];
+            if (!test) return "";
+            var components = test.components.map(function (c) {
+              return c.name;
+            }).join(", ");
+            return (
+              '<div class="quiz-test">' +
+              '<p class="quiz-test__name">' + test.name + "</p>" +
+              '<p class="text-small quiz-test__components">' + components + "</p>" +
+              "</div>"
+            );
+          })
+          .join("") +
+        "</div>"
+      : "";
+
+    body.innerHTML =
+      backHTML +
+      trailHTML +
+      '<div class="quiz-result__badges">' +
+      '<span class="badge">' + product.category + "</span>" +
+      '<span class="badge">' + product.subcategory + "</span>" +
+      "</div>" +
+      '<div class="quiz-result__media"><img src="' + image + '" alt="" /></div>' +
+      "<h3>" + product.name + "</h3>" +
+      '<p class="quiz-result__desc">' + desc + "</p>" +
+      '<div class="quiz-result__price-row">' +
+      '<span class="quiz-result__price">' + price[0] + "</span>" +
+      '<span class="quiz-result__unit">' + price[1] + "</span>" +
+      "</div>" +
+      '<div class="quiz-result__actions">' +
+      '<button class="btn btn--primary" type="button">Add to cart</button>' +
+      '<a class="btn btn--secondary" href="#">View product page</a>' +
+      "</div>" +
+      testsHTML +
+      '<div class="quiz-restart">' +
+      '<button class="quiz-back" type="button" data-quiz-restart>Start over</button>' +
+      "</div>";
+
+    var backBtn = body.querySelector("[data-quiz-back]");
+    backBtn.addEventListener("click", function () {
+      var prev = history.pop();
+      currentKey = prev.nodeKey;
+      render();
+      body.scrollTop = 0;
+    });
+
+    body.querySelector("[data-quiz-restart]").addEventListener("click", function () {
+      history = [];
+      currentKey = tree.start;
+      render();
+      body.scrollTop = 0;
+    });
+  }
+})();
