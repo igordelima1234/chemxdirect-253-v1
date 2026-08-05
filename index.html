@@ -66,6 +66,7 @@
 
     /* Header — divider line separates the nav from the hero below it */
     .site-header {
+      position: relative;
       border-bottom: 1px solid var(--color-border-light);
     }
 
@@ -125,6 +126,83 @@
       background-color: var(--color-navy);
       color: var(--color-sky);
       text-decoration: none;
+    }
+
+    /* Hamburger toggle — hidden until the nav collapses on phones */
+    .site-header__menu-btn {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 44px;
+      height: 44px;
+      margin-block: auto;
+      padding: 0;
+      background: none;
+      border: none;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .site-header__menu-btn span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background-color: var(--color-white);
+      border-radius: var(--radius-pill);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .site-header__menu-btn.is-active span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .site-header__menu-btn.is-active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .site-header__menu-btn.is-active span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    @media (max-width: 640px) {
+      .site-header__menu-btn {
+        display: flex;
+      }
+
+      /* Collapses into a full-width dropdown panel, opaque so it stays
+         readable over the hero photo regardless of scroll position */
+      .site-nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        gap: 0;
+        background-color: var(--color-navy);
+        border-bottom: 1px solid var(--color-border-light);
+        max-height: calc(100vh - 100%);
+        overflow-y: auto;
+        z-index: 20;
+      }
+
+      .site-nav.is-open {
+        display: flex;
+      }
+
+      .site-nav a {
+        width: 100%;
+        min-height: 52px;
+        padding-inline: var(--space-3);
+        border-right: none;
+        border-bottom: 1px solid var(--color-border-light);
+      }
+
+      .site-nav a:last-child {
+        border-bottom: none;
+      }
     }
 
     /* Hero — roughly 200px taller than a standard section */
@@ -260,267 +338,6 @@
 
     .products__eyebrow {
       margin-bottom: var(--space-2);
-    }
-
-    /* How it works — navy overlay over industrial photo, dark enough that
-       the image reads as texture and white text keeps AA contrast */
-    .how {
-      background-image: linear-gradient(
-          color-mix(in srgb, var(--color-navy) 90%, transparent),
-          color-mix(in srgb, var(--color-navy) 90%, transparent)
-        ),
-        url("images/industrial-tanks.jpg");
-      background-size: cover;
-      background-position: center;
-    }
-
-    .how__grid {
-      display: grid;
-      grid-template-columns: 1fr 0.85fr;
-      align-items: center;
-      gap: var(--space-6);
-    }
-
-    @media (max-width: 900px) {
-      .how__grid {
-        grid-template-columns: 1fr;
-        gap: var(--space-5);
-      }
-    }
-
-    .how__eyebrow {
-      margin-bottom: var(--space-2);
-    }
-
-    .how__intro {
-      max-width: 520px;
-      margin-top: var(--space-2);
-      color: var(--color-gray-100);
-    }
-
-    /* Vertical numbered steps with a connecting hairline */
-    .how__steps {
-      list-style: none;
-      counter-reset: step;
-      display: grid;
-      gap: var(--space-3);
-      margin-top: var(--space-4);
-    }
-
-    .how__step {
-      counter-increment: step;
-      position: relative;
-      display: grid;
-      grid-template-columns: 40px 1fr;
-      align-items: start;
-      gap: var(--space-2);
-    }
-
-    .how__step::before {
-      content: counter(step);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-pill);
-      background-color: var(--glass-bg);
-      border: 1px solid var(--color-border-light);
-      font-family: var(--font-heading);
-      font-weight: var(--weight-heading-extrabold);
-      font-size: var(--text-h3);
-      line-height: 1;
-      color: var(--color-sky);
-    }
-
-    .how__step:not(:last-child)::after {
-      content: "";
-      position: absolute;
-      left: 20px;
-      top: 44px;
-      bottom: calc(var(--space-3) * -1);
-      width: 1px;
-      background-color: var(--color-border-light);
-    }
-
-    .how__step-title {
-      font-size: var(--text-body-lg);
-      font-weight: var(--weight-body-medium);
-      line-height: 1.3;
-    }
-
-    .how__step-desc {
-      color: var(--color-gray-100);
-      opacity: 0.7;
-      margin-top: 2px;
-    }
-
-    .how__cta {
-      margin-top: var(--space-5);
-    }
-
-    /* Quiz preview card — glass panel showing the real first question */
-    .quiz-card {
-      background-color: var(--glass-bg);
-      backdrop-filter: blur(var(--glass-blur));
-      -webkit-backdrop-filter: blur(var(--glass-blur));
-      border: 1px solid var(--color-border-light);
-      border-radius: var(--radius-card);
-      padding: var(--space-4);
-    }
-
-    .quiz-card__meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-2);
-      color: var(--color-gray-100);
-    }
-
-    .quiz-card__progress {
-      height: 4px;
-      border-radius: var(--radius-pill);
-      background-color: var(--color-border-light);
-      margin-top: var(--space-1);
-      overflow: hidden;
-    }
-
-    .quiz-card__progress span {
-      display: block;
-      width: 25%;
-      height: 100%;
-      border-radius: var(--radius-pill);
-      background-color: var(--color-sky);
-    }
-
-    .quiz-card__q {
-      margin-top: var(--space-3);
-    }
-
-    .quiz-card__options {
-      display: grid;
-      gap: var(--space-1);
-      margin-top: var(--space-3);
-    }
-
-    .quiz-card__option {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-2);
-      font-size: var(--text-body);
-      font-weight: var(--weight-body-medium);
-      color: var(--color-white);
-      background-color: color-mix(in srgb, var(--color-white) 8%, transparent);
-      border: 1px solid var(--color-border-light);
-      border-radius: var(--radius-button);
-      padding: var(--space-2) var(--space-3);
-      transition: background-color 0.15s ease, border-color 0.15s ease;
-    }
-
-    .quiz-card__option::after {
-      content: "→";
-      opacity: 0.55;
-    }
-
-    .quiz-card__option:hover {
-      background-color: var(--color-sky);
-      border-color: var(--color-sky);
-      text-decoration: none;
-    }
-
-    .quiz-card__option:hover::after {
-      opacity: 1;
-    }
-
-    /* Shop by category */
-    .categories__intro {
-      max-width: 620px;
-      margin-top: var(--space-2);
-      color: var(--color-gray-500);
-    }
-
-    .categories__eyebrow {
-      margin-bottom: var(--space-2);
-    }
-
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-2);
-      margin-top: var(--space-4);
-    }
-
-    @media (max-width: 900px) {
-      .category-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 640px) {
-      .category-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .category-card {
-      display: flex;
-      flex-direction: column;
-      padding: var(--space-4);
-      transition: border-color 0.15s ease, transform 0.15s ease,
-        background-color 0.15s ease;
-    }
-
-    .category-card:hover {
-      transform: translateY(-2px);
-    }
-
-    .category-card__icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-card);
-      background-color: color-mix(in srgb, var(--color-steel) 10%, var(--color-white));
-      color: var(--color-steel);
-      margin-bottom: var(--space-3);
-    }
-
-    .category-card__desc {
-      color: var(--color-gray-500);
-      margin-top: var(--space-1);
-    }
-
-    .category-card__count {
-      display: block;
-      margin-top: var(--space-2);
-      color: var(--color-gray-500);
-    }
-
-    .category-card__more {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: auto;
-      padding-top: var(--space-3);
-      font-size: var(--text-small);
-      font-weight: var(--weight-body-semibold);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--color-steel);
-    }
-
-    .category-card:hover .category-card__more {
-      color: var(--color-sky);
-    }
-
-    .category-card__more span {
-      transition: transform 0.15s ease;
-    }
-
-    .category-card:hover .category-card__more span {
-      transform: translateX(3px);
     }
 
     /* Education / trust */
@@ -720,7 +537,7 @@
       <span class="promo-banner__sep">·</span>
       <span class="promo-banner__secondary"
         >Most in-stock items ship same day —
-        <a href="#shop">shop now</a></span
+        <a href="#products">shop now</a></span
       >
     </div>
   </div>
@@ -731,8 +548,18 @@
         <a class="site-header__logo" href="index.html">
           <img src="images/logo.svg" alt="ChemX Direct" />
         </a>
-        <nav class="site-nav" aria-label="Main">
-          <a href="#shop">Shop</a>
+        <button
+          class="site-header__menu-btn"
+          type="button"
+          data-nav-toggle
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="site-nav"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <nav class="site-nav" id="site-nav" aria-label="Main">
+          <a href="#products">Shop</a>
           <a href="#">About</a>
           <a href="#">Contact</a>
           <a href="#">FAQ</a>
@@ -758,7 +585,7 @@
         </p>
         <div class="hero__ctas">
           <a class="btn btn--primary btn--lg btn--arrow" href="#">Find your product</a>
-          <a class="btn btn--ghost btn--lg" href="#shop">Browse products</a>
+          <a class="btn btn--ghost btn--lg" href="#products">Browse products</a>
         </div>
       </div>
     </section>
@@ -807,7 +634,7 @@
       </div>
     </section>
 
-    <!-- 2b. Product rail -->
+    <!-- 3. Product rail -->
     <section class="section section--blue products" id="products">
       <div class="container">
         <div class="products__header">
@@ -829,130 +656,7 @@
       </div>
     </section>
 
-    <!-- 3. How it works (guided selector teaser) -->
-    <section class="section section--navy how" id="how">
-      <div class="container">
-        <div class="how__grid">
-          <div>
-            <p class="pill-glass how__eyebrow">Guided selector</p>
-            <h2>Not sure what you need? Answer four questions.</h2>
-            <p class="how__intro">
-              Tell us what kind of system you're treating and we'll recommend the
-              right product — plus the testing equipment you'll need to use it
-              correctly. No catalog to dig through, no guesswork.
-            </p>
-            <ol class="how__steps">
-              <li class="how__step">
-                <div>
-                  <p class="how__step-title">Select your system</p>
-                  <p class="text-small how__step-desc">Boiler, cooling tower, or closed loop.</p>
-                </div>
-              </li>
-              <li class="how__step">
-                <div>
-                  <p class="how__step-title">Answer a few questions</p>
-                  <p class="text-small how__step-desc">Format, water chemistry, run length.</p>
-                </div>
-              </li>
-              <li class="how__step">
-                <div>
-                  <p class="how__step-title">Get your product</p>
-                  <p class="text-small how__step-desc">Plus the test kit to run it correctly.</p>
-                </div>
-              </li>
-            </ol>
-            <div class="how__cta">
-              <a class="btn btn--primary btn--lg btn--arrow" href="#">Start the quiz</a>
-            </div>
-          </div>
-          <div class="quiz-card" data-quiz-preview></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. Shop by category -->
-    <section class="section" id="shop">
-      <div class="container">
-        <p class="pill-outline categories__eyebrow">Five categories</p>
-        <h2>Shop by category</h2>
-        <p class="categories__intro">
-          Chemicals, the hardware that doses them, and the kit that tells you
-          it's working — grouped by the system you're running.
-        </p>
-        <div class="category-grid">
-          <a class="card category-card" href="#products">
-            <span class="category-card__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 3c3.2 3.6 5 5.8 5 8.6a5 5 0 1 1-10 0C7 8.8 8.8 6.6 12 3Z"/>
-                <path d="M12 20a2.5 2.5 0 0 1-2.5-2.5c0-1.4 2.5-3.5 2.5-3.5s2.5 2.1 2.5 3.5A2.5 2.5 0 0 1 12 20Z"/>
-              </svg>
-            </span>
-            <h3>Boilers</h3>
-            <p class="category-card__desc">Oxygen scavengers, dispersants, steam treatment</p>
-            <span class="text-small category-card__count" data-cat-count="Boilers"></span>
-            <span class="category-card__more">Shop <span aria-hidden="true">→</span></span>
-          </a>
-          <a class="card category-card" href="#products">
-            <span class="category-card__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 20h14"/>
-                <path d="M8 20 9.5 9h5L16 20"/>
-                <path d="M7.5 9h9"/>
-                <path d="M9.5 5.5c.8-.9 1.7.9 2.5 0s1.7.9 2.5 0"/>
-              </svg>
-            </span>
-            <h3>Cooling Towers</h3>
-            <p class="category-card__desc">Scale, corrosion, and biocide control</p>
-            <span class="text-small category-card__count" data-cat-count="Cooling Towers"></span>
-            <span class="category-card__more">Shop <span aria-hidden="true">→</span></span>
-          </a>
-          <a class="card category-card" href="#products">
-            <span class="category-card__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 12a8 8 0 0 1-8 8 8 8 0 0 1-6.9-4"/>
-                <path d="M4 12a8 8 0 0 1 8-8 8 8 0 0 1 6.9 4"/>
-                <path d="M18 4v4h-4"/>
-                <path d="M6 20v-4h4"/>
-              </svg>
-            </span>
-            <h3>Closed Loop Systems</h3>
-            <p class="category-card__desc">Set it, test it occasionally, move on</p>
-            <span class="text-small category-card__count" data-cat-count="Closed Loop Systems"></span>
-            <span class="category-card__more">Shop <span aria-hidden="true">→</span></span>
-          </a>
-          <a class="card category-card" href="#products">
-            <span class="category-card__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="8"/>
-                <path d="m12 12 4-3"/>
-                <path d="M12 4v2"/>
-                <path d="M20 12h-2"/>
-                <path d="M4 12h2"/>
-              </svg>
-            </span>
-            <h3>Feed Equipment</h3>
-            <p class="category-card__desc">Pumps, injectors, and dosing hardware</p>
-            <span class="text-small category-card__count" data-cat-count="Feed Equipment"></span>
-            <span class="category-card__more">Shop <span aria-hidden="true">→</span></span>
-          </a>
-          <a class="card category-card" href="#products">
-            <span class="category-card__icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 3h6"/>
-                <path d="M10 3v6.5L5.6 17A2 2 0 0 0 7.3 20h9.4a2 2 0 0 0 1.7-3L14 9.5V3"/>
-                <path d="M7.6 15h8.8"/>
-              </svg>
-            </span>
-            <h3>Test Equipment</h3>
-            <p class="category-card__desc">Meters, indicators, and test kits</p>
-            <span class="text-small category-card__count" data-cat-count="Test Equipment"></span>
-            <span class="category-card__more">Shop <span aria-hidden="true">→</span></span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. Education / trust -->
+    <!-- 4. Education / trust -->
     <section class="section section--blue" id="learn">
       <div class="container">
         <div class="edu__grid">
@@ -1051,7 +755,7 @@
     </section>
   </main>
 
-  <!-- 6. Footer -->
+  <!-- 5. Footer -->
   <footer class="site-footer" id="contact">
     <div class="container">
       <div class="site-footer__cta">

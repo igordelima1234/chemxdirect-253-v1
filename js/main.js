@@ -1,5 +1,43 @@
 // ChemX Direct — shared interactions
 
+// Mobile nav toggle
+(function () {
+  var toggle = document.querySelector("[data-nav-toggle]");
+  var nav = document.getElementById("site-nav");
+  if (!toggle || !nav) return;
+
+  function closeMenu() {
+    nav.classList.remove("is-open");
+    toggle.classList.remove("is-active");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-label", "Open menu");
+  }
+
+  function openMenu() {
+    nav.classList.add("is-open");
+    toggle.classList.add("is-active");
+    toggle.setAttribute("aria-expanded", "true");
+    toggle.setAttribute("aria-label", "Close menu");
+  }
+
+  toggle.addEventListener("click", function () {
+    if (nav.classList.contains("is-open")) closeMenu();
+    else openMenu();
+  });
+
+  nav.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", closeMenu);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeMenu();
+  });
+
+  window.addEventListener("resize", function () {
+    if (window.innerWidth > 640) closeMenu();
+  });
+})();
+
 // Accordion toggle
 document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
   trigger.addEventListener("click", function () {
@@ -18,8 +56,7 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
 (function () {
   var rail = document.querySelector("[data-product-rail]");
   var tabsEl = document.querySelector("[data-product-tabs]");
-  var quizEl = document.querySelector("[data-quiz-preview]");
-  if (!rail && !quizEl) return;
+  if (!rail || !tabsEl) return;
 
   var CATEGORIES = [
     "All",
@@ -104,51 +141,15 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
     fetchJSON("data/product-test-equipment-map.json"),
   ])
     .then(function (results) {
-      var catalog = buildCatalog(results[0], results[1]);
-      if (rail && tabsEl) init(catalog);
-      renderCounts(catalog);
-      if (quizEl) renderQuizPreview(results[0]);
+      init(buildCatalog(results[0], results[1]));
     })
     .catch(function (err) {
-      if (rail) {
-        rail.innerHTML =
-          '<p class="text-muted">Product data could not be loaded. ' +
-          "If you opened this file directly, run it from a local server instead " +
-          "(e.g. <code>python3 -m http.server</code>).</p>";
-      }
+      rail.innerHTML =
+        '<p class="text-muted">Product data could not be loaded. ' +
+        "If you opened this file directly, run it from a local server instead " +
+        "(e.g. <code>python3 -m http.server</code>).</p>";
       console.error(err);
     });
-
-  // Fill "N products" on the category cards straight from the catalog
-  function renderCounts(items) {
-    document.querySelectorAll("[data-cat-count]").forEach(function (el) {
-      var cat = el.getAttribute("data-cat-count");
-      var n = items.filter(function (i) {
-        return i.category === cat;
-      }).length;
-      el.textContent = n + (n === 1 ? " product" : " products");
-    });
-  }
-
-  // Teaser showing the real first question from the decision tree
-  function renderQuizPreview(tree) {
-    var node = tree.nodes[tree.start];
-    var total = 4; // matches the "four questions" headline
-    quizEl.innerHTML =
-      '<div class="quiz-card__meta">' +
-      '<span class="text-small">Question 1 of ' + total + "</span>" +
-      '<span class="text-small">About 60 seconds</span>' +
-      "</div>" +
-      '<div class="quiz-card__progress"><span></span></div>' +
-      '<h3 class="quiz-card__q">' + node.question + "</h3>" +
-      '<div class="quiz-card__options">' +
-      node.options
-        .map(function (opt) {
-          return '<a class="quiz-card__option" href="#">' + opt.label + "</a>";
-        })
-        .join("") +
-      "</div>";
-  }
 
   function buildCatalog(tree, map) {
     var items = [];
