@@ -31,7 +31,7 @@
 
   /* ---- Typography ---- */
   --font-heading: "Barlow Condensed", sans-serif;
-  --font-body: "Inter", sans-serif;
+  --font-body: "Public Sans", sans-serif;
 
   --weight-heading-bold: 700;
   --weight-heading-extrabold: 800;
@@ -43,9 +43,9 @@
   --text-h1: 70px;            /* H1 hero — Barlow Condensed 800 */
   --text-h2: 42px;            /* H2 section — Barlow Condensed 700 */
   --text-h3: 24px;            /* H3 subsection — Barlow Condensed 700 */
-  --text-body-lg: 18px;       /* Body large — Inter 400 */
-  --text-body: 16px;          /* Body — Inter 400 */
-  --text-small: 13px;         /* Small / caption — Inter 500 */
+  --text-body-lg: 18px;       /* Body large — Public Sans 400 */
+  --text-body: 16px;          /* Body — Public Sans 400 */
+  --text-small: 13px;         /* Small / caption — Public Sans 500 */
 
   /* Line heights */
   --leading-h1: 1.05;

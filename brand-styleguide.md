@@ -41,7 +41,7 @@ ChemX Direct is a DIY-focused e-commerce brand selling industrial-grade water tr
 
 **Headings:** `Barlow Condensed` — bold/extrabold weights (700–800), tight line-height (1.05–1.1). Load from Google Fonts: `family=Barlow+Condensed:wght@700;800`
 
-**Body:** `Inter` — regular/medium weights (400–500), generous line-height (1.5–1.6) for readability. Load from Google Fonts: `family=Inter:wght@400;500`
+**Body:** `Public Sans` — regular/medium/semibold weights (400–600), generous line-height (1.5–1.6) for readability. Load from Google Fonts: `family=Public+Sans:wght@400;500;600`
 
 **Type scale (desktop):**
 
@@ -50,9 +50,9 @@ ChemX Direct is a DIY-focused e-commerce brand selling industrial-grade water tr
 | H1 (hero) | Barlow Condensed | 800 | 70px | 1.05 |
 | H2 (section) | Barlow Condensed | 700 | 42px | 1.1 |
 | H3 (subsection) | Barlow Condensed | 700 | 24px | 1.15 |
-| Body large | Inter | 400 | 18px | 1.6 |
-| Body | Inter | 400 | 16px | 1.6 |
-| Small / caption | Inter | 500 | 13px | 1.4 |
+| Body large | Public Sans | 400 | 18px | 1.6 |
+| Body | Public Sans | 400 | 16px | 1.6 |
+| Small / caption | Public Sans | 500 | 13px | 1.4 |
 
 Scale down proportionally on mobile (roughly 60–70% of desktop sizes for headings; body stays close to desktop size for readability).
 
