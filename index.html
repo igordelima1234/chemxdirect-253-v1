@@ -638,9 +638,6 @@
 
     .hero-dial__label {
       grid-area: 1 / 1;
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
       font-size: var(--text-small);
       font-weight: var(--weight-body-semibold);
       line-height: var(--leading-small);
@@ -650,14 +647,6 @@
       opacity: 0;
       transform: translateY(6px);
       transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-
-    .hero-dial__label::before,
-    .hero-dial__label::after {
-      content: "";
-      width: 24px;
-      height: 1px;
-      background-color: color-mix(in srgb, var(--color-white) 30%, transparent);
     }
 
     .hero-dial__label.is-active {
@@ -672,11 +661,6 @@
       transform: none;
       transition-delay: 0s;
       color: var(--color-sky);
-    }
-
-    .hero-dial__label.is-preview::before,
-    .hero-dial__label.is-preview::after {
-      background-color: color-mix(in srgb, var(--color-sky) 55%, transparent);
     }
 
     /* The hexagons overhang the top of the orbit box, so reserve room */
