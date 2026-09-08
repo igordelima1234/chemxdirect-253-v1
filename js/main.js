@@ -92,6 +92,16 @@ function chemxTestTag(name) {
     });
   }
 
+  // Which label the dial is showing. Anything other than the current slide is
+  // a preview — hovering a hexagon tells you where it goes before you commit.
+  function showLabel(n) {
+    labels.forEach(function (el, i) {
+      var preview = n !== index && i === n;
+      el.classList.toggle("is-preview", preview);
+      el.classList.toggle("is-active", !preview && i === n);
+    });
+  }
+
   // Shortest signed rotation from where the ring is now to the angle that
   // parks slide `i` at the top of the orbit.
   function deltaTo(i) {
@@ -114,8 +124,8 @@ function chemxTestTag(name) {
     ring.style.setProperty("--rot", rotation + "deg");
     setActive(slides, i);
     setActive(layers, i);
-    setActive(labels, i);
     setActive(tabs, i);
+    showLabel(i);
 
     tabs.forEach(function (tab, n) {
       tab.setAttribute("aria-selected", n === i ? "true" : "false");
@@ -179,10 +189,18 @@ function chemxTestTag(name) {
     schedule(remaining > 0 ? remaining : AUTOPLAY);
   }
 
-  tabs.forEach(function (tab) {
+  tabs.forEach(function (tab, n) {
     tab.addEventListener("click", function () {
-      go(parseInt(tab.getAttribute("data-hero-tab"), 10));
+      go(n);
       tab.focus();
+    });
+
+    tab.addEventListener("mouseenter", function () {
+      showLabel(n);
+    });
+
+    tab.addEventListener("mouseleave", function () {
+      showLabel(index);
     });
   });
 
@@ -280,6 +298,30 @@ function chemxTestTag(name) {
     });
   });
 
+  // The photo drifts slower than the page scrolls, which reads as depth. The
+  // type doesn't move — only the picture behind it.
+  var frame = document.querySelector("[data-hero-parallax]");
+  var MAX_DRIFT = 80; // matches the slack built into .hero-bg__inner
+  var queued = false;
+
+  function drift() {
+    queued = false;
+    if (!frame || reduceMotion.matches) return;
+    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+    var shift = Math.min(y * 0.18, MAX_DRIFT);
+    frame.style.transform = "translate3d(0," + shift.toFixed(1) + "px,0)";
+  }
+
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(drift);
+    },
+    { passive: true }
+  );
+
   // The first slide ships pre-activated so the hero still reads with JS off.
   // Replay that activation once on load to get the entrance animation and the
   // opening zoom, which the markup's static state would otherwise skip.
@@ -303,6 +345,7 @@ function chemxTestTag(name) {
   });
 
   intro();
+  drift();
   play();
 })();
 
