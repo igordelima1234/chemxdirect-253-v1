@@ -73,7 +73,6 @@ function chemxTestTag(name) {
   );
   var tabs = Array.prototype.slice.call(dial.querySelectorAll("[data-hero-tab]"));
   var ring = dial.querySelector("[data-hero-ring]");
-  var counter = dial.querySelector("[data-hero-index]");
   if (slides.length < 2 || tabs.length !== slides.length) return;
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -123,7 +122,6 @@ function chemxTestTag(name) {
       tab.tabIndex = n === i ? 0 : -1;
     });
 
-    if (counter) counter.textContent = ("0" + (i + 1)).slice(-2);
     play();
   }
 

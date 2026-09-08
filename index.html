@@ -522,7 +522,6 @@
 
     /* Entrance stagger — the eyebrow, subhead and CTAs rise into place */
     .hero-slide__eyebrow,
-    .hero-slide__subhead,
     .hero-slide__ctas {
       opacity: 0;
       transform: translateY(20px);
@@ -530,15 +529,13 @@
     }
 
     .hero-slide.is-active .hero-slide__eyebrow,
-    .hero-slide.is-active .hero-slide__subhead,
     .hero-slide.is-active .hero-slide__ctas {
       opacity: 1;
       transform: none;
     }
 
     .hero-slide.is-active .hero-slide__eyebrow { transition-delay: 0.06s; }
-    .hero-slide.is-active .hero-slide__subhead { transition-delay: 0.34s; }
-    .hero-slide.is-active .hero-slide__ctas    { transition-delay: 0.44s; }
+    .hero-slide.is-active .hero-slide__ctas    { transition-delay: 0.36s; }
 
     .hero-slide__eyebrow {
       margin-bottom: var(--space-3);
@@ -565,20 +562,13 @@
       color: var(--color-sky);
     }
 
-    .hero-slide__subhead {
-      max-width: 640px;
-      margin-inline: auto;
-      margin-top: var(--space-3);
-      color: var(--color-gray-100);
-    }
-
     .hero-slide__ctas {
       display: flex;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
       gap: var(--space-3);
-      margin-top: var(--space-4);
+      margin-top: var(--space-5);
     }
 
     /* ---- The dial -------------------------------------------------------- */
@@ -667,23 +657,6 @@
     @keyframes heroDialSweep {
       from { stroke-dashoffset: 100; }
       to   { stroke-dashoffset: 0; }
-    }
-
-    .hero-dial__count {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 11px;
-      font-weight: var(--weight-body-semibold);
-      letter-spacing: 0.14em;
-      color: color-mix(in srgb, var(--color-white) 62%, transparent);
-      white-space: nowrap;
-    }
-
-    .hero-dial__count b {
-      color: var(--color-white);
-      font-weight: var(--weight-body-semibold);
     }
 
     /* The ring carries the rotation; every node counter-rotates by the same
@@ -815,10 +788,6 @@
         min-height: min(calc(100svh - 36px), 760px);
       }
 
-      .hero-slide__subhead {
-        font-size: var(--text-body);
-      }
-
       .hero-slide__ctas {
         gap: var(--space-2);
       }
@@ -838,7 +807,6 @@
       .hero-bg__layer,
       .hero-slide,
       .hero-slide__eyebrow,
-      .hero-slide__subhead,
       .hero-slide__ctas,
       .hero-slide__title span,
       .hero-dial__label,
@@ -1514,15 +1482,8 @@
             <span>Industrial-grade chemistry.</span>
             <span>Self-serve simplicity.</span>
           </h1>
-          <p class="text-body-lg hero-slide__subhead">
-            If your system is simple enough to check yourself, it's simple
-            enough to treat yourself. ChemX Direct helps you find the right
-            product, use it correctly, and know it's working — without paying
-            for a service visit you don't need.
-          </p>
           <div class="hero-slide__ctas">
             <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
-            <a class="btn btn--ghost btn--lg" href="#products">Browse products</a>
           </div>
         </article>
 
@@ -1538,14 +1499,8 @@
             <span>Scale and corrosion,</span>
             <span>under control.</span>
           </h1>
-          <p class="text-body-lg hero-slide__subhead">
-            Oxygen scavengers, alkalinity builders and sludge conditioners for
-            steam and hot-water boilers — matched to the system you actually
-            run, with the dosing already worked out.
-          </p>
           <div class="hero-slide__ctas">
             <button class="btn btn--primary btn--lg btn--arrow" type="button" data-hero-cat="Boilers">Shop boiler chemistry</button>
-            <a class="btn btn--ghost btn--lg" href="#learn">How treatment works</a>
           </div>
         </article>
 
@@ -1561,14 +1516,8 @@
             <span>Test it yourself.</span>
             <span>Know it's working.</span>
           </h1>
-          <p class="text-body-lg hero-slide__subhead">
-            Drop-count kits, meters and feed equipment — plus the ranges you
-            should be holding, so you can prove the program is working without
-            booking anyone's truck.
-          </p>
           <div class="hero-slide__ctas">
             <button class="btn btn--primary btn--lg btn--arrow" type="button" data-hero-cat="Test Equipment">Shop test equipment</button>
-            <a class="btn btn--ghost btn--lg" href="#contact">Talk to a chemist</a>
           </div>
         </article>
       </div>
@@ -1592,10 +1541,6 @@
             <circle class="hero-dial__track" cx="100" cy="100" r="100" pathLength="100" vector-effect="non-scaling-stroke" />
             <circle class="hero-dial__progress" cx="100" cy="100" r="100" pathLength="100" vector-effect="non-scaling-stroke" />
           </svg>
-
-          <p class="hero-dial__count" aria-hidden="true">
-            <b data-hero-index>01</b> / 03
-          </p>
 
           <div
             class="hero-dial__ring"
@@ -1915,6 +1860,6 @@
     </div>
   </div>
 
-  <script src="js/main.js?v=7"></script>
+  <script src="js/main.js?v=8"></script>
 </body>
 </html>
