@@ -369,9 +369,6 @@ function chemxTestTag(name) {
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   var index = 0;
-  var timer = null;
-  var startedAt = 0;
-  var remaining = AUTOPLAY;
   var hovering = false;
   var focusing = false;
   var inView = !("IntersectionObserver" in window);
@@ -382,49 +379,30 @@ function chemxTestTag(name) {
     return hovering || focusing || document.hidden || !inView;
   }
 
-  function stop() {
-    if (timer) {
-      window.clearTimeout(timer);
-      timer = null;
-    }
-  }
-
-  function schedule(ms) {
-    stop();
-    startedAt = Date.now();
-    remaining = ms;
-    timer = window.setTimeout(function () {
-      go(index + 1);
-    }, ms);
-  }
-
+  // The sweep is the clock. The bar crossing the tab is what hands over to the
+  // next one, so what you see and what the code does can't drift apart —
+  // whatever happens, the bar always reaches the end before the tab changes.
   function play() {
-    stop();
-    remaining = AUTOPLAY;
     if (reduceMotion.matches) return;
     root.classList.remove("is-playing", "is-paused");
     void root.offsetWidth;
     root.classList.add("is-playing");
-    if (held()) {
-      root.classList.add("is-paused");
-      return;
-    }
-    schedule(AUTOPLAY);
+    if (held()) root.classList.add("is-paused");
   }
 
   function pause() {
-    if (timer) {
-      remaining = Math.max(0, remaining - (Date.now() - startedAt));
-      stop();
-    }
     root.classList.add("is-paused");
   }
 
   function resume() {
-    if (timer || held() || reduceMotion.matches) return;
+    if (held() || reduceMotion.matches) return;
     root.classList.remove("is-paused");
-    schedule(remaining > 0 ? remaining : AUTOPLAY);
   }
+
+  // Bubbles up from the active tab's bar
+  tabsEl.addEventListener("animationend", function (e) {
+    if (e.animationName === "catSweep") go(index + 1);
+  });
 
   // Once the strip scrolls, keep the active tab where it can be seen. Scrolling
   // the strip itself rather than the element avoids dragging the page with it.
@@ -486,12 +464,14 @@ function chemxTestTag(name) {
     if (target) target.focus();
   });
 
-  root.addEventListener("mouseenter", function () {
+  // Only the strip holds the sweep. Hovering the panel to read it shouldn't
+  // freeze the bar half-way across a tab.
+  tabsEl.addEventListener("mouseenter", function () {
     hovering = true;
     pause();
   });
 
-  root.addEventListener("mouseleave", function () {
+  tabsEl.addEventListener("mouseleave", function () {
     hovering = false;
     resume();
   });
@@ -531,12 +511,8 @@ function chemxTestTag(name) {
   }
 
   reduceMotion.addEventListener("change", function () {
-    if (reduceMotion.matches) {
-      stop();
-      root.classList.remove("is-playing");
-    } else {
-      play();
-    }
+    if (reduceMotion.matches) root.classList.remove("is-playing");
+    else play();
   });
 
   play();
