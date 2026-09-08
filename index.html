@@ -952,6 +952,385 @@
       }
     }
 
+
+    /* ======================================================================
+       CATEGORY TABS
+       Six product categories on an auto-rotating tab strip. The sky bar
+       under the active tab is the countdown to the next one — the linear
+       cousin of the hero dial's arc — and it pauses on hover or focus the
+       same way. Panels are stacked in one grid cell so switching never
+       reflows the page.
+       ====================================================================== */
+    .cats {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Same lattice as the hero, reusing its pattern, so the two dark
+       sections read as one surface */
+    .cats__lattice {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: var(--color-white);
+      stroke-width: 1;
+      opacity: 0.045;
+      -webkit-mask-image: radial-gradient(70% 70% at 50% 40%, transparent 35%, #000 100%);
+      mask-image: radial-gradient(70% 70% at 50% 40%, transparent 35%, #000 100%);
+    }
+
+    .cats > .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---- Heading --------------------------------------------------------- */
+    .cats__head {
+      max-width: 760px;
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .cats__eyebrow {
+      margin-bottom: var(--space-3);
+    }
+
+    .cats__sub {
+      max-width: 620px;
+      margin-inline: auto;
+      margin-top: var(--space-3);
+      color: var(--color-gray-100);
+    }
+
+    /* ---- Tab strip ------------------------------------------------------- */
+    .cats__tabs {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      margin-top: var(--space-6);
+      border-block: 1px solid var(--color-border-light);
+    }
+
+    .cat-tab {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-2);
+      background: none;
+      border: none;
+      border-right: 1px solid var(--color-border-light);
+      color: color-mix(in srgb, var(--color-white) 62%, transparent);
+      cursor: pointer;
+      transition: color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .cats__tabs .cat-tab:last-child {
+      border-right: none;
+    }
+
+    .cat-tab:hover {
+      color: var(--color-white);
+      background-color: color-mix(in srgb, var(--color-white) 5%, transparent);
+    }
+
+    .cat-tab.is-active {
+      color: var(--color-white);
+      background-color: color-mix(in srgb, var(--color-white) 8%, transparent);
+      cursor: default;
+    }
+
+    .cat-tab:focus-visible {
+      outline: 2px solid var(--color-sky);
+      outline-offset: -2px;
+    }
+
+    .cat-tab__icon {
+      width: 30px;
+      height: 30px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cat-tab.is-active .cat-tab__icon {
+      color: var(--color-sky);
+      transform: translateY(-2px) scale(1.08);
+    }
+
+    .cat-tab__name {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      line-height: var(--leading-small);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    /* Countdown to the next tab, pinned to the strip's bottom rule */
+    .cat-tab__bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      background-color: var(--color-sky);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .cats.is-playing .cat-tab.is-active .cat-tab__bar {
+      animation: catSweep var(--autoplay, 6000ms) linear forwards;
+    }
+
+    .cats.is-paused .cat-tab.is-active .cat-tab__bar {
+      animation-play-state: paused;
+    }
+
+    @keyframes catSweep {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* ---- Panels ---------------------------------------------------------- */
+    .cats__panels {
+      display: grid;
+      margin-top: var(--space-6);
+    }
+
+    .cat-panel {
+      grid-area: 1 / 1;
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: var(--space-6);
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.4s ease, visibility 0.4s;
+    }
+
+    .cat-panel.is-active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition-duration: 0.5s;
+    }
+
+    .cat-panel__media {
+      position: relative;
+      aspect-ratio: 16 / 11;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      background-color: color-mix(in srgb, var(--color-steel) 22%, var(--color-navy));
+    }
+
+    .cat-panel__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.07);
+      transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cat-panel.is-active .cat-panel__media img {
+      transform: scale(1);
+    }
+
+    /* Hexagon badge — the hero's motif, carried down the page */
+    .cat-panel__badge {
+      position: absolute;
+      left: var(--space-4);
+      bottom: var(--space-4);
+      display: grid;
+      place-items: center;
+      width: 62px;
+      height: calc(62px / 0.866);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background-color: var(--color-sky);
+      color: var(--color-white);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cat-panel.is-active .cat-panel__badge {
+      opacity: 1;
+      transform: none;
+      transition-delay: 0.2s;
+    }
+
+    .cat-panel__badge svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Body copy rises in behind the panel fade */
+    .cat-panel__body > * {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.5s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cat-panel.is-active .cat-panel__body > * {
+      opacity: 1;
+      transform: none;
+    }
+
+    .cat-panel.is-active .cat-panel__body > :nth-child(1) { transition-delay: 0.1s; }
+    .cat-panel.is-active .cat-panel__body > :nth-child(2) { transition-delay: 0.18s; }
+    .cat-panel.is-active .cat-panel__body > :nth-child(3) { transition-delay: 0.26s; }
+    .cat-panel.is-active .cat-panel__body > :nth-child(4) { transition-delay: 0.34s; }
+
+    .cat-panel__kicker {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-sky);
+    }
+
+    .cat-panel__title {
+      margin-top: var(--space-2);
+    }
+
+    .cat-panel__text {
+      margin-top: var(--space-3);
+      color: var(--color-gray-100);
+    }
+
+    .cat-panel__cta {
+      margin-top: var(--space-4);
+    }
+
+    /* ---- Responsive ------------------------------------------------------ */
+    @media (max-width: 1100px) {
+      .cat-tab__name {
+        letter-spacing: 0.06em;
+      }
+    }
+
+    @media (max-width: 900px) {
+      /* Six columns stop fitting — the strip becomes a swipeable rail with
+         the active tab scrolled into view */
+      .cats__tabs {
+        display: flex;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        margin-inline: calc(var(--side-pad-mobile) * -1);
+        padding-inline: var(--side-pad-mobile);
+        scroll-padding-inline: var(--side-pad-mobile);
+      }
+
+      .cats__tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Fading the trailing edge is the only hint that the strip scrolls */
+      .cats__tabs {
+        -webkit-mask-image: linear-gradient(
+          90deg,
+          #000 0,
+          #000 calc(100% - 48px),
+          transparent 100%
+        );
+        mask-image: linear-gradient(
+          90deg,
+          #000 0,
+          #000 calc(100% - 48px),
+          transparent 100%
+        );
+      }
+
+      .cat-tab {
+        flex: 0 0 auto;
+        min-width: 124px;
+        scroll-snap-align: center;
+      }
+
+      .cat-panel {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+      }
+
+      .cat-panel__media {
+        aspect-ratio: 16 / 10;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .cats__tabs {
+        margin-top: var(--space-5);
+      }
+
+      .cats__panels {
+        margin-top: var(--space-5);
+      }
+
+      .cat-tab {
+        min-width: 108px;
+        padding: var(--space-3) var(--space-2);
+      }
+
+      .cat-tab__icon {
+        width: 26px;
+        height: 26px;
+      }
+
+      .cat-panel__media {
+        aspect-ratio: 3 / 2;
+      }
+
+      .cat-panel__badge {
+        left: var(--space-3);
+        bottom: var(--space-3);
+        width: 52px;
+        height: calc(52px / 0.866);
+      }
+
+      .cat-panel__badge svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .cat-panel__cta .btn {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cat-panel,
+      .cat-panel__body > *,
+      .cat-panel__badge,
+      .cat-panel__media img,
+      .cat-tab,
+      .cat-tab__icon {
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+      }
+
+      .cat-panel__media img,
+      .cat-panel.is-active .cat-panel__media img {
+        transform: none;
+      }
+
+      .cats.is-playing .cat-tab.is-active .cat-tab__bar {
+        animation: none;
+        transform: scaleX(1);
+      }
+    }
+
     /* Why */
     .why__grid {
       display: grid;
@@ -1661,7 +2040,7 @@
         </article>
       </div>
 
-      <a class="hero-scroll" href="#why">
+      <a class="hero-scroll" href="#categories">
         <span class="hero-scroll__label">Scroll</span>
         <span class="hero-scroll__line" aria-hidden="true"></span>
       </a>
@@ -1761,7 +2140,253 @@
 
   <main>
 
-    <!-- 2. Why ChemX Direct -->
+  <!-- Icon sprite for the category tabs; drawn once, referenced by <use> -->
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="ic-boiler" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="6" ry="2.4"/><path d="M6 6v11.6c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4V6"/><path d="M6 13.2h12"/></symbol>
+      <symbol id="ic-tower" viewBox="0 0 24 24"><path d="M7.4 3.5h9.2l-1.3 5.2H8.7z"/><path d="M8.7 8.7h6.6L18 20.5H6z"/><path d="M9.2 15.4h5.6"/></symbol>
+      <symbol id="ic-biocide" viewBox="0 0 24 24"><path d="M12 3.2c3.4 4.3 5.1 7 5.1 8.9a5.1 5.1 0 1 1-10.2 0c0-1.9 1.7-4.6 5.1-8.9z"/><path d="M9.8 12.5l1.7 1.7 3.1-3.3"/></symbol>
+      <symbol id="ic-loop" viewBox="0 0 24 24"><path d="M19 12a7 7 0 0 1-11.4 5.4"/><path d="M5 12a7 7 0 0 1 11.4-5.4"/><path d="M4.4 8.4 5.1 12l3.5-.8"/><path d="M19.6 15.6 18.9 12l-3.5.8"/></symbol>
+      <symbol id="ic-test" viewBox="0 0 24 24"><path d="M9.4 3h5.2"/><path d="M10.2 3v14a1.8 1.8 0 0 0 3.6 0V3"/><path d="M10.2 12.4h3.6"/><path d="M17.6 5.4c.9 1.2 1.4 2 1.4 2.5a1.4 1.4 0 0 1-2.8 0c0-.5.5-1.3 1.4-2.5z"/></symbol>
+      <symbol id="ic-pump" viewBox="0 0 24 24"><circle cx="9.8" cy="13.4" r="4.7"/><path d="M9.8 8.7V4.4h4.6"/><path d="M14.5 13.4H20"/><path d="m17.4 10.6 2.6 2.8-2.6 2.8"/></symbol>
+    </defs>
+  </svg>
+
+    <!-- 2. Category tabs — six product categories, auto-rotating -->
+    <section class="section section--navy cats" id="categories" data-cats>
+      <svg class="cats__lattice" aria-hidden="true">
+        <rect width="100%" height="100%" fill="url(#hero-hex)" />
+      </svg>
+
+      <div class="container">
+        <div class="cats__head">
+          <p class="pill-glass cats__eyebrow">What we carry</p>
+          <h2>Sorted by the system you run</h2>
+          <p class="text-body-lg cats__sub">
+            Six categories covering the chemistry, the test kits and the feed
+            equipment for boilers, cooling towers and closed loops — sold
+            direct, with no service contract attached.
+          </p>
+        </div>
+
+        <div class="cats__tabs" role="tablist" aria-label="Product categories" data-cats-tabs>
+          <button
+            class="cat-tab is-active"
+            type="button"
+            role="tab"
+            id="cat-tab-boilers"
+            aria-controls="cat-panel-boilers"
+            aria-selected="true"
+            data-cat-tab="0"
+          >
+            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-boiler" /></svg>
+            <span class="cat-tab__name">Boilers</span>
+            <span class="cat-tab__bar" aria-hidden="true"></span>
+          </button>
+          <button
+            class="cat-tab"
+            type="button"
+            role="tab"
+            id="cat-tab-towers"
+            aria-controls="cat-panel-towers"
+            aria-selected="false"
+            tabindex="-1"
+            data-cat-tab="1"
+          >
+            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-tower" /></svg>
+            <span class="cat-tab__name">Cooling Towers</span>
+            <span class="cat-tab__bar" aria-hidden="true"></span>
+          </button>
+          <button
+            class="cat-tab"
+            type="button"
+            role="tab"
+            id="cat-tab-biocides"
+            aria-controls="cat-panel-biocides"
+            aria-selected="false"
+            tabindex="-1"
+            data-cat-tab="2"
+          >
+            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-biocide" /></svg>
+            <span class="cat-tab__name">Biocides</span>
+            <span class="cat-tab__bar" aria-hidden="true"></span>
+          </button>
+          <button
+            class="cat-tab"
+            type="button"
+            role="tab"
+            id="cat-tab-loops"
+            aria-controls="cat-panel-loops"
+            aria-selected="false"
+            tabindex="-1"
+            data-cat-tab="3"
+          >
+            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-loop" /></svg>
+            <span class="cat-tab__name">Closed Loops</span>
+            <span class="cat-tab__bar" aria-hidden="true"></span>
+          </button>
+          <button
+            class="cat-tab"
+            type="button"
+            role="tab"
+            id="cat-tab-tests"
+            aria-controls="cat-panel-tests"
+            aria-selected="false"
+            tabindex="-1"
+            data-cat-tab="4"
+          >
+            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-test" /></svg>
+            <span class="cat-tab__name">Test Kits</span>
+            <span class="cat-tab__bar" aria-hidden="true"></span>
+          </button>
+          <button
+            class="cat-tab"
+            type="button"
+            role="tab"
+            id="cat-tab-feed"
+            aria-controls="cat-panel-feed"
+            aria-selected="false"
+            tabindex="-1"
+            data-cat-tab="5"
+          >
+            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-pump" /></svg>
+            <span class="cat-tab__name">Feed Equipment</span>
+            <span class="cat-tab__bar" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div class="cats__panels">
+        <article
+          class="cat-panel is-active"
+          id="cat-panel-boilers"
+          role="tabpanel"
+          aria-labelledby="cat-tab-boilers"
+        >
+          <div class="cat-panel__media">
+            <img src="images/industrial-tanks.jpg" alt="Industrial storage tanks at dusk" loading="lazy" decoding="async" />
+            <span class="cat-panel__badge" aria-hidden="true">
+              <svg><use href="#ic-boiler" /></svg>
+            </span>
+          </div>
+          <div class="cat-panel__body">
+            <p class="cat-panel__kicker">Boiler treatment</p>
+            <h3 class="cat-panel__title">Steam and hot water, held in range</h3>
+            <p class="cat-panel__text">Oxygen scavengers, water dispersants, steam treatments and all-in-one programs for steam and hot-water boilers. Which one you need comes down to your feedwater alkalinity and how long the boiler runs — the first two questions the selector asks.</p>
+            <div class="cat-panel__cta">
+              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your boiler product</button>
+            </div>
+          </div>
+        </article>
+        <article
+          class="cat-panel"
+          id="cat-panel-towers"
+          role="tabpanel"
+          aria-labelledby="cat-tab-towers"
+        >
+          <div class="cat-panel__media">
+            <img src="images/treatment-plant-aerial.jpg" alt="Aerial view of a water treatment plant" loading="lazy" decoding="async" />
+            <span class="cat-panel__badge" aria-hidden="true">
+              <svg><use href="#ic-tower" /></svg>
+            </span>
+          </div>
+          <div class="cat-panel__body">
+            <p class="cat-panel__kicker">Cooling tower treatment</p>
+            <h3 class="cat-panel__title">Scale and corrosion in open loops</h3>
+            <p class="cat-panel__text">Treatment for open recirculating towers, split by what comes out of your make-up line. Soft water and hard water need different chemistry, and running the wrong one shows up in the basin faster than you'd think.</p>
+            <div class="cat-panel__cta">
+              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your tower product</button>
+            </div>
+          </div>
+        </article>
+        <article
+          class="cat-panel"
+          id="cat-panel-biocides"
+          role="tabpanel"
+          aria-labelledby="cat-tab-biocides"
+        >
+          <div class="cat-panel__media">
+            <img src="images/hero-water.jpg" alt="Close-up of blue treatment chemistry" loading="lazy" decoding="async" />
+            <span class="cat-panel__badge" aria-hidden="true">
+              <svg><use href="#ic-biocide" /></svg>
+            </span>
+          </div>
+          <div class="cat-panel__body">
+            <p class="cat-panel__kicker">Biocides</p>
+            <h3 class="cat-panel__title">Two kill mechanisms, on rotation</h3>
+            <p class="cat-panel__text">Oxidizing biocides for a fast knockdown, non-oxidizing for the slower and more persistent kill — each in tablet or liquid. Most towers alternate between the two so the population never settles in around one of them.</p>
+            <div class="cat-panel__cta">
+              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your biocide</button>
+            </div>
+          </div>
+        </article>
+        <article
+          class="cat-panel"
+          id="cat-panel-loops"
+          role="tabpanel"
+          aria-labelledby="cat-tab-loops"
+        >
+          <div class="cat-panel__media">
+            <img src="images/clarifier-tank.jpg" alt="Aerial view of a circular clarifier tank" loading="lazy" decoding="async" />
+            <span class="cat-panel__badge" aria-hidden="true">
+              <svg><use href="#ic-loop" /></svg>
+            </span>
+          </div>
+          <div class="cat-panel__body">
+            <p class="cat-panel__kicker">Closed loop systems</p>
+            <h3 class="cat-panel__title">Almost no loss, so almost no dosing</h3>
+            <p class="cat-panel__text">Chilled and hot water loops lose next to nothing to evaporation, so they need an inhibitor held in range rather than a full feed program. Nitrite does the work, and a periodic reading is all it takes to prove it's still there.</p>
+            <div class="cat-panel__cta">
+              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your loop product</button>
+            </div>
+          </div>
+        </article>
+        <article
+          class="cat-panel"
+          id="cat-panel-tests"
+          role="tabpanel"
+          aria-labelledby="cat-tab-tests"
+        >
+          <div class="cat-panel__media">
+            <img src="images/water-sampling.jpg" alt="A gloved hand taking a water sample" loading="lazy" decoding="async" />
+            <span class="cat-panel__badge" aria-hidden="true">
+              <svg><use href="#ic-test" /></svg>
+            </span>
+          </div>
+          <div class="cat-panel__body">
+            <p class="cat-panel__kicker">Test kits</p>
+            <h3 class="cat-panel__title">The readings that prove it's working</h3>
+            <p class="cat-panel__text">Conductivity, pH, sulfite, total hardness, chlorine and PTSA fluorescein. Every product we sell lists the tests that go with it and the range you should be holding, so the kit and the chemistry arrive matched.</p>
+            <div class="cat-panel__cta">
+              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your test kit</button>
+            </div>
+          </div>
+        </article>
+        <article
+          class="cat-panel"
+          id="cat-panel-feed"
+          role="tabpanel"
+          aria-labelledby="cat-tab-feed"
+        >
+          <div class="cat-panel__media">
+            <img src="images/ibc-totes.jpg" alt="Stacked intermediate bulk containers" loading="lazy" decoding="async" />
+            <span class="cat-panel__badge" aria-hidden="true">
+              <svg><use href="#ic-pump" /></svg>
+            </span>
+          </div>
+          <div class="cat-panel__body">
+            <p class="cat-panel__kicker">Feed equipment</p>
+            <h3 class="cat-panel__title">What turns a program into a routine</h3>
+            <p class="cat-panel__text">Chemical feed pumps, injectors, foot valves and the fittings in between. If you're dosing by hand today, this is the shelf that takes the job off your calendar and puts it on a timer.</p>
+            <div class="cat-panel__cta">
+              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your feed setup</button>
+            </div>
+          </div>
+        </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Why ChemX Direct -->
     <section class="section section--blue" id="why">
       <div class="container">
         <div class="why__grid">
@@ -2004,6 +2629,6 @@
     </div>
   </div>
 
-  <script src="js/main.js?v=9"></script>
+  <script src="js/main.js?v=10"></script>
 </body>
 </html>

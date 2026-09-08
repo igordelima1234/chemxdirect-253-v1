@@ -349,6 +349,199 @@ function chemxTestTag(name) {
   play();
 })();
 
+// ---------------------------------------------------------------------------
+// Category tabs — six auto-rotating product categories.
+//
+// Same contract as the hero carousel: panels stacked in one grid cell, a sky
+// countdown that pauses and resumes with the timer, and autoplay that yields
+// to anyone reading. It also stays still until the section is actually on
+// screen, so it isn't cycling through tabs nobody is looking at.
+// ---------------------------------------------------------------------------
+(function () {
+  var root = document.querySelector("[data-cats]");
+  if (!root) return;
+
+  var AUTOPLAY = 6000;
+  var tabsEl = root.querySelector("[data-cats-tabs]");
+  var tabs = Array.prototype.slice.call(root.querySelectorAll("[data-cat-tab]"));
+  var panels = Array.prototype.slice.call(root.querySelectorAll(".cat-panel"));
+  if (!tabsEl || tabs.length < 2 || tabs.length !== panels.length) return;
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var index = 0;
+  var timer = null;
+  var startedAt = 0;
+  var remaining = AUTOPLAY;
+  var hovering = false;
+  var focusing = false;
+  var inView = !("IntersectionObserver" in window);
+
+  root.style.setProperty("--autoplay", AUTOPLAY + "ms");
+
+  function held() {
+    return hovering || focusing || document.hidden || !inView;
+  }
+
+  function stop() {
+    if (timer) {
+      window.clearTimeout(timer);
+      timer = null;
+    }
+  }
+
+  function schedule(ms) {
+    stop();
+    startedAt = Date.now();
+    remaining = ms;
+    timer = window.setTimeout(function () {
+      go(index + 1);
+    }, ms);
+  }
+
+  function play() {
+    stop();
+    remaining = AUTOPLAY;
+    if (reduceMotion.matches) return;
+    root.classList.remove("is-playing", "is-paused");
+    void root.offsetWidth;
+    root.classList.add("is-playing");
+    if (held()) {
+      root.classList.add("is-paused");
+      return;
+    }
+    schedule(AUTOPLAY);
+  }
+
+  function pause() {
+    if (timer) {
+      remaining = Math.max(0, remaining - (Date.now() - startedAt));
+      stop();
+    }
+    root.classList.add("is-paused");
+  }
+
+  function resume() {
+    if (timer || held() || reduceMotion.matches) return;
+    root.classList.remove("is-paused");
+    schedule(remaining > 0 ? remaining : AUTOPLAY);
+  }
+
+  // Once the strip scrolls, keep the active tab where it can be seen. Scrolling
+  // the strip itself rather than the element avoids dragging the page with it.
+  function revealTab(el) {
+    if (tabsEl.scrollWidth <= tabsEl.clientWidth + 1) return;
+    var left = el.offsetLeft - (tabsEl.clientWidth - el.offsetWidth) / 2;
+    if (tabsEl.scrollTo) {
+      tabsEl.scrollTo({
+        left: left,
+        behavior: reduceMotion.matches ? "auto" : "smooth",
+      });
+    } else {
+      tabsEl.scrollLeft = left;
+    }
+  }
+
+  function go(i) {
+    i = ((i % tabs.length) + tabs.length) % tabs.length;
+    if (i === index) {
+      play();
+      return;
+    }
+
+    index = i;
+
+    tabs.forEach(function (tab, n) {
+      var on = n === i;
+      tab.classList.toggle("is-active", on);
+      tab.setAttribute("aria-selected", on ? "true" : "false");
+      tab.tabIndex = on ? 0 : -1;
+    });
+
+    panels.forEach(function (panel, n) {
+      panel.classList.toggle("is-active", n === i);
+    });
+
+    revealTab(tabs[i]);
+    play();
+  }
+
+  tabs.forEach(function (tab, n) {
+    tab.addEventListener("click", function () {
+      go(n);
+      tab.focus();
+    });
+  });
+
+  tabsEl.addEventListener("keydown", function (e) {
+    var next;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = index + 1;
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = index - 1;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = tabs.length - 1;
+    else return;
+
+    e.preventDefault();
+    go(next);
+    var target = tabs[((next % tabs.length) + tabs.length) % tabs.length];
+    if (target) target.focus();
+  });
+
+  root.addEventListener("mouseenter", function () {
+    hovering = true;
+    pause();
+  });
+
+  root.addEventListener("mouseleave", function () {
+    hovering = false;
+    resume();
+  });
+
+  root.addEventListener("focusin", function (e) {
+    var keyboard = true;
+    try {
+      keyboard = e.target.matches(":focus-visible");
+    } catch (err) {
+      /* older engine — treat any focus as keyboard focus */
+    }
+    if (!keyboard) return;
+    focusing = true;
+    pause();
+  });
+
+  root.addEventListener("focusout", function (e) {
+    if (root.contains(e.relatedTarget)) return;
+    focusing = false;
+    resume();
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) pause();
+    else resume();
+  });
+
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(
+      function (entries) {
+        inView = entries[0].isIntersecting;
+        if (inView) resume();
+        else pause();
+      },
+      { threshold: 0.25 }
+    ).observe(root);
+  }
+
+  reduceMotion.addEventListener("change", function () {
+    if (reduceMotion.matches) {
+      stop();
+      root.classList.remove("is-playing");
+    } else {
+      play();
+    }
+  });
+
+  play();
+})();
+
 // Accordion toggle
 document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
   trigger.addEventListener("click", function () {
