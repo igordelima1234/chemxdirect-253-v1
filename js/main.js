@@ -518,6 +518,45 @@ function chemxTestTag(name) {
   play();
 })();
 
+// ---------------------------------------------------------------------------
+// How it works — reveals the four columns in sequence once the grid is in
+// view. One-shot: it stops observing after the first reveal, so scrolling back
+// past it doesn't replay the animation.
+// ---------------------------------------------------------------------------
+(function () {
+  var grid = document.querySelector("[data-how-grid]");
+  if (!grid) return;
+
+  // Without an observer, or when motion is unwelcome, leave the columns alone —
+  // they are already visible, and only opting in here hides them.
+  if (
+    !("IntersectionObserver" in window) ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    return;
+  }
+
+  grid.classList.add("is-animated");
+
+  function reveal() {
+    grid.classList.add("is-revealed");
+    observer.disconnect();
+    window.clearTimeout(failsafe);
+  }
+
+  var observer = new IntersectionObserver(
+    function (entries) {
+      if (entries[0].isIntersecting) reveal();
+    },
+    { threshold: 0.2 }
+  );
+
+  observer.observe(grid);
+
+  // Belt and braces: if the observer never reports, show the columns anyway
+  var failsafe = window.setTimeout(reveal, 3000);
+})();
+
 // Accordion toggle
 document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
   trigger.addEventListener("click", function () {

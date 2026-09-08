@@ -1331,6 +1331,162 @@
       }
     }
 
+
+    /* ======================================================================
+       HOW IT WORKS
+       Four steps as a grid of columns, each led by its own image. The
+       columns reveal on scroll in sequence so the order reads as an order.
+       ====================================================================== */
+    .how__head {
+      max-width: 760px;
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .how__eyebrow {
+      margin-bottom: var(--space-3);
+    }
+
+    .how__sub {
+      max-width: 660px;
+      margin-inline: auto;
+      margin-top: var(--space-3);
+      color: var(--color-gray-500);
+    }
+
+    .how__grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-5);
+      margin-top: var(--space-6);
+      list-style: none;
+    }
+
+    /* The columns are visible by default and only hide once js/main.js has
+       said it will animate them — so a failed script or a stalled observer
+       can never leave the section blank. */
+    .how__grid.is-animated .how-step {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .how__grid.is-animated.is-revealed .how-step {
+      opacity: 1;
+      transform: none;
+    }
+
+    .how__grid.is-revealed .how-step:nth-child(1) { transition-delay: 0s; }
+    .how__grid.is-revealed .how-step:nth-child(2) { transition-delay: 0.1s; }
+    .how__grid.is-revealed .how-step:nth-child(3) { transition-delay: 0.2s; }
+    .how__grid.is-revealed .how-step:nth-child(4) { transition-delay: 0.3s; }
+
+    .how-step__media {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      background-color: var(--color-white);
+      border: 1px solid var(--color-gray-100);
+    }
+
+    .how-step__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* The drum is a product shot on white — it sits in the card rather than
+       filling it, since the step is about what turns up at your door */
+    .how-step__media--product img {
+      object-fit: contain;
+      padding: var(--space-3);
+    }
+
+    .how-step:hover .how-step__media img {
+      transform: scale(1.04);
+    }
+
+    /* Step number in the hexagon badge the category tabs use */
+    .how-step__num {
+      position: absolute;
+      left: var(--space-2);
+      bottom: var(--space-2);
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: calc(42px / 0.866);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background-color: var(--color-sky);
+      color: var(--color-white);
+      font-family: var(--font-heading);
+      font-size: var(--text-h3);
+      font-weight: var(--weight-heading-bold);
+      line-height: 1;
+    }
+
+    .how-step__title {
+      margin-top: var(--space-3);
+      color: var(--color-heading-muted);
+    }
+
+    .how-step__text {
+      margin-top: var(--space-2);
+      color: var(--color-gray-500);
+    }
+
+    .how__cta {
+      display: flex;
+      justify-content: center;
+      margin-top: var(--space-6);
+    }
+
+    @media (max-width: 1100px) {
+      .how__grid {
+        gap: var(--space-4);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .how__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-5);
+        margin-top: var(--space-5);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .how__grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-5);
+      }
+
+      .how-step__media {
+        aspect-ratio: 16 / 10;
+      }
+
+      .how__cta {
+        margin-top: var(--space-5);
+      }
+
+      .how__cta .btn {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .how__grid.is-animated .how-step,
+      .how-step__media img {
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+      }
+
+      .how-step:hover .how-step__media img {
+        transform: none;
+      }
+    }
+
     /* Why */
     .why__grid {
       display: grid;
@@ -2427,7 +2583,61 @@
       </div>
     </section>
 
-    <!-- 3. Product rail -->
+    <!-- 4. How it works — four DIY steps, revealed in sequence -->
+    <section class="section how" id="how">
+      <div class="container">
+        <div class="how__head">
+          <p class="pill-outline how__eyebrow">How it works</p>
+          <h2>Four steps you can do yourself</h2>
+          <p class="text-body-lg how__sub">
+            Tell us what kind of system you're treating and we'll recommend the
+            right product — plus the testing equipment you'll need to use it
+            correctly. No catalog to dig through, no guesswork.
+          </p>
+        </div>
+
+        <ol class="how__grid" data-how-grid>
+          <li class="how-step">
+            <div class="how-step__media">
+              <img src="images/plant-site.jpg" alt="Aerial view of a treatment facility" loading="lazy" decoding="async" />
+              <span class="how-step__num" aria-hidden="true">1</span>
+            </div>
+            <h3 class="how-step__title">Tell us what you're treating</h3>
+            <p class="how-step__text">Pick your system — boiler, cooling tower or closed loop — and answer a few plain questions about it. Takes about a minute, and you don't need to know the chemistry to answer them.</p>
+          </li>
+          <li class="how-step">
+            <div class="how-step__media how-step__media--product">
+              <img src="images/product-drum.png" alt="A ChemX Direct treatment drum" loading="lazy" decoding="async" />
+              <span class="how-step__num" aria-hidden="true">2</span>
+            </div>
+            <h3 class="how-step__title">Get your match</h3>
+            <p class="how-step__text">We come back with the right product for your water and the test kit that goes with it. One recommendation, one price, nothing to cross-reference in a catalog.</p>
+          </li>
+          <li class="how-step">
+            <div class="how-step__media">
+              <img src="images/tote-valve.jpg" alt="Close-up of a valve on a chemical tote" loading="lazy" decoding="async" />
+              <span class="how-step__num" aria-hidden="true">3</span>
+            </div>
+            <h3 class="how-step__title">Dose it yourself</h3>
+            <p class="how-step__text">It ships to your door with dosing instructions written for whoever is actually holding the drum. No training course, no service visit to book, nobody to wait on.</p>
+          </li>
+          <li class="how-step">
+            <div class="how-step__media">
+              <img src="images/dropper.jpg" alt="A dropper releasing a drop into a sample bottle" loading="lazy" decoding="async" />
+              <span class="how-step__num" aria-hidden="true">4</span>
+            </div>
+            <h3 class="how-step__title">Check it and know</h3>
+            <p class="how-step__text">Run the test, read the number, compare it to the range on the label. That's the whole job — and if the number looks off, we're one message away.</p>
+          </li>
+        </ol>
+
+        <div class="how__cta">
+          <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Start the quiz</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Product rail -->
     <section class="section section--blue products" id="products">
       <div class="container">
         <div class="products__header">
@@ -2449,7 +2659,7 @@
       </div>
     </section>
 
-    <!-- 4. Education / trust -->
+    <!-- 6. Education / trust -->
     <section class="section section--blue" id="learn">
       <div class="container">
         <div class="edu__grid">
@@ -2548,7 +2758,7 @@
     </section>
   </main>
 
-  <!-- 5. Footer -->
+  <!-- 7. Footer -->
   <footer class="site-footer" id="contact">
     <div class="container">
       <div class="site-footer__cta">
@@ -2629,6 +2839,6 @@
     </div>
   </div>
 
-  <script src="js/main.js?v=11"></script>
+  <script src="js/main.js?v=13"></script>
 </body>
 </html>
