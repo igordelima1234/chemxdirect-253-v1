@@ -51,22 +51,26 @@
       }
     }
 
-    /* Hero wrapper — shared full-bleed photo background with navy overlay,
-       header sits transparently on top of it */
+    /* Hero wrapper — full-bleed photo stage shared by the header and the
+       carousel below it. Each slide supplies its own background layer, so
+       the photo behind the nav changes with the slide. */
     .page-hero {
-      background-image: linear-gradient(
-          color-mix(in srgb, var(--color-navy) 82%, transparent),
-          color-mix(in srgb, var(--color-navy) 82%, transparent)
-        ),
-        url("images/hero-water.jpg");
-      background-size: cover;
-      background-position: center;
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      /* Viewport-tall minus the promo banner, capped so it doesn't turn
+         into a canyon on very tall displays */
+      min-height: min(calc(100vh - 36px), 900px);
+      min-height: min(calc(100svh - 36px), 900px);
+      background-color: var(--color-navy);
       color: var(--color-white);
     }
 
     /* Header — divider line separates the nav from the hero below it */
     .site-header {
       position: relative;
+      z-index: 3; /* above the hero photo layers and the carousel content */
       border-bottom: 1px solid var(--color-border-light);
     }
 
@@ -426,34 +430,149 @@
       }
     }
 
-    /* Hero — roughly 200px taller than a standard section */
+    /* ======================================================================
+       HERO CAROUSEL
+       Three slides sharing one full-bleed photo stage. The dial at the
+       bottom is the only control: three hexagons orbiting a common centre,
+       the active one enlarged at the top of the ring. Selecting one spins
+       the ring until it reaches the top; the sky arc around the orbit is
+       the autoplay countdown to the next spin.
+       ====================================================================== */
+
+    /* ---- Background: one layer per slide, crossfaded and slowly zoomed --- */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden; /* contains the over-scaled layers */
+    }
+
+    .hero-bg__layer {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      /* Held slightly over-scaled so the active layer can drift back to 1
+         for the length of the slide */
+      transform: scale(1.12);
+      transition: opacity 1s ease;
+    }
+
+    .hero-bg__layer.is-active {
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity 1s ease, transform 12s linear;
+    }
+
+    /* Navy wash — same 80%-ish weight the flat overlay used, but graded so
+       the middle stays photographic and the base is dark enough for the dial */
+    .hero-bg__scrim {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(
+          120% 80% at 50% 38%,
+          transparent 0%,
+          color-mix(in srgb, var(--color-navy) 45%, transparent) 100%
+        ),
+        linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--color-navy) 76%, transparent) 0%,
+          color-mix(in srgb, var(--color-navy) 58%, transparent) 34%,
+          color-mix(in srgb, var(--color-navy) 72%, transparent) 68%,
+          color-mix(in srgb, var(--color-navy) 92%, transparent) 100%
+        );
+    }
+
+    /* ---- Layout ---------------------------------------------------------- */
     .hero {
-      padding-block: calc(var(--space-7) * 2 - 100px);
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: grid;
+      grid-template-rows: 1fr auto;
       text-align: center;
     }
 
-    @media (max-width: 900px) {
-      .hero {
-        padding-block: calc(var(--space-6) * 1.5);
-      }
+    /* All slides share one grid cell, so the stage is as tall as the
+       longest slide and nothing reflows between them */
+    .hero__stage {
+      display: grid;
+      align-content: center;
+      padding-block: var(--space-5) var(--space-4);
     }
 
-    .hero h1 span {
+    .hero-slide {
+      grid-area: 1 / 1;
+      max-width: 1040px;
+      margin-inline: auto;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.4s ease, visibility 0.4s;
+    }
+
+    .hero-slide.is-active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition-duration: 0.5s;
+    }
+
+    /* Entrance stagger — the eyebrow, subhead and CTAs rise into place */
+    .hero-slide__eyebrow,
+    .hero-slide__subhead,
+    .hero-slide__ctas {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-slide.is-active .hero-slide__eyebrow,
+    .hero-slide.is-active .hero-slide__subhead,
+    .hero-slide.is-active .hero-slide__ctas {
+      opacity: 1;
+      transform: none;
+    }
+
+    .hero-slide.is-active .hero-slide__eyebrow { transition-delay: 0.06s; }
+    .hero-slide.is-active .hero-slide__subhead { transition-delay: 0.34s; }
+    .hero-slide.is-active .hero-slide__ctas    { transition-delay: 0.44s; }
+
+    .hero-slide__eyebrow {
+      margin-bottom: var(--space-3);
+    }
+
+    /* Headline lines wipe up out of their own baseline */
+    .hero-slide__title span {
       display: block;
+      clip-path: inset(0 -20% 105% -20%);
+      transform: translateY(0.12em);
+      transition: clip-path 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .hero__line-2 {
+    .hero-slide.is-active .hero-slide__title span {
+      clip-path: inset(-25% -20% -25% -20%);
+      transform: none;
+    }
+
+    .hero-slide.is-active .hero-slide__title span:nth-child(1) { transition-delay: 0.12s; }
+    .hero-slide.is-active .hero-slide__title span:nth-child(2) { transition-delay: 0.24s; }
+
+    .hero-slide__title span:nth-child(2) {
       color: var(--color-sky);
     }
 
-    .hero__subhead {
+    .hero-slide__subhead {
       max-width: 640px;
       margin-inline: auto;
       margin-top: var(--space-3);
       color: var(--color-gray-100);
     }
 
-    .hero__ctas {
+    .hero-slide__ctas {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -462,8 +581,286 @@
       margin-top: var(--space-4);
     }
 
-    .hero__eyebrow {
-      margin-bottom: var(--space-3);
+    /* ---- The dial -------------------------------------------------------- */
+    .hero-dial {
+      --dial-r: 86px;   /* orbit radius — also the SVG's outer circle */
+      --hex-w: 98px;    /* width of the active hexagon */
+      --dial-spin: 0.95s;
+      --dial-ease: cubic-bezier(0.68, 0, 0.32, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: var(--space-5);
+    }
+
+    .hero-dial__labels {
+      display: grid;
+      justify-items: center;
+    }
+
+    .hero-dial__label {
+      grid-area: 1 / 1;
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      line-height: var(--leading-small);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--color-white) 72%, transparent);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .hero-dial__label.is-active {
+      opacity: 1;
+      transform: none;
+      transition-delay: 0.15s;
+    }
+
+    /* The hexagons overhang the top of the orbit box, so reserve room */
+    .hero-dial__orbit {
+      position: relative;
+      width: calc(var(--dial-r) * 2);
+      height: calc(var(--dial-r) * 2);
+      margin-top: calc(var(--hex-w) * 0.62);
+    }
+
+    .hero-dial__rings {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .hero-dial__spoke-line {
+      stroke: color-mix(in srgb, var(--color-white) 26%, transparent);
+      stroke-width: 1;
+    }
+
+    .hero-dial__track {
+      fill: none;
+      stroke: color-mix(in srgb, var(--color-white) 28%, transparent);
+      stroke-width: 1;
+    }
+
+    /* Autoplay countdown — sweeps the orbit once per slide */
+    .hero-dial__progress {
+      fill: none;
+      stroke: var(--color-sky);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    .hero-dial.is-playing .hero-dial__progress {
+      animation: heroDialSweep var(--autoplay, 7000ms) linear forwards;
+    }
+
+    .hero-dial.is-paused .hero-dial__progress {
+      animation-play-state: paused;
+    }
+
+    @keyframes heroDialSweep {
+      from { stroke-dashoffset: 100; }
+      to   { stroke-dashoffset: 0; }
+    }
+
+    .hero-dial__count {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 11px;
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.14em;
+      color: color-mix(in srgb, var(--color-white) 62%, transparent);
+      white-space: nowrap;
+    }
+
+    .hero-dial__count b {
+      color: var(--color-white);
+      font-weight: var(--weight-body-semibold);
+    }
+
+    /* The ring carries the rotation; every node counter-rotates by the same
+       amount over the same curve, so the photos never tilt */
+    .hero-dial__ring {
+      position: absolute;
+      inset: 0;
+      transform: rotate(var(--rot, 0deg));
+      transition: transform var(--dial-spin) var(--dial-ease);
+    }
+
+    .hero-dial__spoke {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 0;
+      height: 0;
+      transform: rotate(var(--slot, 0deg)) translateY(calc(var(--dial-r) * -1));
+    }
+
+    .hexnode {
+      --hex-h: calc(var(--hex-w) / 0.866);
+      --hex-scale: 0.6;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--hex-w);
+      height: var(--hex-h);
+      margin-left: calc(var(--hex-w) / -2);
+      margin-top: calc(var(--hex-h) / -2);
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      /* Undo the ring's rotation plus this spoke's own angle */
+      transform: rotate(calc(0deg - var(--rot, 0deg) - var(--slot, 0deg)))
+        scale(var(--hex-scale));
+      transition: transform var(--dial-spin) var(--dial-ease);
+    }
+
+    .hexnode.is-active {
+      --hex-scale: 1;
+      cursor: default;
+    }
+
+    .hexnode:focus-visible {
+      outline: 2px solid var(--color-sky);
+      outline-offset: 4px;
+    }
+
+    .hexnode__glow {
+      position: absolute;
+      inset: -8px;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background-color: var(--color-sky);
+      filter: blur(10px);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .hexnode.is-active .hexnode__glow {
+      opacity: 0.4;
+    }
+
+    /* Frame is the hexagon "border": the media sits 2px inside it */
+    .hexnode__frame {
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background-color: color-mix(in srgb, var(--color-white) 40%, transparent);
+      transition: background-color 0.5s ease;
+    }
+
+    .hexnode.is-active .hexnode__frame {
+      background-color: var(--color-sky);
+    }
+
+    .hexnode__media {
+      position: absolute;
+      inset: 2px;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background-color: var(--color-navy);
+    }
+
+    .hexnode__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Inactive nodes read as thumbnails, not as competing focal points */
+    .hexnode__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: color-mix(in srgb, var(--color-navy) 62%, transparent);
+      transition: background-color 0.5s ease;
+    }
+
+    .hexnode.is-active .hexnode__media::after {
+      background-color: color-mix(in srgb, var(--color-navy) 12%, transparent);
+    }
+
+    .hexnode:not(.is-active):hover .hexnode__media::after,
+    .hexnode:not(.is-active):focus-visible .hexnode__media::after {
+      background-color: color-mix(in srgb, var(--color-navy) 34%, transparent);
+    }
+
+    .hexnode:not(.is-active):hover .hexnode__frame {
+      background-color: color-mix(in srgb, var(--color-white) 75%, transparent);
+    }
+
+    /* ---- Responsive ------------------------------------------------------ */
+    @media (max-width: 900px) {
+      .hero__stage {
+        padding-block: var(--space-4) var(--space-3);
+      }
+
+      .hero-dial {
+        --dial-r: 68px;
+        --hex-w: 78px;
+        padding-bottom: var(--space-4);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-hero {
+        min-height: min(calc(100vh - 36px), 760px);
+        min-height: min(calc(100svh - 36px), 760px);
+      }
+
+      .hero-slide__subhead {
+        font-size: var(--text-body);
+      }
+
+      .hero-slide__ctas {
+        gap: var(--space-2);
+      }
+
+      .hero-dial {
+        --dial-r: 54px;
+        --hex-w: 62px;
+      }
+
+      .hero-dial__label {
+        letter-spacing: 0.12em;
+      }
+    }
+
+    /* Motion is decorative here — the carousel still works without any of it */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-bg__layer,
+      .hero-slide,
+      .hero-slide__eyebrow,
+      .hero-slide__subhead,
+      .hero-slide__ctas,
+      .hero-slide__title span,
+      .hero-dial__label,
+      .hero-dial__ring,
+      .hexnode {
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+      }
+
+      .hero-bg__layer,
+      .hero-bg__layer.is-active {
+        transform: none;
+      }
+
+      .hero-slide__title span {
+        clip-path: none;
+        transform: none;
+      }
+
+      .hero-dial.is-playing .hero-dial__progress {
+        animation: none;
+      }
     }
 
     /* Why */
@@ -1047,6 +1444,13 @@
   </div>
 
   <div class="page-hero">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hero-bg__layer is-active" style="background-image: url('images/treatment-plant-aerial.jpg')"></div>
+      <div class="hero-bg__layer" style="background-image: url('images/industrial-tanks.jpg')"></div>
+      <div class="hero-bg__layer" style="background-image: url('images/water-sampling.jpg')"></div>
+      <div class="hero-bg__scrim"></div>
+    </div>
+
     <header class="site-header">
       <div class="container">
         <a class="site-header__logo" href="index.html">
@@ -1087,28 +1491,183 @@
       </div>
     </header>
 
-    <!-- 1. Hero -->
-    <section class="hero">
-      <div class="container">
-        <p class="pill-glass hero__eyebrow">
-          ChemX Direct provides the best chemicals
-        </p>
-        <h1>
-          <span>Industrial-grade chemistry.</span>
-          <span class="hero__line-2">Self-serve simplicity.</span>
-        </h1>
-        <p class="text-body-lg hero__subhead">
-          If your system is simple enough to check yourself, it's simple
-          enough to treat yourself. ChemX Direct helps you find the right
-          product, use it correctly, and know it's working — without paying
-          for a service visit you don't need.
-        </p>
-        <div class="hero__ctas">
-          <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
-          <a class="btn btn--ghost btn--lg" href="#products">Browse products</a>
+    <!-- 1. Hero carousel — slides are declared here; js/main.js drives the
+         crossfade, the dial rotation and the autoplay countdown. -->
+    <section
+      class="hero"
+      data-hero
+      aria-roledescription="carousel"
+      aria-label="ChemX Direct highlights"
+    >
+      <div class="container hero__stage">
+        <article
+          class="hero-slide is-active"
+          id="hero-slide-1"
+          role="tabpanel"
+          aria-labelledby="hero-tab-1"
+          aria-roledescription="slide"
+        >
+          <p class="pill-glass hero-slide__eyebrow">
+            DIY industrial water treatment
+          </p>
+          <h1 class="hero-slide__title">
+            <span>Industrial-grade chemistry.</span>
+            <span>Self-serve simplicity.</span>
+          </h1>
+          <p class="text-body-lg hero-slide__subhead">
+            If your system is simple enough to check yourself, it's simple
+            enough to treat yourself. ChemX Direct helps you find the right
+            product, use it correctly, and know it's working — without paying
+            for a service visit you don't need.
+          </p>
+          <div class="hero-slide__ctas">
+            <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
+            <a class="btn btn--ghost btn--lg" href="#products">Browse products</a>
+          </div>
+        </article>
+
+        <article
+          class="hero-slide"
+          id="hero-slide-2"
+          role="tabpanel"
+          aria-labelledby="hero-tab-2"
+          aria-roledescription="slide"
+        >
+          <p class="pill-glass hero-slide__eyebrow">Boilers</p>
+          <h1 class="hero-slide__title">
+            <span>Scale and corrosion,</span>
+            <span>under control.</span>
+          </h1>
+          <p class="text-body-lg hero-slide__subhead">
+            Oxygen scavengers, alkalinity builders and sludge conditioners for
+            steam and hot-water boilers — matched to the system you actually
+            run, with the dosing already worked out.
+          </p>
+          <div class="hero-slide__ctas">
+            <button class="btn btn--primary btn--lg btn--arrow" type="button" data-hero-cat="Boilers">Shop boiler chemistry</button>
+            <a class="btn btn--ghost btn--lg" href="#learn">How treatment works</a>
+          </div>
+        </article>
+
+        <article
+          class="hero-slide"
+          id="hero-slide-3"
+          role="tabpanel"
+          aria-labelledby="hero-tab-3"
+          aria-roledescription="slide"
+        >
+          <p class="pill-glass hero-slide__eyebrow">Test kits &amp; feed equipment</p>
+          <h1 class="hero-slide__title">
+            <span>Test it yourself.</span>
+            <span>Know it's working.</span>
+          </h1>
+          <p class="text-body-lg hero-slide__subhead">
+            Drop-count kits, meters and feed equipment — plus the ranges you
+            should be holding, so you can prove the program is working without
+            booking anyone's truck.
+          </p>
+          <div class="hero-slide__ctas">
+            <button class="btn btn--primary btn--lg btn--arrow" type="button" data-hero-cat="Test Equipment">Shop test equipment</button>
+            <a class="btn btn--ghost btn--lg" href="#contact">Talk to a chemist</a>
+          </div>
+        </article>
+      </div>
+
+      <!-- Dial: three hexagons on one orbit. The ring rotates until the
+           chosen slide's hexagon reaches the top. -->
+      <div class="hero-dial" data-hero-dial>
+        <div class="hero-dial__labels" aria-hidden="true">
+          <p class="hero-dial__label is-active">The ChemX way</p>
+          <p class="hero-dial__label">Boiler treatment</p>
+          <p class="hero-dial__label">Testing &amp; proof</p>
+        </div>
+
+        <div class="hero-dial__orbit">
+          <svg class="hero-dial__rings" viewBox="0 0 200 200" aria-hidden="true">
+            <!-- Spokes are 120° apart, so they look identical at every
+                 rotation and can stay still while the ring turns -->
+            <line class="hero-dial__spoke-line" x1="100" y1="100" x2="100" y2="4" vector-effect="non-scaling-stroke" />
+            <line class="hero-dial__spoke-line" x1="100" y1="100" x2="183.1" y2="148" vector-effect="non-scaling-stroke" />
+            <line class="hero-dial__spoke-line" x1="100" y1="100" x2="16.9" y2="148" vector-effect="non-scaling-stroke" />
+            <circle class="hero-dial__track" cx="100" cy="100" r="100" pathLength="100" vector-effect="non-scaling-stroke" />
+            <circle class="hero-dial__progress" cx="100" cy="100" r="100" pathLength="100" vector-effect="non-scaling-stroke" />
+          </svg>
+
+          <p class="hero-dial__count" aria-hidden="true">
+            <b data-hero-index>01</b> / 03
+          </p>
+
+          <div
+            class="hero-dial__ring"
+            style="--rot: 0deg"
+            role="tablist"
+            aria-label="Choose a slide"
+            data-hero-ring
+          >
+            <div class="hero-dial__spoke" style="--slot: 0deg">
+              <button
+                class="hexnode is-active"
+                type="button"
+                role="tab"
+                id="hero-tab-1"
+                aria-controls="hero-slide-1"
+                aria-selected="true"
+                data-hero-tab="0"
+              >
+                <span class="hexnode__glow" aria-hidden="true"></span>
+                <span class="hexnode__frame" aria-hidden="true">
+                  <span class="hexnode__media">
+                    <img src="images/treatment-plant-aerial.jpg" alt="" />
+                  </span>
+                </span>
+                <span class="visually-hidden">The ChemX way</span>
+              </button>
+            </div>
+            <div class="hero-dial__spoke" style="--slot: -120deg">
+              <button
+                class="hexnode"
+                type="button"
+                role="tab"
+                id="hero-tab-2"
+                aria-controls="hero-slide-2"
+                aria-selected="false"
+                tabindex="-1"
+                data-hero-tab="1"
+              >
+                <span class="hexnode__glow" aria-hidden="true"></span>
+                <span class="hexnode__frame" aria-hidden="true">
+                  <span class="hexnode__media">
+                    <img src="images/industrial-tanks.jpg" alt="" />
+                  </span>
+                </span>
+                <span class="visually-hidden">Boiler treatment</span>
+              </button>
+            </div>
+            <div class="hero-dial__spoke" style="--slot: -240deg">
+              <button
+                class="hexnode"
+                type="button"
+                role="tab"
+                id="hero-tab-3"
+                aria-controls="hero-slide-3"
+                aria-selected="false"
+                tabindex="-1"
+                data-hero-tab="2"
+              >
+                <span class="hexnode__glow" aria-hidden="true"></span>
+                <span class="hexnode__frame" aria-hidden="true">
+                  <span class="hexnode__media">
+                    <img src="images/water-sampling.jpg" alt="" />
+                  </span>
+                </span>
+                <span class="visually-hidden">Testing &amp; proof</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
+
   </div>
 
   <main>
@@ -1356,6 +1915,6 @@
     </div>
   </div>
 
-  <script src="js/main.js?v=6"></script>
+  <script src="js/main.js?v=7"></script>
 </body>
 </html>

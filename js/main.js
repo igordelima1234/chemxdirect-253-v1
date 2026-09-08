@@ -46,6 +46,268 @@ function chemxTestTag(name) {
   });
 })();
 
+// ---------------------------------------------------------------------------
+// Hero carousel — crossfading slides driven by the hexagon dial.
+//
+// The three hexagons sit on one orbit, 120° apart, and the ring element
+// carries the rotation. Each node counter-rotates by the same amount over the
+// same curve so the photos stay upright while the constellation turns. Slot
+// angles run counter-clockwise (0/-120/-240), which puts the *next* slide at
+// the lower left — so autoplay always spins the ring clockwise, and clicking
+// the other hexagon takes the short way round in the opposite direction.
+// ---------------------------------------------------------------------------
+(function () {
+  var hero = document.querySelector("[data-hero]");
+  var dial = document.querySelector("[data-hero-dial]");
+  if (!hero || !dial) return;
+
+  var AUTOPLAY = 7000;
+  var STEP = 120; // degrees between adjacent hexagons
+
+  var slides = Array.prototype.slice.call(hero.querySelectorAll(".hero-slide"));
+  var layers = Array.prototype.slice.call(
+    document.querySelectorAll(".hero-bg__layer")
+  );
+  var labels = Array.prototype.slice.call(
+    dial.querySelectorAll(".hero-dial__label")
+  );
+  var tabs = Array.prototype.slice.call(dial.querySelectorAll("[data-hero-tab]"));
+  var ring = dial.querySelector("[data-hero-ring]");
+  var counter = dial.querySelector("[data-hero-index]");
+  if (slides.length < 2 || tabs.length !== slides.length) return;
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var index = 0;
+  var rotation = 0; // unbounded, so the ring keeps turning the short way
+  var timer = null;
+  var startedAt = 0;
+  var remaining = AUTOPLAY;
+  var hovering = false;
+  var focusing = false;
+
+  dial.style.setProperty("--autoplay", AUTOPLAY + "ms");
+
+  function setActive(list, i) {
+    list.forEach(function (el, n) {
+      el.classList.toggle("is-active", n === i);
+    });
+  }
+
+  // Shortest signed rotation from where the ring is now to the angle that
+  // parks slide `i` at the top of the orbit.
+  function deltaTo(i) {
+    var d = (i * STEP - rotation) % 360;
+    if (d > 180) d -= 360;
+    if (d < -180) d += 360;
+    return d;
+  }
+
+  function go(i) {
+    i = ((i % slides.length) + slides.length) % slides.length;
+    if (i === index) {
+      play();
+      return;
+    }
+
+    rotation += deltaTo(i);
+    index = i;
+
+    ring.style.setProperty("--rot", rotation + "deg");
+    setActive(slides, i);
+    setActive(layers, i);
+    setActive(labels, i);
+    setActive(tabs, i);
+
+    tabs.forEach(function (tab, n) {
+      tab.setAttribute("aria-selected", n === i ? "true" : "false");
+      tab.tabIndex = n === i ? 0 : -1;
+    });
+
+    if (counter) counter.textContent = ("0" + (i + 1)).slice(-2);
+    play();
+  }
+
+  // Anything that means "someone is reading this" holds the countdown
+  function held() {
+    return hovering || focusing || document.hidden;
+  }
+
+  function stop() {
+    if (timer) {
+      window.clearTimeout(timer);
+      timer = null;
+    }
+  }
+
+  function schedule(ms) {
+    stop();
+    startedAt = Date.now();
+    remaining = ms;
+    timer = window.setTimeout(function () {
+      go(index + 1);
+    }, ms);
+  }
+
+  // Restart the countdown from the top. Replaying the sweep means tearing the
+  // animation down and forcing a reflow — CSS won't replay an identical
+  // animation otherwise.
+  function play() {
+    stop();
+    remaining = AUTOPLAY;
+    if (reduceMotion.matches) return;
+    dial.classList.remove("is-playing", "is-paused");
+    void dial.offsetWidth;
+    dial.classList.add("is-playing");
+    if (held()) {
+      dial.classList.add("is-paused");
+      return;
+    }
+    schedule(AUTOPLAY);
+  }
+
+  // The arc and the timer pause and resume together, so what the sweep shows
+  // is always the time actually left on the slide.
+  function pause() {
+    if (timer) {
+      remaining = Math.max(0, remaining - (Date.now() - startedAt));
+      stop();
+    }
+    dial.classList.add("is-paused");
+  }
+
+  function resume() {
+    if (timer || held() || reduceMotion.matches) return;
+    dial.classList.remove("is-paused");
+    schedule(remaining > 0 ? remaining : AUTOPLAY);
+  }
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      go(parseInt(tab.getAttribute("data-hero-tab"), 10));
+      tab.focus();
+    });
+  });
+
+  // Arrow keys walk the tablist, matching the usual tabs pattern
+  ring.addEventListener("keydown", function (e) {
+    var next;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = index + 1;
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = index - 1;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = slides.length - 1;
+    else return;
+
+    e.preventDefault();
+    go(next);
+    var target = tabs[((next % tabs.length) + tabs.length) % tabs.length];
+    if (target) target.focus();
+  });
+
+  // Autoplay is a nudge, not a hijack. Hovering the dial means someone is
+  // aiming at it, so it waits — hovering the hero at large doesn't, since the
+  // hero covers most of the window and a parked cursor would stall it forever.
+  dial.addEventListener("mouseenter", function () {
+    hovering = true;
+    pause();
+  });
+
+  dial.addEventListener("mouseleave", function () {
+    hovering = false;
+    resume();
+  });
+
+  hero.addEventListener("focusin", function (e) {
+    // Only a keyboard user landing here should hold the carousel; a click that
+    // happens to focus a button shouldn't freeze the countdown mid-sweep.
+    var keyboard = true;
+    try {
+      keyboard = e.target.matches(":focus-visible");
+    } catch (err) {
+      /* older engine — treat any focus as keyboard focus */
+    }
+    if (!keyboard) return;
+    focusing = true;
+    pause();
+  });
+
+  hero.addEventListener("focusout", function (e) {
+    if (hero.contains(e.relatedTarget)) return;
+    focusing = false;
+    resume();
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) pause();
+    else resume();
+  });
+
+  // Swipe on touch — horizontal only, so vertical scrolling still wins
+  var startX = null;
+  var startY = null;
+
+  hero.addEventListener(
+    "touchstart",
+    function (e) {
+      var t = e.changedTouches[0];
+      startX = t.clientX;
+      startY = t.clientY;
+    },
+    { passive: true }
+  );
+
+  hero.addEventListener(
+    "touchend",
+    function (e) {
+      if (startX === null) return;
+      var t = e.changedTouches[0];
+      var dx = t.clientX - startX;
+      var dy = t.clientY - startY;
+      startX = startY = null;
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+      go(dx < 0 ? index + 1 : index - 1);
+    },
+    { passive: true }
+  );
+
+  // Slide CTAs that jump straight into a filtered product rail
+  hero.querySelectorAll("[data-hero-cat]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.dispatchEvent(
+        new CustomEvent("chemx:filter", {
+          detail: { category: btn.getAttribute("data-hero-cat"), subcategory: null },
+        })
+      );
+      var section = document.getElementById("products");
+      if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  // The first slide ships pre-activated so the hero still reads with JS off.
+  // Replay that activation once on load to get the entrance animation and the
+  // opening zoom, which the markup's static state would otherwise skip.
+  function intro() {
+    if (reduceMotion.matches) return;
+    [slides[0], layers[0], labels[0]].forEach(function (el) {
+      if (!el) return;
+      el.classList.remove("is-active");
+      void el.offsetWidth;
+      el.classList.add("is-active");
+    });
+  }
+
+  reduceMotion.addEventListener("change", function () {
+    if (reduceMotion.matches) {
+      stop();
+      dial.classList.remove("is-playing");
+    } else {
+      play();
+    }
+  });
+
+  intro();
+  play();
+})();
+
 // Accordion toggle
 document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
   trigger.addEventListener("click", function () {
