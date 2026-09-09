@@ -333,9 +333,7 @@
       flex-direction: column;
       align-items: center;
       gap: var(--space-2);
-      /* Room for the countdown ring, which stands --ring-gap outside the
-         widest hexagon */
-      padding: var(--space-3) var(--space-2);
+      padding: var(--space-2);
       background-color: var(--color-white);
       border: 1px solid var(--color-gray-100);
       border-radius: var(--radius-pill);
@@ -363,8 +361,16 @@
 
     /* Inactive nodes give their unused footprint back with a negative
        margin, so the stack closes up around whichever one is active */
+    /* One SVG per node, not a stack of clipped boxes: the photo is a pattern
+       fill, the tint sits on top of it, and the hexagon's own border is the
+       autoplay countdown — a sky stroke drawing itself over a gray track from
+       the top vertex round. One shape, one outline, and edges that antialias
+       properly instead of stair-stepping the way clip-path does.
+
+       Inactive nodes give their unused footprint back with a negative margin,
+       so the stack closes up around whichever one is active. */
     .hexnode2 {
-      --hex-scale: 0.58;
+      --hex-scale: 0.64;
       position: relative;
       flex: none;
       width: var(--hex-w);
@@ -385,121 +391,69 @@
     }
 
     .hexnode2:focus-visible {
-      outline: 2px solid var(--color-sky);
-      outline-offset: 3px;
+      outline: none;
     }
 
-    .hexnode2__glow {
-      --glow-gap: 4px;
-      position: absolute;
-      inset: calc(var(--glow-gap) / -1 / var(--hex-ratio)) calc(var(--glow-gap) * -1);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      background-color: var(--color-sky);
-      filter: blur(10px);
-      opacity: 0;
-      transition: opacity 0.5s ease;
+    .hexnode2:focus-visible .hexnode2__track {
+      stroke: var(--color-sky);
     }
 
-    .hexnode2.is-active .hexnode2__glow {
-      opacity: 0.22;
-    }
-
-    /* Frame is the hexagon "border": the photo sits 2px inside it */
-    .hexnode2__frame {
+    .hexnode2__shape {
       position: absolute;
       inset: 0;
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      background-color: var(--color-gray-100);
-      transition: background-color 0.4s ease;
-    }
-
-    .hexnode2.is-active .hexnode2__frame {
-      background-color: var(--color-sky);
-    }
-
-    .hexnode2:not(.is-active):hover .hexnode2__frame {
-      background-color: var(--color-steel);
-    }
-
-    .hexnode2__media {
-      --frame-w: 2px;
-      position: absolute;
-      inset: calc(var(--frame-w) / var(--hex-ratio)) var(--frame-w);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      background-color: var(--color-navy);
-    }
-
-    .hexnode2__media img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
     }
 
     /* Inactive nodes read as thumbnails, not as competing focal points */
-    .hexnode2__media::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-color: color-mix(in srgb, var(--color-navy) 42%, transparent);
-      transition: background-color 0.4s ease;
+    .hexnode2__tint {
+      fill: var(--color-navy);
+      fill-opacity: 0.46;
+      transition: fill-opacity 0.4s ease;
     }
 
-    .hexnode2.is-active .hexnode2__media::after {
-      background-color: color-mix(in srgb, var(--color-navy) 8%, transparent);
+    .hexnode2.is-active .hexnode2__tint {
+      fill-opacity: 0.06;
     }
 
-    .hexnode2:not(.is-active):hover .hexnode2__media::after,
-    .hexnode2:not(.is-active):focus-visible .hexnode2__media::after {
-      background-color: color-mix(in srgb, var(--color-navy) 18%, transparent);
+    .hexnode2:not(.is-active):hover .hexnode2__tint,
+    .hexnode2:not(.is-active):focus-visible .hexnode2__tint {
+      fill-opacity: 0.24;
     }
 
-    /* Autoplay countdown — a sky outline drawing itself around the active
-       hexagon, starting at the top vertex. The dial's arc, hexagonal. */
-    .hexnode2__ring {
-      --ring-gap: 9px;
-      position: absolute;
-      /* An <svg> is a replaced element: with width/height auto it keeps its
-         own size and honours only top/left, so it has to be sized outright.
-         Growing the box by the gap on each side — over the ratio vertically —
-         is the same hexagon scaled about its centre, which is exactly an
-         even offset outline. */
-      top: calc(var(--ring-gap) / -1 / var(--hex-ratio));
-      left: calc(var(--ring-gap) * -1);
-      width: calc(100% + var(--ring-gap) * 2);
-      height: calc(100% + var(--ring-gap) * 2 / var(--hex-ratio));
-      /* base.css caps every svg at max-width:100%, which would clamp the
-         ring back to the width of the node it's supposed to sit outside */
-      max-width: none;
-      overflow: visible;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .hexnode2.is-active .hexnode2__ring {
-      opacity: 1;
-    }
-
-    .hexnode2__ring polygon {
+    .hexnode2__track,
+    .hexnode2__sweep {
       fill: none;
-      stroke-width: 2.5;
+      stroke-width: 3.4;
       stroke-linejoin: round;
     }
 
-    .hexnode2__ring-track {
+    .hexnode2__track {
       stroke: var(--color-gray-100);
+      transition: stroke 0.3s ease;
     }
 
-    .hexnode2__ring-sweep {
+    .hexnode2:not(.is-active):hover .hexnode2__track {
+      stroke: var(--color-steel);
+    }
+
+    /* Sky by default so the active hexagon still reads as chosen with the
+       animation off; the sweep starts it empty and fills it back in */
+    .hexnode2__sweep {
       stroke: var(--color-sky);
       stroke-dasharray: 100;
       stroke-dashoffset: 100;
     }
 
-    .hex-rail.is-playing .hexnode2.is-active .hexnode2__ring-sweep {
+    .hexnode2.is-active .hexnode2__sweep {
+      stroke-dashoffset: 0;
+    }
+
+    .hex-rail.is-playing .hexnode2.is-active .hexnode2__sweep {
       animation: hexRailSweep var(--autoplay, 7000ms) linear forwards;
     }
 
-    .hex-rail.is-paused .hexnode2.is-active .hexnode2__ring-sweep {
+    .hex-rail.is-paused .hexnode2.is-active .hexnode2__sweep {
       animation-play-state: paused;
     }
 
@@ -686,7 +640,7 @@
         transform: none;
       }
 
-      .hex-rail.is-playing .hexnode2.is-active .hexnode2__ring-sweep {
+      .hex-rail.is-playing .hexnode2.is-active .hexnode2__sweep {
         animation: none;
       }
     }
@@ -1492,15 +1446,18 @@
             aria-selected="true"
             data-hero2-tab="0"
           >
-            <span class="hexnode2__glow" aria-hidden="true"></span>
-            <span class="hexnode2__frame" aria-hidden="true">
-              <span class="hexnode2__media">
-                <img src="images/treatment-plant-aerial.jpg" alt="" />
-              </span>
-            </span>
-            <svg class="hexnode2__ring" viewBox="0 0 100 115.47" preserveAspectRatio="none" aria-hidden="true">
-              <polygon class="hexnode2__ring-track" points="50,0 100,28.87 100,86.6 50,115.47 0,86.6 0,28.87" vector-effect="non-scaling-stroke" />
-              <polygon class="hexnode2__ring-sweep" points="50,0 100,28.87 100,86.6 50,115.47 0,86.6 0,28.87" pathLength="100" vector-effect="non-scaling-stroke" />
+            <svg class="hexnode2__shape" viewBox="0 0 100 115.47" aria-hidden="true">
+              <defs>
+                <!-- Image overhangs the tile by a third: a wide aerial shot
+                     cropped to a 54px hexagon is mush, so it's zoomed in -->
+                <pattern id="hexpat-1" patternUnits="userSpaceOnUse" width="100" height="115.47">
+                  <image href="images/treatment-plant-aerial.jpg" x="-17.5" y="-20.2" width="135" height="155.9" preserveAspectRatio="xMidYMid slice" />
+                </pattern>
+              </defs>
+              <polygon points="50,2.31 98,29.72 98,85.75 50,113.16 2,85.75 2,29.72" fill="url(#hexpat-1)" />
+              <polygon class="hexnode2__tint" points="50,2.31 98,29.72 98,85.75 50,113.16 2,85.75 2,29.72" />
+              <polygon class="hexnode2__track" points="50,2.31 98,29.72 98,85.75 50,113.16 2,85.75 2,29.72" />
+              <polygon class="hexnode2__sweep" points="50,2.31 98,29.72 98,85.75 50,113.16 2,85.75 2,29.72" pathLength="100" />
             </svg>
             <span class="visually-hidden">The ChemX way</span>
           </button>
@@ -1515,15 +1472,16 @@
             tabindex="-1"
             data-hero2-tab="1"
           >
-            <span class="hexnode2__glow" aria-hidden="true"></span>
-            <span class="hexnode2__frame" aria-hidden="true">
-              <span class="hexnode2__media">
-                <img src="images/industrial-tanks.jpg" alt="" />
-              </span>
-            </span>
-            <svg class="hexnode2__ring" viewBox="0 0 100 115.47" preserveAspectRatio="none" aria-hidden="true">
-              <polygon class="hexnode2__ring-track" points="50,0 100,28.87 100,86.6 50,115.47 0,86.6 0,28.87" vector-effect="non-scaling-stroke" />
-              <polygon class="hexnode2__ring-sweep" points="50,0 100,28.87 100,86.6 50,115.47 0,86.6 0,28.87" pathLength="100" vector-effect="non-scaling-stroke" />
+            <svg class="hexnode2__shape" viewBox="0 0 100 115.47" aria-hidden="true">
+              <defs>
+                <pattern id="hexpat-2" patternUnits="userSpaceOnUse" width="100" height="115.47">
+                  <image href="images/industrial-tanks.jpg" x="-17.5" y="-20.2" width="135" height="155.9" preserveAspectRatio="xMidYMid slice" />
+                </pattern>
+              </defs>
+              <polygon points="50,2.31 98,29.72 98,85.75 50,113.16 2,85.75 2,29.72" fill="url(#hexpat-2)" />
+              <polygon class="hexnode2__tint" points="50,2.31 98,29.72 98,85.75 50,113.16 2,85.75 2,29.72" />
+              <polygon class="hexnode2__track" points="50,2.31 98,29.72 98,85.75 50,113.16 2,85.75 2,29.72" />
+              <polygon class="hexnode2__sweep" points="50,2.31 98,29.72 98,85.75 50,113.16 2,85.75 2,29.72" pathLength="100" />
             </svg>
             <span class="visually-hidden">Boiler treatment</span>
           </button>
@@ -1538,15 +1496,16 @@
             tabindex="-1"
             data-hero2-tab="2"
           >
-            <span class="hexnode2__glow" aria-hidden="true"></span>
-            <span class="hexnode2__frame" aria-hidden="true">
-              <span class="hexnode2__media">
-                <img src="images/water-sampling.jpg" alt="" />
-              </span>
-            </span>
-            <svg class="hexnode2__ring" viewBox="0 0 100 115.47" preserveAspectRatio="none" aria-hidden="true">
-              <polygon class="hexnode2__ring-track" points="50,0 100,28.87 100,86.6 50,115.47 0,86.6 0,28.87" vector-effect="non-scaling-stroke" />
-              <polygon class="hexnode2__ring-sweep" points="50,0 100,28.87 100,86.6 50,115.47 0,86.6 0,28.87" pathLength="100" vector-effect="non-scaling-stroke" />
+            <svg class="hexnode2__shape" viewBox="0 0 100 115.47" aria-hidden="true">
+              <defs>
+                <pattern id="hexpat-3" patternUnits="userSpaceOnUse" width="100" height="115.47">
+                  <image href="images/dropper.jpg" x="-17.5" y="-20.2" width="135" height="155.9" preserveAspectRatio="xMidYMid slice" />
+                </pattern>
+              </defs>
+              <polygon points="50,2.31 98,29.72 98,85.75 50,113.16 2,85.75 2,29.72" fill="url(#hexpat-3)" />
+              <polygon class="hexnode2__tint" points="50,2.31 98,29.72 98,85.75 50,113.16 2,85.75 2,29.72" />
+              <polygon class="hexnode2__track" points="50,2.31 98,29.72 98,85.75 50,113.16 2,85.75 2,29.72" />
+              <polygon class="hexnode2__sweep" points="50,2.31 98,29.72 98,85.75 50,113.16 2,85.75 2,29.72" pathLength="100" />
             </svg>
             <span class="visually-hidden">Testing &amp; proof</span>
           </button>
@@ -1562,7 +1521,7 @@
       <div class="hero-v2__media">
         <div class="hero-v2__layer is-active" style="background-image: url('images/treatment-plant-aerial.jpg')"></div>
         <div class="hero-v2__layer" style="background-image: url('images/industrial-tanks.jpg')"></div>
-        <div class="hero-v2__layer" style="background-image: url('images/water-sampling.jpg')"></div>
+        <div class="hero-v2__layer" style="background-image: url('images/dropper.jpg')"></div>
         <!-- Hexagon lattice — the rail's motif, running quietly under the seam -->
         <svg class="hero-v2__lattice" aria-hidden="true">
           <defs>
