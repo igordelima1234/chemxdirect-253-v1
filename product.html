@@ -1,0 +1,2712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CWT 5000 — Cooling Tower Treatment for Soft Water | ChemX Direct</title>
+  <meta
+    name="description"
+    content="Scale and corrosion control for cooling towers on softened makeup water. Dosing chart, weekly test routine, and the equipment to run it — all on one page."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Public+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/chrome.css" />
+  <style>
+    /* ======================================================================
+       PRODUCT PAGE (PDP) — layout specific to this template.
+       Tokens only, no raw color values. Shared chrome lives in chrome.css.
+       ====================================================================== */
+
+    /* The header has no hero photo behind it here, so it gets its own
+       navy band to sit on. */
+    .page-chrome {
+      background-color: var(--color-navy);
+      color: var(--color-white);
+    }
+
+    /* Section anchors have to clear the sticky bar when jumped to */
+    main section[id] {
+      scroll-margin-top: 52px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    /* ---- Breadcrumb ---- */
+
+    .crumbs {
+      padding-block: var(--space-3);
+    }
+
+    .crumbs ol {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-1);
+      list-style: none;
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-medium);
+      color: var(--color-gray-500);
+    }
+
+    .crumbs a {
+      color: var(--color-gray-500);
+    }
+
+    .crumbs a:hover {
+      color: var(--color-sky);
+    }
+
+    .crumbs li::after {
+      content: "/";
+      margin-left: var(--space-1);
+      color: var(--color-gray-100);
+    }
+
+    .crumbs li:last-child {
+      color: var(--color-navy);
+    }
+
+    .crumbs li:last-child::after {
+      content: none;
+    }
+
+    /* ======================================================================
+       BUY BLOCK — gallery on the left, everything you decide with on the right
+       ====================================================================== */
+
+    .pdp {
+      padding-bottom: var(--space-7);
+    }
+
+    .pdp__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: var(--space-6);
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .pdp__grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+      }
+    }
+
+    /* ---- Gallery ---- */
+
+    .gallery {
+      position: sticky;
+      top: var(--space-6);
+    }
+
+    @media (max-width: 900px) {
+      .gallery {
+        position: static;
+      }
+    }
+
+    .gallery__stage {
+      position: relative;
+      display: grid;
+      place-items: center;
+      aspect-ratio: 4 / 4.1;
+      background-color: var(--color-surface-blue);
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+
+    .gallery__stage img {
+      grid-area: 1 / 1;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: var(--space-5);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    /* Photographs fill the frame; the drum shot is a cut-out and needs air */
+    .gallery__stage img[data-fill] {
+      object-fit: cover;
+      padding: 0;
+    }
+
+    .gallery__stage img.is-active {
+      opacity: 1;
+    }
+
+    .gallery__flag {
+      position: absolute;
+      top: var(--space-3);
+      left: var(--space-3);
+      z-index: 1;
+    }
+
+    .gallery__thumbs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-2);
+      margin-top: var(--space-2);
+    }
+
+    .gallery__thumb {
+      aspect-ratio: 1;
+      background-color: var(--color-gray-50);
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-button);
+      overflow: hidden;
+      padding: 0;
+      transition: border-color 0.15s ease;
+    }
+
+    .gallery__thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery__thumb[data-contain] img {
+      object-fit: contain;
+      padding: var(--space-1);
+    }
+
+    .gallery__thumb:hover {
+      border-color: var(--color-steel);
+    }
+
+    .gallery__thumb.is-active {
+      border-color: var(--color-sky);
+      box-shadow: inset 0 0 0 1px var(--color-sky);
+    }
+
+    .gallery__note {
+      color: var(--color-gray-500);
+      margin-top: var(--space-2);
+    }
+
+    /* ---- Buy column ---- */
+
+    .buy__eyebrow {
+      margin-bottom: var(--space-2);
+    }
+
+    .buy h1 {
+      letter-spacing: -0.01em;
+    }
+
+    .buy__tagline {
+      font-family: var(--font-heading);
+      font-weight: var(--weight-heading-bold);
+      font-size: var(--text-h3);
+      line-height: var(--leading-h3);
+      text-transform: uppercase;
+      color: var(--color-steel);
+      margin-top: var(--space-1);
+    }
+
+    .buy__lead {
+      color: var(--color-navy);
+      margin-top: var(--space-3);
+      max-width: 52ch;
+    }
+
+    .buy__flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      margin-top: var(--space-3);
+    }
+
+    /* Four facts that answer "what am I actually buying" at a glance */
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-2) var(--space-3);
+      margin-top: var(--space-4);
+      padding-block: var(--space-3);
+      border-block: 1px solid var(--color-gray-100);
+    }
+
+    .facts div {
+      min-width: 0;
+    }
+
+    .facts dt {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+    }
+
+    .facts dd {
+      font-weight: var(--weight-body-medium);
+      line-height: 1.35;
+      margin-top: 2px;
+    }
+
+    /* ---- Option groups (size, purchase mode) ---- */
+
+    .opt {
+      margin-top: var(--space-4);
+    }
+
+    .opt__label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-2);
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-2);
+    }
+
+    .opt__hint {
+      letter-spacing: 0;
+      text-transform: none;
+      font-weight: var(--weight-body-regular);
+      color: var(--color-gray-500);
+    }
+
+    .opt__row {
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .opt__row--3 {
+      grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    }
+
+    .opt__row--2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 420px) {
+      .opt__row--2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Radio cards — the input itself is hidden, the label is the control */
+    .swatch {
+      position: relative;
+      display: block;
+      background-color: var(--color-white);
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-card);
+      padding: var(--space-2);
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .swatch:hover {
+      border-color: var(--color-steel);
+    }
+
+    .swatch input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .swatch__name {
+      font-family: var(--font-heading);
+      font-size: var(--text-h3);
+      font-weight: var(--weight-heading-bold);
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .swatch__meta {
+      display: block;
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-medium);
+      color: var(--color-gray-500);
+      margin-top: 4px;
+    }
+
+    .swatch__price {
+      display: block;
+      font-weight: var(--weight-body-semibold);
+      margin-top: var(--space-1);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .swatch:has(input:checked) {
+      border-color: var(--color-sky);
+      box-shadow: inset 0 0 0 1px var(--color-sky);
+      background-color: var(--color-surface-blue);
+    }
+
+    .swatch:has(input:focus-visible) {
+      outline: 2px solid var(--color-sky);
+      outline-offset: 2px;
+    }
+
+    .swatch--plan .swatch__name {
+      font-family: var(--font-body);
+      font-size: var(--text-body);
+      font-weight: var(--weight-body-semibold);
+      line-height: var(--leading-body);
+      text-transform: none;
+    }
+
+    .swatch__save {
+      display: inline-block;
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      color: var(--color-success);
+      margin-top: 2px;
+    }
+
+    /* ---- Price + cart ---- */
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-4);
+    }
+
+    .price {
+      font-family: var(--font-heading);
+      font-size: var(--text-h2);
+      font-weight: var(--weight-heading-extrabold);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .price-was {
+      font-size: var(--text-body);
+      color: var(--color-gray-500);
+      text-decoration: line-through;
+    }
+
+    .price-unit {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-medium);
+      color: var(--color-gray-500);
+    }
+
+    .cart-row {
+      display: flex;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+
+    .qty {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-button);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .qty button {
+      width: 44px;
+      height: 100%;
+      background: none;
+      border: none;
+      color: var(--color-steel);
+      font-size: var(--text-body-lg);
+      line-height: 1;
+    }
+
+    .qty button:hover {
+      background-color: var(--color-gray-50);
+      color: var(--color-navy);
+    }
+
+    .qty input {
+      width: 44px;
+      border: none;
+      text-align: center;
+      font: inherit;
+      font-weight: var(--weight-body-semibold);
+      color: var(--color-navy);
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .qty input::-webkit-outer-spin-button,
+    .qty input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .cart-row .btn {
+      flex-grow: 1;
+    }
+
+    .buy__stock {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      margin-top: var(--space-2);
+      color: var(--color-gray-500);
+    }
+
+    .buy__stock::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-pill);
+      background-color: var(--color-success);
+    }
+
+    .buy__unsure {
+      margin-top: var(--space-3);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--color-gray-100);
+    }
+
+    .buy__unsure button {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--color-sky);
+      font-weight: var(--weight-body-semibold);
+    }
+
+    .buy__unsure button:hover {
+      text-decoration: underline;
+    }
+
+    /* Three reassurances, icon + line */
+    .assure {
+      display: grid;
+      gap: var(--space-2);
+      margin-top: var(--space-4);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--color-gray-100);
+    }
+
+    .assure li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      list-style: none;
+    }
+
+    .assure svg {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      color: var(--color-steel);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .assure strong {
+      font-weight: var(--weight-body-semibold);
+    }
+
+    /* ======================================================================
+       STICKY SECTION BAR — in-page nav that turns into a buy bar on scroll
+       ====================================================================== */
+
+    .pdp-bar {
+      position: sticky;
+      top: 0;
+      z-index: 6;
+      background-color: color-mix(in srgb, var(--color-white) 88%, transparent);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border-block: 1px solid var(--color-gray-100);
+    }
+
+    .pdp-bar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .pdp-bar__links {
+      display: flex;
+      gap: var(--space-3);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .pdp-bar__links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .pdp-bar__links a {
+      position: relative;
+      white-space: nowrap;
+      padding-block: var(--space-2);
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+    }
+
+    .pdp-bar__links a:hover {
+      color: var(--color-navy);
+      text-decoration: none;
+    }
+
+    .pdp-bar__links a.is-active {
+      color: var(--color-navy);
+    }
+
+    .pdp-bar__links a.is-active::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      bottom: -1px;
+      height: 2px;
+      background-color: var(--color-sky);
+    }
+
+    /* Hidden until the buy block scrolls out of view */
+    .pdp-bar__buy {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-shrink: 0;
+      opacity: 0;
+      transform: translateY(4px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .pdp-bar.is-stuck .pdp-bar__buy {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+
+    .pdp-bar__price {
+      font-family: var(--font-heading);
+      font-size: var(--text-h3);
+      font-weight: var(--weight-heading-bold);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 900px) {
+      .pdp-bar__buy {
+        display: none;
+      }
+    }
+
+    /* ======================================================================
+       IS THIS YOUR PRODUCT — the fit check, before any more selling
+       ====================================================================== */
+
+    .fit__grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+      margin-top: var(--space-5);
+    }
+
+    @media (max-width: 768px) {
+      .fit__grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .fit__card {
+      background-color: var(--color-white);
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-card);
+      padding: var(--space-4);
+    }
+
+    .fit__card h3 {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .fit__mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      border-radius: var(--radius-pill);
+      color: var(--color-white);
+      font-size: var(--text-small);
+      line-height: 1;
+    }
+
+    .fit__mark--yes {
+      background-color: var(--color-success);
+    }
+
+    .fit__mark--no {
+      background-color: var(--color-gray-500);
+    }
+
+    .fit__list {
+      list-style: none;
+      margin-top: var(--space-3);
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .fit__list li {
+      display: flex;
+      gap: var(--space-2);
+      padding-top: var(--space-2);
+      border-top: 1px solid var(--color-gray-100);
+    }
+
+    .fit__list li::before {
+      content: "—";
+      color: var(--color-steel);
+      flex-shrink: 0;
+    }
+
+    .fit__list a {
+      font-weight: var(--weight-body-semibold);
+    }
+
+    .fit__quiz {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background-color: var(--color-navy);
+      color: var(--color-white);
+      border-radius: var(--radius-card);
+    }
+
+    .fit__quiz p {
+      color: var(--color-gray-100);
+      margin: 0;
+    }
+
+    .fit__quiz strong {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: var(--text-h3);
+      font-weight: var(--weight-heading-bold);
+      text-transform: uppercase;
+      color: var(--color-white);
+    }
+
+    /* ======================================================================
+       WHAT IT DOES — three jobs, plain language
+       ====================================================================== */
+
+    .jobs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+      margin-top: var(--space-5);
+    }
+
+    @media (max-width: 768px) {
+      .jobs {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .job {
+      background-color: var(--color-white);
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-card);
+      padding: var(--space-4);
+    }
+
+    /* Hexagon icon badge — the motif the homepage uses for categories */
+    .job__icon {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 58px;
+      margin-bottom: var(--space-3);
+      background-color: var(--color-navy);
+      clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    }
+
+    .job__icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--color-sky);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .job p {
+      color: var(--color-gray-500);
+      margin-top: var(--space-1);
+    }
+
+    /* ======================================================================
+       DOSING — the calculator and the chart it generates
+       ====================================================================== */
+
+    .dose__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      gap: var(--space-5);
+      align-items: start;
+      margin-top: var(--space-5);
+    }
+
+    @media (max-width: 900px) {
+      .dose__grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .calc {
+      background-color: var(--color-navy);
+      color: var(--color-white);
+      border-radius: var(--radius-card);
+      padding: var(--space-4);
+    }
+
+    .calc h3 {
+      color: var(--color-white);
+    }
+
+    .calc__intro {
+      color: var(--color-gray-100);
+      margin-top: var(--space-1);
+    }
+
+    .calc__field {
+      margin-top: var(--space-4);
+    }
+
+    .calc__field label {
+      display: block;
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-gray-100);
+      margin-bottom: var(--space-1);
+    }
+
+    .calc__input {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      background-color: var(--glass-bg);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-button);
+      padding: var(--space-2) var(--space-3);
+    }
+
+    .calc__input input {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--color-white);
+      font-family: var(--font-heading);
+      font-size: var(--text-h3);
+      font-weight: var(--weight-heading-bold);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .calc__input input:focus {
+      outline: none;
+    }
+
+    .calc__input span {
+      flex-shrink: 0;
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      color: var(--color-gray-100);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .calc__range {
+      width: 100%;
+      margin-top: var(--space-2);
+      accent-color: var(--color-sky);
+    }
+
+    .calc__cycles {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-1);
+    }
+
+    .calc__cycle {
+      background-color: transparent;
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-button);
+      color: var(--color-white);
+      padding-block: var(--space-1);
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+    }
+
+    .calc__cycle:hover {
+      border-color: var(--color-sky);
+    }
+
+    .calc__cycle.is-active {
+      background-color: var(--color-sky);
+      border-color: var(--color-sky);
+      color: var(--color-white);
+    }
+
+    .calc__out {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-2);
+      margin-top: var(--space-4);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--color-border-light);
+    }
+
+    .calc__out div {
+      min-width: 0;
+    }
+
+    .calc__out dt {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-medium);
+      color: var(--color-gray-100);
+      line-height: var(--leading-small);
+    }
+
+    .calc__out dd {
+      font-family: var(--font-heading);
+      font-size: var(--text-h3);
+      font-weight: var(--weight-heading-bold);
+      line-height: 1.1;
+      color: var(--color-sky);
+      font-variant-numeric: tabular-nums;
+      margin-top: 4px;
+    }
+
+    .calc__out dd small {
+      display: block;
+      font-family: var(--font-body);
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-medium);
+      color: var(--color-gray-100);
+      text-transform: none;
+    }
+
+    .calc__rec {
+      margin-top: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      background-color: var(--glass-bg);
+      border-radius: var(--radius-button);
+      color: var(--color-gray-100);
+      font-size: var(--text-small);
+      line-height: var(--leading-body);
+    }
+
+    .calc__rec strong {
+      color: var(--color-white);
+      font-weight: var(--weight-body-semibold);
+    }
+
+    /* Steps beside the calculator */
+    .dose__steps {
+      list-style: none;
+      counter-reset: dose;
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    .dose__steps li {
+      counter-increment: dose;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: var(--space-3);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--color-gray-100);
+    }
+
+    .dose__steps li::before {
+      content: counter(dose);
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 50px;
+      background-color: var(--color-surface-blue);
+      color: var(--color-steel);
+      font-family: var(--font-heading);
+      font-size: var(--text-h3);
+      font-weight: var(--weight-heading-extrabold);
+      clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    }
+
+    .dose__steps h3 {
+      font-size: var(--text-body-lg);
+      text-transform: none;
+      font-family: var(--font-body);
+      font-weight: var(--weight-body-semibold);
+      line-height: 1.35;
+    }
+
+    .dose__steps p {
+      color: var(--color-gray-500);
+      margin-top: 2px;
+    }
+
+    /* Reference chart, generated from the same maths as the calculator */
+    .chart {
+      margin-top: var(--space-5);
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-card);
+      overflow-x: auto;
+      background-color: var(--color-white);
+    }
+
+    .chart table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 560px;
+    }
+
+    .chart caption {
+      text-align: left;
+      padding: var(--space-3) var(--space-3) 0;
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+    }
+
+    .chart th,
+    .chart td {
+      text-align: left;
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--color-gray-100);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chart thead th {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+    }
+
+    .chart tbody th {
+      font-weight: var(--weight-body-semibold);
+    }
+
+    .chart tbody tr:last-child th,
+    .chart tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .chart tbody tr.is-match {
+      background-color: var(--color-surface-blue);
+    }
+
+    .dose__note {
+      margin-top: var(--space-2);
+      color: var(--color-gray-500);
+    }
+
+    /* ======================================================================
+       TESTING — one card per test, with the kit that runs it
+       ====================================================================== */
+
+    .tests {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+      margin-top: var(--space-5);
+    }
+
+    @media (max-width: 768px) {
+      .tests {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .test {
+      display: flex;
+      flex-direction: column;
+      background-color: var(--color-white);
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-card);
+      padding: var(--space-4);
+    }
+
+    /* Chemistry names that lose their meaning in caps */
+    .test__title--case {
+      text-transform: none;
+    }
+
+    .test__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    .test p {
+      color: var(--color-gray-500);
+      margin-top: var(--space-1);
+    }
+
+    .test__target {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      background-color: var(--color-surface-blue);
+      border-radius: var(--radius-button);
+    }
+
+    .test__target dt {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+    }
+
+    .test__target dd {
+      font-family: var(--font-heading);
+      font-size: var(--text-h3);
+      font-weight: var(--weight-heading-bold);
+      line-height: 1;
+      color: var(--color-navy);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .test__kit {
+      list-style: none;
+      margin-top: var(--space-3);
+      padding-top: var(--space-2);
+      border-top: 1px solid var(--color-gray-100);
+      display: grid;
+      gap: var(--space-1);
+    }
+
+    .test__kit-label {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+      margin-bottom: var(--space-1);
+    }
+
+    .test__kit li {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    .test__kit span:last-child {
+      font-variant-numeric: tabular-nums;
+      font-weight: var(--weight-body-semibold);
+      flex-shrink: 0;
+    }
+
+    .test__refill {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-medium);
+      color: var(--color-steel);
+    }
+
+    /* Bundle strip closing the testing section */
+    .bundle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background-color: var(--color-white);
+      border: 1px solid var(--color-steel);
+      border-radius: var(--radius-card);
+    }
+
+    .bundle__price {
+      font-family: var(--font-heading);
+      font-size: var(--text-h2);
+      font-weight: var(--weight-heading-extrabold);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bundle__meta {
+      color: var(--color-gray-500);
+      margin-top: 2px;
+    }
+
+    /* Feed parts read as a checklist, not a shelf of near-identical photos */
+    .parts {
+      list-style: none;
+      margin-top: var(--space-5);
+      background-color: var(--color-white);
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+
+    .parts__row {
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+    }
+
+    .parts__row + .parts__row {
+      border-top: 1px solid var(--color-gray-100);
+    }
+
+    .parts__icon {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 58px;
+      background-color: var(--color-surface-blue);
+      clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    }
+
+    .parts__icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--color-steel);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .parts__body h3 {
+      font-family: var(--font-body);
+      font-size: var(--text-body-lg);
+      font-weight: var(--weight-body-semibold);
+      line-height: 1.35;
+      text-transform: none;
+    }
+
+    .parts__body p {
+      color: var(--color-gray-500);
+      margin-top: 2px;
+    }
+
+    .parts__buy {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .parts__price {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: var(--text-h3);
+      font-weight: var(--weight-heading-bold);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 700px) {
+      .parts__row {
+        grid-template-columns: 52px minmax(0, 1fr);
+        row-gap: var(--space-2);
+      }
+
+      .parts__buy,
+      .parts__row .btn {
+        grid-column: 2;
+        justify-self: start;
+        text-align: left;
+      }
+    }
+
+    /* ======================================================================
+       SAFETY — navy band with the same hex lattice as the homepage
+       ====================================================================== */
+
+    .safety {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+    }
+
+    .safety__lattice {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      color: var(--color-white);
+      opacity: 0.05;
+      /* Fades through the middle so the copy sits on clean navy */
+      -webkit-mask-image: radial-gradient(75% 75% at 30% 40%, transparent 30%, #000 100%);
+      mask-image: radial-gradient(75% 75% at 30% 40%, transparent 30%, #000 100%);
+    }
+
+    .safety__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+      margin-top: var(--space-5);
+    }
+
+    @media (max-width: 768px) {
+      .safety__grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+      }
+    }
+
+    .safety__item {
+      padding-top: var(--space-3);
+      border-top: 2px solid var(--color-sky);
+    }
+
+    .safety__item h3 {
+      color: var(--color-white);
+    }
+
+    .safety__item p {
+      color: var(--color-gray-100);
+      margin-top: var(--space-1);
+    }
+
+    .safety__foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-5);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--color-border-light);
+    }
+
+    .safety__foot p {
+      color: var(--color-gray-100);
+      max-width: 60ch;
+    }
+
+    /* ======================================================================
+       SPECS + DOCUMENTS
+       ====================================================================== */
+
+    .specs__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: var(--space-5);
+      align-items: start;
+      margin-top: var(--space-5);
+    }
+
+    @media (max-width: 900px) {
+      .specs__grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--color-white);
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+
+    .spec-table th,
+    .spec-table td {
+      text-align: left;
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--color-gray-100);
+      vertical-align: top;
+    }
+
+    .spec-table th {
+      width: 42%;
+      font-weight: var(--weight-body-medium);
+      color: var(--color-gray-500);
+    }
+
+    .spec-table td {
+      font-weight: var(--weight-body-medium);
+    }
+
+    .spec-table tr:last-child th,
+    .spec-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .docs {
+      list-style: none;
+      display: grid;
+      gap: var(--space-1);
+    }
+
+    .docs a {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3);
+      background-color: var(--color-white);
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-card);
+      color: var(--color-navy);
+      font-weight: var(--weight-body-medium);
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .docs a:hover {
+      border-color: var(--color-steel);
+      background-color: var(--color-gray-50);
+      text-decoration: none;
+    }
+
+    .docs svg {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      color: var(--color-steel);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .docs small {
+      margin-left: auto;
+      font-size: var(--text-small);
+      color: var(--color-gray-500);
+      flex-shrink: 0;
+    }
+
+    /* ======================================================================
+       FAQ + RELATED
+       ====================================================================== */
+
+    .faq__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+      gap: var(--space-4);
+      align-items: start;
+      margin-top: var(--space-5);
+    }
+
+    @media (max-width: 900px) {
+      .faq__grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .faq {
+      background-color: var(--color-white);
+    }
+
+    .faq__aside {
+      background-color: var(--color-navy);
+      color: var(--color-white);
+      border-radius: var(--radius-card);
+      padding: var(--space-4);
+    }
+
+    .faq__aside h3 {
+      color: var(--color-white);
+    }
+
+    .faq__aside p {
+      color: var(--color-gray-100);
+      margin-top: var(--space-2);
+    }
+
+    .faq__aside .btn {
+      margin-top: var(--space-3);
+    }
+
+    .faq__aside-note {
+      padding-top: var(--space-3);
+      margin-top: var(--space-3);
+      border-top: 1px solid var(--color-border-light);
+    }
+
+    .related__head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .related__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-3);
+      margin-top: var(--space-5);
+    }
+
+    @media (max-width: 1000px) {
+      .related__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .related__grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ======================================================================
+       MOBILE BUY BAR — the buy block is far up the page on a phone
+       ====================================================================== */
+
+    .buybar {
+      position: fixed;
+      inset-inline: 0;
+      bottom: 0;
+      z-index: 7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--side-pad-mobile);
+      background-color: var(--color-white);
+      border-top: 1px solid var(--color-gray-100);
+      transform: translateY(110%);
+      transition: transform 0.25s ease;
+    }
+
+    .buybar.is-visible {
+      transform: none;
+    }
+
+    .buybar__price {
+      font-family: var(--font-heading);
+      font-size: var(--text-h3);
+      font-weight: var(--weight-heading-bold);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .buybar__meta {
+      font-size: var(--text-small);
+      color: var(--color-gray-500);
+    }
+
+    @media (min-width: 901px) {
+      .buybar {
+        display: none;
+      }
+    }
+
+    /* Section headings share one measure across the page */
+    .lede {
+      max-width: 62ch;
+      color: var(--color-gray-500);
+      margin-top: var(--space-2);
+    }
+
+    .lede--dark {
+      color: var(--color-gray-100);
+    }
+
+    .section__eyebrow {
+      margin-bottom: var(--space-2);
+    }
+  </style>
+</head>
+<body>
+  <div class="promo-banner">
+    <div class="container">
+      Free shipping on orders over $500
+      <span class="promo-banner__sep">·</span>
+      <span class="promo-banner__secondary"
+        >Most in-stock items ship same day —
+        <a href="index.html#products">shop now</a></span
+      >
+    </div>
+  </div>
+
+  <!-- Shared chrome: same header, nav and mega menu as the homepage
+       (markup mirrors index.html; styles live in css/chrome.css). -->
+  <div class="page-chrome">
+    <header class="site-header">
+      <div class="container">
+        <a class="site-header__logo" href="index.html">
+          <img src="images/logo.svg" alt="ChemX Direct" />
+        </a>
+        <button
+          class="site-header__menu-btn"
+          type="button"
+          data-nav-toggle
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="site-nav"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <nav class="site-nav" id="site-nav" aria-label="Main">
+          <div class="site-nav__item" data-mega-item>
+            <button
+              class="site-nav__link"
+              type="button"
+              data-mega-toggle
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="mega-shop"
+            >
+              Shop
+              <svg class="site-nav__chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 4.5 6 8.5l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <!-- Filled in by js/main.js from the catalog data files -->
+            <div class="mega" id="mega-shop" data-mega></div>
+          </div>
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+          <a href="#">FAQ</a>
+        </nav>
+      </div>
+    </header>
+  </div>
+
+  <!-- Icon sprite — drawn once, referenced by <use> below -->
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="ic-scale" viewBox="0 0 24 24"><path d="M4 19.5h16"/><path d="M6.5 19.5V13l3-3 3 3 3-4 2 2v9"/><path d="M8.5 5.5h3.5"/><path d="M10.2 3.6v3.8"/></symbol>
+      <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 3.2 19 6v6c0 4-3 7-7 8.8C8 19 5 16 5 12V6z"/><path d="m9.2 12.2 2 2 3.6-4"/></symbol>
+      <symbol id="ic-tracer" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.6v3"/><path d="M12 18.4v3"/><path d="M2.6 12h3"/><path d="M18.4 12h3"/><path d="m5.4 5.4 2.1 2.1"/><path d="m16.5 16.5 2.1 2.1"/><path d="m18.6 5.4-2.1 2.1"/><path d="m7.5 16.5-2.1 2.1"/></symbol>
+      <symbol id="ic-truck" viewBox="0 0 24 24"><path d="M2.8 6.5h10.4v9.8H2.8z"/><path d="M13.2 10h3.6l2.4 2.6v3.7h-6z"/><circle cx="7" cy="18" r="1.8"/><circle cx="16.6" cy="18" r="1.8"/></symbol>
+      <symbol id="ic-doc" viewBox="0 0 24 24"><path d="M13.6 3H6.4v18h11.2V7z"/><path d="M13.4 3v4.2h4.2"/><path d="M9 12.6h6"/><path d="M9 16.2h4.4"/></symbol>
+      <symbol id="ic-inject" viewBox="0 0 24 24"><path d="M3 12h6"/><path d="M15 12h6"/><path d="M9 7.5h6v9H9z"/><path d="M12 3.4v4.1"/><path d="m10.4 5.4 1.6-2 1.6 2"/></symbol>
+      <symbol id="ic-valve" viewBox="0 0 24 24"><path d="M4 20.4h16"/><path d="M12 20.4v-6.2"/><path d="M8.2 14.2h7.6l-1.6-4.4H9.8z"/><circle cx="12" cy="6" r="2.6"/></symbol>
+      <symbol id="ic-tube" viewBox="0 0 24 24"><path d="M4 6.6h7.4a4.4 4.4 0 0 1 0 8.8H8a3.4 3.4 0 0 0 0 6.8h9"/><path d="M4 3.8v5.6"/></symbol>
+      <symbol id="ic-pump" viewBox="0 0 24 24"><circle cx="9.8" cy="13.4" r="4.7"/><path d="M9.8 8.7V4.4h4.6"/><path d="M14.5 13.4H20"/><path d="m17.4 10.6 2.6 2.8-2.6 2.8"/></symbol>
+      <symbol id="ic-chat" viewBox="0 0 24 24"><path d="M20.4 13.4c0 2.4-2.9 4.4-6.6 4.4a10 10 0 0 1-2.4-.3L6.6 20l.6-3a4.6 4.6 0 0 1-2.6-3.6c0-2.4 2.9-4.4 6.6-4.4"/><path d="M15.4 3.6c2.7 0 4.9 1.6 4.9 3.5S18.1 10.7 15.4 10.7"/></symbol>
+    </defs>
+  </svg>
+
+  <main>
+    <!-- Breadcrumb — the taxonomy here matches decision-tree.json -->
+    <div class="container crumbs">
+      <nav aria-label="Breadcrumb">
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#products">Cooling Towers</a></li>
+          <li><a href="index.html#products">Soft Water</a></li>
+          <li aria-current="page">CWT 5000</li>
+        </ol>
+      </nav>
+    </div>
+
+    <!-- ==================================================================
+         BUY BLOCK
+         Product record mirrors data/decision-tree.json (CWT5000) and the
+         SAMPLE pricing in js/main.js. Swap for real SKU data at build time.
+         ================================================================== -->
+    <section class="pdp">
+      <div class="container">
+        <div class="pdp__grid">
+          <div class="gallery" data-gallery>
+            <div class="gallery__stage">
+              <span class="badge gallery__flag">Cooling towers · Soft water</span>
+              <img
+                src="images/product-drum.png"
+                alt="ChemX Direct CWT 5000 in a 55-gallon drum"
+                class="is-active"
+                data-gallery-img
+              />
+              <img
+                src="images/tote-valve.jpg"
+                alt="Discharge valve on an IBC tote of CWT 5000"
+                data-gallery-img
+                data-fill
+                loading="lazy"
+              />
+              <img
+                src="images/dropper.jpg"
+                alt="Running the weekly drop test on a tower sample"
+                data-gallery-img
+                data-fill
+                loading="lazy"
+              />
+              <img
+                src="images/industrial-tanks.jpg"
+                alt="Cooling tower and tank installation the product is fed into"
+                data-gallery-img
+                data-fill
+                loading="lazy"
+              />
+            </div>
+            <div class="gallery__thumbs">
+              <button class="gallery__thumb is-active" type="button" data-contain data-gallery-thumb="0" aria-label="View the drum">
+                <img src="images/product-drum.png" alt="" />
+              </button>
+              <button class="gallery__thumb" type="button" data-gallery-thumb="1" aria-label="View the tote valve">
+                <img src="images/tote-valve.jpg" alt="" loading="lazy" />
+              </button>
+              <button class="gallery__thumb" type="button" data-gallery-thumb="2" aria-label="View the weekly test">
+                <img src="images/dropper.jpg" alt="" loading="lazy" />
+              </button>
+              <button class="gallery__thumb" type="button" data-gallery-thumb="3" aria-label="View a tower installation">
+                <img src="images/industrial-tanks.jpg" alt="" loading="lazy" />
+              </button>
+            </div>
+            <p class="text-small gallery__note">
+              Shown in the 55-gallon drum. Also stocked as a 5-gallon pail and
+              a 15-gallon keg — same chemistry, same dose rate.
+            </p>
+          </div>
+
+          <div class="buy">
+            <p class="pill-outline buy__eyebrow">Cooling towers · Soft water</p>
+            <h1>CWT 5000</h1>
+            <p class="buy__tagline">Scale &amp; corrosion inhibitor</p>
+            <p class="text-body-lg buy__lead">
+              One liquid that keeps mineral scale off your fill and heat
+              exchanger, protects the steel and copper in the loop, and carries
+              a fluorescent tracer so you can prove the dose is where you set
+              it. Feed it continuously with a small pump. Test once a week.
+            </p>
+
+            <div class="buy__flags">
+              <span class="badge badge--warning">Alkaline — irritant</span>
+              <span class="badge">Continuous feed</span>
+              <span class="badge">Softened makeup water</span>
+            </div>
+
+            <dl class="facts">
+              <div>
+                <dt>Form</dt>
+                <dd>Clear amber liquid concentrate</dd>
+              </div>
+              <div>
+                <dt>Feeds with</dt>
+                <dd>Any 30 GPD chemical pump</dd>
+              </div>
+              <div>
+                <dt>You test</dt>
+                <dd>PTSA tracer, conductivity, hardness, pH</dd>
+              </div>
+              <div>
+                <dt>Gear you need</dt>
+                <dd>Splash goggles, nitrile gloves</dd>
+              </div>
+            </dl>
+
+            <div class="opt">
+              <div class="opt__label">
+                <span>Container size</span>
+                <span class="opt__hint" data-size-hint>$41.73 per gallon</span>
+              </div>
+              <div class="opt__row opt__row--3">
+                <label class="swatch">
+                  <input type="radio" name="size" value="5" data-size data-price="249" data-gal="5" data-label="5-gal pail" />
+                  <span class="swatch__name">5 gal</span>
+                  <span class="swatch__meta">Pail</span>
+                  <span class="swatch__price">$249</span>
+                </label>
+                <label class="swatch">
+                  <input type="radio" name="size" value="15" data-size data-price="669" data-gal="15" data-label="15-gal keg" />
+                  <span class="swatch__name">15 gal</span>
+                  <span class="swatch__meta">Keg</span>
+                  <span class="swatch__price">$669</span>
+                </label>
+                <label class="swatch">
+                  <input type="radio" name="size" value="55" data-size data-price="2295" data-gal="55" data-label="55-gal drum" checked />
+                  <span class="swatch__name">55 gal</span>
+                  <span class="swatch__meta">Drum</span>
+                  <span class="swatch__price">$2,295</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="opt">
+              <div class="opt__label">
+                <span>How you want it</span>
+                <span class="opt__hint">Change or cancel any time</span>
+              </div>
+              <div class="opt__row opt__row--2">
+                <label class="swatch swatch--plan">
+                  <input type="radio" name="plan" value="once" data-plan data-discount="0" checked />
+                  <span class="swatch__name">One-time order</span>
+                  <span class="swatch__meta">Reorder when you're ready</span>
+                </label>
+                <label class="swatch swatch--plan">
+                  <input type="radio" name="plan" value="sub" data-plan data-discount="0.1" />
+                  <span class="swatch__name">Reorder every 8 weeks</span>
+                  <span class="swatch__save">Save 10%</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="price-row">
+              <span class="price" data-total>$2,295</span>
+              <span class="price-was" data-was hidden></span>
+              <span class="price-unit" data-unit>55-gal drum · $41.73/gal</span>
+            </div>
+
+            <div class="cart-row">
+              <div class="qty">
+                <button type="button" data-qty-down aria-label="Decrease quantity">−</button>
+                <input type="number" value="1" min="1" max="99" data-qty aria-label="Quantity" />
+                <button type="button" data-qty-up aria-label="Increase quantity">+</button>
+              </div>
+              <button class="btn btn--primary btn--lg" type="button" data-add-to-cart>Add to cart</button>
+            </div>
+
+            <p class="text-small buy__stock">In stock — ships in 1–2 business days</p>
+
+            <div class="buy__unsure">
+              <p class="text-small text-muted">
+                Not sure this is the one for your system?
+                <button type="button" data-open-quiz>Answer four questions →</button>
+              </p>
+            </div>
+
+            <ul class="assure">
+              <li>
+                <svg aria-hidden="true"><use href="#ic-truck" /></svg>
+                <span><strong>Ships from Ohio.</strong> Pails and kegs go UPS; drums move by freight with a liftgate.</span>
+              </li>
+              <li>
+                <svg aria-hidden="true"><use href="#ic-doc" /></svg>
+                <span><strong>SDS and tech sheet are on this page.</strong> Download them before you order, not after.</span>
+              </li>
+              <li>
+                <svg aria-hidden="true"><use href="#ic-chat" /></svg>
+                <span><strong>A water treatment tech answers.</strong> No ticket queue, no upsell to a service contract.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- In-page nav; becomes a buy bar once the block above scrolls away -->
+    <div class="pdp-bar" data-pdp-bar>
+      <div class="container">
+        <nav class="pdp-bar__links" aria-label="On this page">
+          <a href="#fit" data-spy>Is it right for you</a>
+          <a href="#does" data-spy>What it does</a>
+          <a href="#dosing" data-spy>Dosing</a>
+          <a href="#testing" data-spy>Testing</a>
+          <a href="#gear" data-spy>Equipment</a>
+          <a href="#specs" data-spy>Specs &amp; docs</a>
+          <a href="#faq" data-spy>FAQ</a>
+        </nav>
+        <div class="pdp-bar__buy">
+          <span class="pdp-bar__price" data-bar-price>$2,295</span>
+          <button class="btn btn--primary" type="button" data-add-to-cart>Add to cart</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================
+         1. FIT CHECK — guide, don't just list
+         ================================================================== -->
+    <section class="section section--blue" id="fit">
+      <div class="container">
+        <p class="pill-outline section__eyebrow">Before you buy</p>
+        <h2>Is CWT 5000 the right product for your tower?</h2>
+        <p class="text-body-lg lede">
+          Cooling tower chemistry comes down to one question: how hard is the
+          water you're making up with? Get that wrong and you'll be fighting
+          scale all summer. Here's the honest version.
+        </p>
+
+        <div class="fit__grid">
+          <div class="fit__card">
+            <h3>
+              <span class="fit__mark fit__mark--yes" aria-hidden="true">✓</span>
+              Use CWT 5000 if
+            </h3>
+            <ul class="fit__list">
+              <li>Your makeup water runs through a softener — under about 1 grain (17 ppm) of hardness</li>
+              <li>You're treating an open recirculating tower or an evaporative condenser</li>
+              <li>You can feed continuously with a small chemical pump, or you're ready to add one</li>
+              <li>You'd rather run one inhibitor than juggle a scale product, a corrosion product and a dispersant</li>
+            </ul>
+          </div>
+
+          <div class="fit__card">
+            <h3>
+              <span class="fit__mark fit__mark--no" aria-hidden="true">✕</span>
+              Look at something else if
+            </h3>
+            <ul class="fit__list">
+              <li>Your makeup is unsoftened city or well water — you want <a href="#">CWT 9000</a></li>
+              <li>You're treating a closed loop that doesn't evaporate — that's <a href="#">558T</a></li>
+              <li>What you actually have is algae or bacteria — start with a biocide instead: <a href="#">BioBrom BT</a> or <a href="#">DBNPA</a></li>
+              <li>It's a steam boiler, not a tower — see the <a href="index.html#products">boiler range</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="fit__quiz">
+          <p>
+            <strong>Don't know your hardness yet?</strong>
+            Four questions about your system and we'll point at one product — plus the test kit that proves it's working.
+          </p>
+          <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your product</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         2. WHAT IT DOES
+         ================================================================== -->
+    <section class="section" id="does">
+      <div class="container">
+        <p class="pill-outline section__eyebrow">What it does</p>
+        <h2>Three jobs, one drum</h2>
+        <p class="text-body-lg lede">
+          A cooling tower concentrates whatever is in your makeup water, over
+          and over, as it evaporates. CWT 5000 handles what that concentration
+          does to your equipment.
+        </p>
+
+        <div class="jobs">
+          <div class="job">
+            <div class="job__icon"><svg aria-hidden="true"><use href="#ic-scale" /></svg></div>
+            <h3>Keeps minerals in the water</h3>
+            <p>
+              A phosphonate and polymer package holds calcium and silica in
+              solution instead of letting them bake onto your fill, tubes and
+              heat exchanger surfaces — where a sixteenth of an inch of scale
+              costs you real efficiency.
+            </p>
+          </div>
+          <div class="job">
+            <div class="job__icon"><svg aria-hidden="true"><use href="#ic-shield" /></svg></div>
+            <h3>Films the metal</h3>
+            <p>
+              An azole component lays a protective film on copper and yellow
+              metal, and the inhibitor package covers mild steel. That's the
+              part you don't see working until you open the system up.
+            </p>
+          </div>
+          <div class="job">
+            <div class="job__icon"><svg aria-hidden="true"><use href="#ic-tracer" /></svg></div>
+            <h3>Proves the dose</h3>
+            <p>
+              A fluorescent PTSA tracer travels with the product. One meter
+              reading tells you whether your pump is actually keeping up — no
+              guessing, no waiting for a service visit to find out.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         3. DOSING — calculator + the chart it generates
+         ================================================================== -->
+    <section class="section section--blue" id="dosing">
+      <div class="container">
+        <p class="pill-outline section__eyebrow">Dosing</p>
+        <h2>How much, and how often</h2>
+        <p class="text-body-lg lede">
+          Two numbers run this product: the charge that gets you to strength,
+          and the daily feed that holds you there. Put your system volume in and
+          we'll do the arithmetic.
+        </p>
+
+        <div class="dose__grid">
+          <div class="calc" data-calc>
+            <h3>Dose calculator</h3>
+            <p class="text-small calc__intro">
+              System volume is the whole loop — basin, piping and everything
+              hanging off it. If you only know the basin, add roughly 30%.
+            </p>
+
+            <div class="calc__field">
+              <label for="calc-volume">System volume</label>
+              <div class="calc__input">
+                <input id="calc-volume" type="number" min="100" max="50000" step="100" value="2500" data-calc-volume />
+                <span>gallons</span>
+              </div>
+              <input
+                class="calc__range"
+                type="range"
+                min="100"
+                max="20000"
+                step="100"
+                value="2500"
+                data-calc-range
+                aria-label="System volume slider"
+              />
+            </div>
+
+            <div class="calc__field">
+              <label id="calc-cycles-label">Cycles of concentration</label>
+              <div class="calc__cycles" role="group" aria-labelledby="calc-cycles-label">
+                <button class="calc__cycle" type="button" data-cycles="2">2</button>
+                <button class="calc__cycle is-active" type="button" data-cycles="3">3</button>
+                <button class="calc__cycle" type="button" data-cycles="4">4</button>
+                <button class="calc__cycle" type="button" data-cycles="5">5</button>
+              </div>
+            </div>
+
+            <dl class="calc__out">
+              <div>
+                <dt>Initial charge</dt>
+                <dd data-out-charge>2.5 gal</dd>
+              </div>
+              <div>
+                <dt>Daily feed</dt>
+                <dd data-out-daily>112 oz<small>per day</small></dd>
+              </div>
+              <div>
+                <dt>A 55-gal drum lasts</dt>
+                <dd data-out-life>8 wks</dd>
+              </div>
+            </dl>
+
+            <p class="calc__rec" data-out-rec>
+              <strong>Buy the 55-gal drum.</strong> It covers about two months
+              of feed at this volume.
+            </p>
+          </div>
+
+          <ol class="dose__steps">
+            <li>
+              <div>
+                <h3>Charge the system</h3>
+                <p>
+                  Pour the initial charge straight into the tower basin with the
+                  pump running. This gets you to strength in one shot instead of
+                  waiting a week for the feed pump to catch up.
+                </p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <h3>Set the feed pump</h3>
+                <p>
+                  Set the pump to the daily feed rate above. On a 30 GPD pump
+                  that's usually a low stroke setting — write down where you put
+                  it so you can tell if someone moves it.
+                </p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <h3>Test after 24 hours</h3>
+                <p>
+                  Read PTSA and conductivity. PTSA tells you if the product is
+                  at strength; conductivity tells you whether your bleed is
+                  holding the cycles you assumed.
+                </p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <h3>Adjust, then hold</h3>
+                <p>
+                  Low tracer means feed more or bleed less. High tracer means
+                  the opposite. Once two readings in a row land in range, you're
+                  set — check weekly from there.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="chart">
+          <table data-chart>
+            <caption>Starting points at 3 cycles of concentration</caption>
+            <thead>
+              <tr>
+                <th scope="col">System volume</th>
+                <th scope="col">Initial charge</th>
+                <th scope="col">Daily feed</th>
+                <th scope="col">55-gal drum lasts</th>
+                <th scope="col">Target PTSA</th>
+              </tr>
+            </thead>
+            <tbody data-chart-body></tbody>
+          </table>
+        </div>
+        <p class="text-small dose__note">
+          These are starting points, not gospel. Your tracer reading is what
+          decides the final pump setting — every tower has its own leak rate,
+          drift loss and operating hours.
+        </p>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         4. TESTING — the four tests mapped to this product in
+         data/decision-tree.json, with components from
+         data/product-test-equipment-map.json
+         ================================================================== -->
+    <section class="section" id="testing">
+      <div class="container">
+        <p class="pill-outline section__eyebrow">Testing</p>
+        <h2>How you'll know it's working</h2>
+        <p class="text-body-lg lede">
+          Four readings, about ten minutes, once a week. Three of them are drop
+          counts — fill the tube, add drops, watch for the color change. The
+          other two are meters you dip in the water.
+        </p>
+
+        <div class="tests">
+          <article class="test">
+            <div class="test__head">
+              <h3>PTSA tracer</h3>
+              <span class="badge">Weekly</span>
+            </div>
+            <p>
+              The one that matters most. PTSA is a fluorescent dye blended into
+              CWT 5000 at a fixed ratio, so the reading tells you exactly how
+              much product is in the water. Low means your pump isn't keeping
+              up or you're bleeding too hard.
+            </p>
+            <dl class="test__target">
+              <dt>Target</dt>
+              <dd>90–110 ppb</dd>
+            </dl>
+            <ul class="test__kit">
+              <li class="test__kit-label">Runs on</li>
+              <li><span>Meter SP380</span><span>$385</span></li>
+            </ul>
+          </article>
+
+          <article class="test">
+            <div class="test__head">
+              <h3>Conductivity</h3>
+              <span class="badge">Weekly</span>
+            </div>
+            <p>
+              Tells you how many times your water has been concentrated by
+              evaporation — your cycles. It's what a bleed controller reads, and
+              it's how you check that the controller is telling the truth.
+            </p>
+            <dl class="test__target">
+              <dt>Target</dt>
+              <dd>1,800–2,400 µS</dd>
+            </dl>
+            <ul class="test__kit">
+              <li class="test__kit-label">Runs on</li>
+              <li><span>Meter 4P</span><span>$295</span></li>
+            </ul>
+          </article>
+
+          <article class="test">
+            <div class="test__head">
+              <h3>Total hardness</h3>
+              <span class="badge">Weekly</span>
+            </div>
+            <p>
+              This one is really a check on your softener. CWT 5000 is built for
+              soft makeup water — if hardness starts showing up in the makeup,
+              your softener needs salt or service before the tower shows scale.
+            </p>
+            <dl class="test__target">
+              <dt>Target</dt>
+              <dd>Under 17 ppm</dd>
+            </dl>
+            <ul class="test__kit">
+              <li class="test__kit-label">Runs on</li>
+              <li><span>Hardness Buffer Solution <span class="test__refill">· refill</span></span><span>$14</span></li>
+              <li><span>Hardness Titrating Solution <span class="test__refill">· refill</span></span><span>$16</span></li>
+            </ul>
+          </article>
+
+          <article class="test">
+            <div class="test__head">
+              <h3 class="test__title--case">pH</h3>
+              <span class="badge">Weekly</span>
+            </div>
+            <p>
+              Drifting low means acid is getting in somewhere — usually flue gas
+              or an acid feed gone wrong — and corrosion follows. Drifting high
+              usually means scale is about to fall out of solution.
+            </p>
+            <dl class="test__target">
+              <dt>Target</dt>
+              <dd>8.2–9.0</dd>
+            </dl>
+            <ul class="test__kit">
+              <li class="test__kit-label">Runs on</li>
+              <li><span>Cresol Red Indicator <span class="test__refill">· refill</span></span><span>$14</span></li>
+              <li><span>Test Tube</span><span>$9</span></li>
+              <li><span>Slide Viewer</span><span>$12</span></li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="bundle">
+          <div>
+            <h3>CWT 5000 test set — everything above, boxed</h3>
+            <p class="bundle__meta">
+              Both meters, all reagents, tube and viewer. Reagents reorder on
+              their own; the meters are a one-time buy.
+            </p>
+          </div>
+          <div>
+            <span class="bundle__price">$669</span>
+            <p class="text-small bundle__meta">$745 bought separately — save $76</p>
+          </div>
+          <button class="btn btn--primary" type="button" data-add-to-cart>Add test set</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         5. FEED EQUIPMENT — from the equipment list in
+         data/product-test-equipment-map.json
+         ================================================================== -->
+    <section class="section section--blue" id="gear">
+      <div class="container">
+        <p class="pill-outline section__eyebrow">Equipment</p>
+        <h2>What you need to feed it</h2>
+        <p class="text-body-lg lede">
+          If you already have a working feed pump and injection point, skip
+          this. If you're starting from nothing, these four parts are the whole
+          setup — pump on the wall, injector in the return line.
+        </p>
+
+        <ul class="parts">
+          <li class="parts__row">
+            <div class="parts__icon"><svg aria-hidden="true"><use href="#ic-pump" /></svg></div>
+            <div class="parts__body">
+              <h3>30 GPD Chemical Feed Pump</h3>
+              <p class="text-small">Meters chemical into your system at a set rate. Wall-mounts near the drum; one stroke setting is all you adjust.</p>
+            </div>
+            <div class="parts__buy">
+              <span class="parts__price">$349</span>
+              <span class="text-small text-muted">each</span>
+            </div>
+            <button class="btn btn--secondary" type="button" data-add-to-cart>Add</button>
+          </li>
+          <li class="parts__row">
+            <div class="parts__icon"><svg aria-hidden="true"><use href="#ic-inject" /></svg></div>
+            <div class="parts__body">
+              <h3>Plastic Injector</h3>
+              <p class="text-small">Injection fitting for standard lines. Threads into the return line so the product mixes where the flow is.</p>
+            </div>
+            <div class="parts__buy">
+              <span class="parts__price">$19</span>
+              <span class="text-small text-muted">each</span>
+            </div>
+            <button class="btn btn--secondary" type="button" data-add-to-cart>Add</button>
+          </li>
+          <li class="parts__row">
+            <div class="parts__icon"><svg aria-hidden="true"><use href="#ic-valve" /></svg></div>
+            <div class="parts__body">
+              <h3>Foot Valve</h3>
+              <p class="text-small">Keeps the suction line primed inside the drum, so the pump doesn't lose its prime overnight.</p>
+            </div>
+            <div class="parts__buy">
+              <span class="parts__price">$24</span>
+              <span class="text-small text-muted">each</span>
+            </div>
+            <button class="btn btn--secondary" type="button" data-add-to-cart>Add</button>
+          </li>
+          <li class="parts__row">
+            <div class="parts__icon"><svg aria-hidden="true"><use href="#ic-tube" /></svg></div>
+            <div class="parts__body">
+              <h3>Suction &amp; Discharge Tubing 3/8"</h3>
+              <p class="text-small">Connects pump, drum and injection point. A 20-ft roll covers most installs with slack to spare.</p>
+            </div>
+            <div class="parts__buy">
+              <span class="parts__price">$18</span>
+              <span class="text-small text-muted">20-ft roll</span>
+            </div>
+            <button class="btn btn--secondary" type="button" data-add-to-cart>Add</button>
+          </li>
+        </ul>
+
+        <div class="bundle">
+          <div>
+            <h3>Tower feed kit — all four parts</h3>
+            <p class="bundle__meta">
+              Pump, injector, foot valve and a 20-ft roll of tubing. One
+              afternoon to install with hand tools.
+            </p>
+          </div>
+          <div>
+            <span class="bundle__price">$379</span>
+            <p class="text-small bundle__meta">$410 bought separately — save $31</p>
+          </div>
+          <button class="btn btn--primary" type="button" data-add-to-cart>Add feed kit</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         6. SAFETY — flagged before checkout, not buried in the SDS
+         ================================================================== -->
+    <section class="section section--navy safety">
+      <svg class="safety__lattice" aria-hidden="true">
+        <defs>
+          <pattern id="pdp-hex" width="56" height="97" patternUnits="userSpaceOnUse">
+            <path
+              d="M28 0 56 16.2 56 48.5 28 64.7 0 48.5 0 16.2Z
+                 M0 48.5 28 64.7 28 97 0 113.2 -28 97 -28 64.7Z
+                 M56 48.5 84 64.7 84 97 56 113.2 28 97 28 64.7Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#pdp-hex)" />
+      </svg>
+
+      <div class="container">
+        <p class="pill-glass section__eyebrow">Handling</p>
+        <h2>What to know before the drum arrives</h2>
+        <p class="text-body-lg lede lede--dark">
+          CWT 5000 is alkaline. It won't hurt you through a glove, but it will
+          sting on skin and it does not belong anywhere near your eyes.
+        </p>
+
+        <div class="safety__grid">
+          <div class="safety__item">
+            <h3>Wear the basics</h3>
+            <p>
+              Splash goggles and nitrile gloves whenever you're pouring or
+              breaking a line. That's all this product asks for — no respirator,
+              no suit.
+            </p>
+          </div>
+          <div class="safety__item">
+            <h3>Store above freezing</h3>
+            <p>
+              Keep it between 40 °F and 100 °F, sealed and out of the sun. It
+              freezes around 28 °F; if it does, thaw it slowly and mix it well
+              before feeding.
+            </p>
+          </div>
+          <div class="safety__item">
+            <h3>Never mix it in a line</h3>
+            <p>
+              Don't share a feed line or a day tank with acid or an oxidizing
+              biocide. Separate injection points, and let the loop do the
+              mixing.
+            </p>
+          </div>
+        </div>
+
+        <div class="safety__foot">
+          <p class="text-small">
+            The safety data sheet has the full hazard statements, first-aid
+            measures and spill procedure. Print it and keep it where the drum
+            lives — most inspectors ask for it.
+          </p>
+          <a class="btn btn--ghost" href="#">Download SDS (PDF)</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         7. SPECS + DOCUMENTS
+         ================================================================== -->
+    <section class="section" id="specs">
+      <div class="container">
+        <p class="pill-outline section__eyebrow">Specs &amp; documents</p>
+        <h2>The technical page</h2>
+        <p class="text-body-lg lede">
+          Everything an engineer, an inspector or a purchasing system might ask
+          for — in one place, no form to fill in.
+        </p>
+
+        <div class="specs__grid">
+          <table class="spec-table">
+            <tbody>
+              <tr><th scope="row">Product code</th><td>CWT 5000</td></tr>
+              <tr><th scope="row">Chemistry</th><td>Phosphonate / polymer / azole blend</td></tr>
+              <tr><th scope="row">Appearance</th><td>Clear amber liquid</td></tr>
+              <tr><th scope="row">pH as supplied</th><td>11.5 – 12.5</td></tr>
+              <tr><th scope="row">Specific gravity</th><td>1.18 at 68 °F</td></tr>
+              <tr><th scope="row">Freeze point</th><td>28 °F</td></tr>
+              <tr><th scope="row">Shelf life</th><td>24 months, sealed</td></tr>
+              <tr><th scope="row">Feed method</th><td>Continuous, chemical feed pump</td></tr>
+              <tr><th scope="row">Tracer</th><td>PTSA, fixed ratio — 1 ppb per 1 ppm product</td></tr>
+              <tr><th scope="row">Compatible with</th><td>PVC, CPVC, polypropylene, HDPE, 316 stainless, Viton</td></tr>
+              <tr><th scope="row">Not compatible with</th><td>Aluminum, galvanized steel, natural rubber</td></tr>
+              <tr><th scope="row">Container sizes</th><td>5-gal pail · 15-gal keg · 55-gal drum</td></tr>
+            </tbody>
+          </table>
+
+          <ul class="docs">
+            <li>
+              <a href="#">
+                <svg aria-hidden="true"><use href="#ic-doc" /></svg>
+                Safety data sheet <small>PDF · 240 KB</small>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <svg aria-hidden="true"><use href="#ic-doc" /></svg>
+                Technical data sheet <small>PDF · 180 KB</small>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <svg aria-hidden="true"><use href="#ic-doc" /></svg>
+                Dosing &amp; test log sheet <small>PDF · 90 KB</small>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <svg aria-hidden="true"><use href="#ic-doc" /></svg>
+                Container label <small>PDF · 120 KB</small>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <svg aria-hidden="true"><use href="#ic-chat" /></svg>
+                Ask a tech about this product <small>Reply in 1 day</small>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         8. FAQ — product-specific; general questions live on the homepage
+         ================================================================== -->
+    <section class="section section--blue" id="faq">
+      <div class="container">
+        <p class="pill-outline section__eyebrow">Questions</p>
+        <h2>Things people ask about CWT 5000</h2>
+
+        <div class="faq__grid">
+        <div class="accordion faq">
+          <div class="accordion__item is-open">
+            <button class="accordion__trigger" type="button" aria-expanded="true">
+              What happens if my softener goes down for a week?
+              <svg class="accordion__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__panel">
+              <p>
+                Nothing dramatic in a week. Drop your cycles — bleed more — so
+                the hardness coming in doesn't get concentrated, and keep
+                feeding CWT 5000 at the same rate. If the softener is going to
+                be down longer than that, switch to CWT 9000 until it's back.
+                Hardness is what pushes this product past what it's built for.
+              </p>
+            </div>
+          </div>
+
+          <div class="accordion__item">
+            <button class="accordion__trigger" type="button" aria-expanded="false">
+              Can I feed it by hand instead of buying a pump?
+              <svg class="accordion__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__panel">
+              <p>
+                You can, and plenty of small towers do — pour the daily amount
+                into the basin every morning. It works, but your tracer reading
+                will swing between doses instead of holding steady, and one
+                forgotten weekend undoes a lot of protection. A $349 pump pays
+                for itself the first time you're out sick.
+              </p>
+            </div>
+          </div>
+
+          <div class="accordion__item">
+            <button class="accordion__trigger" type="button" aria-expanded="false">
+              How do I know how much to bleed?
+              <svg class="accordion__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__panel">
+              <p>
+                Conductivity decides it. Read your makeup water, read the tower,
+                and divide — that's your cycles. On softened makeup, three to
+                five cycles is normal. If the tower reading climbs past your
+                target range, bleed more; if it sits low, you're wasting water
+                and chemical.
+              </p>
+            </div>
+          </div>
+
+          <div class="accordion__item">
+            <button class="accordion__trigger" type="button" aria-expanded="false">
+              Does it work alongside a biocide program?
+              <svg class="accordion__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__panel">
+              <p>
+                Yes — most towers run both. Keep them on separate injection
+                points and don't slug a biocide right where the inhibitor goes
+                in. Heavy oxidizer use will read a little low on PTSA over time;
+                if your tracer keeps drifting down without a pump problem,
+                that's usually why.
+              </p>
+            </div>
+          </div>
+
+          <div class="accordion__item">
+            <button class="accordion__trigger" type="button" aria-expanded="false">
+              I inherited this system and don't know its volume. Now what?
+              <svg class="accordion__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__panel">
+              <p>
+                Estimate it: basin length × width × depth in feet × 7.5 gives
+                you gallons in the basin, then add about 30% for piping and the
+                heat exchanger. Charge to that estimate, wait 24 hours and read
+                PTSA. The tracer will tell you how far off you were, and you can
+                correct from there — that's exactly what it's for.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <aside class="faq__aside">
+          <h3>Didn't find your question?</h3>
+          <p class="text-small">
+            Send it over. A water treatment tech reads it and answers in plain
+            language — usually the same day, always within one business day.
+          </p>
+          <a class="btn btn--primary btn--arrow" href="mailto:hello@chemxdirect.com">Ask a tech</a>
+          <p class="text-small faq__aside-note">
+            Already running CWT 5000 and something looks off? Send your last
+            few test readings with the question — it saves a round trip.
+          </p>
+        </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         9. RELATED — the rest of the cooling tower shelf
+         ================================================================== -->
+    <section class="section" id="related">
+      <div class="container">
+        <div class="related__head">
+          <div>
+            <p class="pill-outline section__eyebrow">Also for cooling towers</p>
+            <h2>The rest of the tower shelf</h2>
+          </div>
+          <a class="btn btn--secondary btn--arrow" href="index.html#products">See all products</a>
+        </div>
+
+        <div class="related__grid">
+          <article class="product-card">
+            <div class="product-card__media">
+              <img src="images/product-drum.png" alt="CWT 9000" loading="lazy" />
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__tags"><span class="badge">Hard water</span></div>
+              <h3>CWT 9000</h3>
+              <p class="text-small product-card__desc">Scale and corrosion control for towers running hard makeup water.</p>
+              <div class="product-card__price-row">
+                <span class="product-card__price">$249</span>
+                <span class="product-card__unit">5-gal pail</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="btn btn--secondary product-card__cta" type="button" data-add-to-cart>Add to cart</button>
+                <a class="product-card__link" href="#">Learn more</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card">
+            <div class="product-card__media">
+              <img src="images/product-drum.png" alt="BioBrom BT" loading="lazy" />
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__tags"><span class="badge">Biocide · oxidizing</span></div>
+              <h3>BioBrom BT</h3>
+              <p class="text-small product-card__desc">Fast-acting control for algae and bacteria in open systems.</p>
+              <div class="product-card__price-row">
+                <span class="product-card__price">$164</span>
+                <span class="product-card__unit">25-lb bucket</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="btn btn--secondary product-card__cta" type="button" data-add-to-cart>Add to cart</button>
+                <a class="product-card__link" href="#">Learn more</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card">
+            <div class="product-card__media">
+              <img src="images/product-drum.png" alt="DBNPA" loading="lazy" />
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__tags"><span class="badge">Biocide · non-oxidizing</span></div>
+              <h3>DBNPA</h3>
+              <p class="text-small product-card__desc">Slower-acting biocide for rotation or stubborn growth.</p>
+              <div class="product-card__price-row">
+                <span class="product-card__price">$178</span>
+                <span class="product-card__unit">5-gal pail</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="btn btn--secondary product-card__cta" type="button" data-add-to-cart>Add to cart</button>
+                <a class="product-card__link" href="#">Learn more</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card">
+            <div class="product-card__media">
+              <img src="images/product-test.svg" alt="Meter SP380" loading="lazy" />
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__tags"><span class="badge">PTSA / Fluorescein test</span></div>
+              <h3>Meter SP380</h3>
+              <p class="text-small product-card__desc">Reads PTSA / fluorescein tracer levels.</p>
+              <div class="product-card__price-row">
+                <span class="product-card__price">$385</span>
+                <span class="product-card__unit">each</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="btn btn--secondary product-card__cta" type="button" data-add-to-cart>Add to cart</button>
+                <a class="product-card__link" href="#">Learn more</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Shared footer (styles in css/chrome.css) -->
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <div class="site-footer__cta">
+        <h2>Start with the right chemical.</h2>
+        <p class="text-body-lg">
+          Answer a few quick questions and we'll match your system to the
+          product that fits it — plus the test kit to prove it's working.
+        </p>
+        <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
+      </div>
+
+      <div class="site-footer__grid">
+        <div class="site-footer__brand">
+          <a class="site-footer__logo" href="index.html">
+            <img src="images/logo.svg" alt="ChemX Direct" />
+          </a>
+        </div>
+        <div>
+          <ul class="site-footer__list">
+            <li><a href="index.html#products">Shop</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="site-footer__col-title">Contact Us</p>
+          <ul class="site-footer__list">
+            <li><a href="mailto:hello@chemxdirect.com">hello@chemxdirect.com</a></li>
+            <li><a href="#">Download SDS library</a></li>
+            <li><a href="#">Shipping &amp; returns</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="site-footer__col-title">Follow Us</p>
+          <ul class="site-footer__list">
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">YouTube</a></li>
+            <li><a href="#">Instagram</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="site-footer__bottom">
+        <p class="text-small">© 2026 ChemX Direct</p>
+        <p class="text-small site-footer__legal-links">
+          <a href="#">Privacy</a>
+          <span aria-hidden="true">|</span>
+          <a href="#">Terms &amp; Conditions</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Phone-width buy bar; appears once the buy block scrolls off -->
+  <div class="buybar" data-buybar>
+    <div>
+      <span class="buybar__price" data-bar-price-mobile>$2,295</span>
+      <p class="buybar__meta" data-bar-meta>CWT 5000 · 55-gal drum</p>
+    </div>
+    <button class="btn btn--primary" type="button" data-add-to-cart>Add to cart</button>
+  </div>
+
+  <!-- Guided selector — same modal as the homepage, driven by js/main.js -->
+  <div class="quiz-modal" data-quiz-modal aria-hidden="true">
+    <div class="quiz-modal__backdrop" data-quiz-close></div>
+    <div
+      class="quiz-modal__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="quiz-modal-title"
+    >
+      <div class="quiz-modal__header">
+        <div>
+          <p class="quiz-modal__eyebrow">Guided selector</p>
+          <h2 class="quiz-modal__title" id="quiz-modal-title">Find your product</h2>
+        </div>
+        <button class="quiz-modal__close" type="button" data-quiz-close aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M2 2l14 14M16 2 2 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="quiz-modal__body" data-quiz-body></div>
+    </div>
+  </div>
+
+  <script src="js/main.js?v=14"></script>
+  <script src="js/product.js?v=1"></script>
+</body>
+</html>

@@ -726,8 +726,11 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
   }
 
   function init(items) {
-    var active = "All";
-    var activeSub = null; // set by the Shop mega menu, cleared by the pills
+    // A link from the Shop menu on another page arrives pre-filtered
+    var params = new URLSearchParams(window.location.search);
+    var fromURL = params.get("cat");
+    var active = fromURL && CATEGORIES.indexOf(fromURL) !== -1 ? fromURL : "All";
+    var activeSub = active !== "All" ? params.get("sub") : null;
 
     CATEGORIES.forEach(function (cat) {
       var btn = document.createElement("button");
@@ -789,7 +792,7 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
         "</div>" +
         '<div class="product-card__actions">' +
         '<button class="btn btn--primary" type="button">Add to cart</button>' +
-        '<a class="product-card__link" href="#">Learn more</a>' +
+        '<a class="product-card__link" href="product.html">Learn more</a>' +
         "</div>" +
         "</div>" +
         "</article>"
@@ -1061,7 +1064,7 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
       "</div>" +
       '<div class="quiz-result__actions">' +
       '<button class="btn btn--primary" type="button">Add to cart</button>' +
-      '<a class="btn btn--secondary" href="#">View product page</a>' +
+      '<a class="btn btn--secondary" href="product.html">View product page</a>' +
       "</div>" +
       testsHTML +
       '<div class="quiz-restart">' +
@@ -1214,7 +1217,17 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
         close();
         closeMobileNav();
         var section = document.getElementById("products");
-        if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          // Off the homepage (e.g. a product page) — carry the choice over
+          // in the URL so the rail lands pre-filtered.
+          var params = "?cat=" + encodeURIComponent(el.getAttribute("data-cat"));
+          if (el.getAttribute("data-sub")) {
+            params += "&sub=" + encodeURIComponent(el.getAttribute("data-sub"));
+          }
+          window.location.href = "index.html" + params + "#products";
+        }
       });
     });
 
@@ -1225,8 +1238,12 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
       quizBtn.addEventListener("click", function () {
         close();
         closeMobileNav();
-        var hero = document.querySelector(".hero [data-open-quiz]");
-        if (hero) hero.click();
+        // Any [data-open-quiz] outside the mega is already bound to the
+        // modal by the quiz module — borrow the first one.
+        var opener = document.querySelector(
+          ".hero [data-open-quiz], main [data-open-quiz], .site-footer [data-open-quiz]"
+        );
+        if (opener) opener.click();
       });
     }
   }
