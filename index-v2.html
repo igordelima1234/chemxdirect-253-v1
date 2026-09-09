@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChemX Direct — Industrial-Grade Water Treatment, Self-Serve Simple (v2)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Public+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/chrome.css" />
+  <style>
+    /* Homepage-specific layout (tokens only — no raw values) */
+
+
+
+    /* ======================================================================
+       V2 CHROME — SOLID NAV
+       chrome.css dresses the header for a translucent pass over a photo. On
+       this page it sits on its own navy block, so it takes a solid fill, its
+       own divider above, and a hover state that reads against navy instead
+       of painting navy on navy.
+       ====================================================================== */
+    .promo-banner {
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .site-header--solid {
+      background-color: var(--color-navy);
+      border-bottom: none;
+    }
+
+    .site-header--solid .site-nav > a:hover,
+    .site-header--solid .site-nav__link:hover,
+    .site-header--solid .site-nav__item.is-open .site-nav__link {
+      background-color: color-mix(in srgb, var(--color-white) 9%, transparent);
+      color: var(--color-sky);
+    }
+
+
+    /* ======================================================================
+       V2 HERO — SPLIT STAGE
+       Copy on the left, photograph on the right, split 45 / 65. The middle
+       grid track is zero-width: the hexagon rail is centred in it, so it
+       straddles the seam between the two halves without taking width from
+       either and the split stays exact at every viewport.
+       ====================================================================== */
+    .hero-v2 {
+      position: relative;
+      background-color: var(--color-white);
+    }
+
+    .hero-v2__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 45fr) 0 minmax(0, 65fr);
+      align-items: stretch;
+      /* Tall enough to own the fold, capped so it can't become a canyon */
+      min-height: min(78vh, 760px);
+      min-height: min(78svh, 760px);
+      /* Left edge of the copy lands on the same gutter as .container; the
+         photo still runs to the window edge */
+      padding-left: max(
+        var(--side-pad-mobile),
+        calc((100% - var(--content-max-width)) / 2)
+      );
+    }
+
+    /* ---- Left: the copy -------------------------------------------------- */
+    .hero-v2__copy {
+      grid-column: 1;
+      position: relative;
+      z-index: 2;
+      display: grid;
+      align-content: center;
+      padding-block: clamp(var(--space-6), 7vw, var(--space-7));
+      /* Clears the half of the rail that overhangs this side */
+      padding-right: clamp(var(--space-6), 5vw, var(--space-7));
+    }
+
+    /* All slides share one grid cell, so the column is as tall as the
+       longest slide and nothing reflows between them */
+    .hero-v2__stage {
+      display: grid;
+    }
+
+    .hero-v2-slide {
+      grid-area: 1 / 1;
+      max-width: 560px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.4s ease, visibility 0.4s;
+    }
+
+    .hero-v2-slide.is-active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition-duration: 0.5s;
+    }
+
+    /* Entrance stagger — eyebrow, headline, copy and CTAs arrive in order */
+    .hero-v2-slide__eyebrow,
+    .hero-v2-slide__text,
+    .hero-v2-slide__ctas {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.5s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-v2-slide.is-active .hero-v2-slide__eyebrow,
+    .hero-v2-slide.is-active .hero-v2-slide__text,
+    .hero-v2-slide.is-active .hero-v2-slide__ctas {
+      opacity: 1;
+      transform: none;
+    }
+
+    .hero-v2-slide.is-active .hero-v2-slide__eyebrow { transition-delay: 0.06s; }
+    .hero-v2-slide.is-active .hero-v2-slide__text    { transition-delay: 0.34s; }
+    .hero-v2-slide.is-active .hero-v2-slide__ctas    { transition-delay: 0.44s; }
+
+    .hero-v2-slide__title {
+      font-size: clamp(38px, 4vw, 56px);
+      line-height: var(--leading-h1);
+      color: var(--color-navy);
+      margin-top: var(--space-3);
+    }
+
+    /* Headline lines wipe up out of their own baseline */
+    .hero-v2-slide__title span {
+      display: block;
+      clip-path: inset(0 -20% 105% -20%);
+      transform: translateY(0.12em);
+      transition: clip-path 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-v2-slide.is-active .hero-v2-slide__title span {
+      clip-path: inset(-25% -20% -25% -20%);
+      transform: none;
+    }
+
+    .hero-v2-slide.is-active .hero-v2-slide__title span:nth-child(1) { transition-delay: 0.12s; }
+    .hero-v2-slide.is-active .hero-v2-slide__title span:nth-child(2) { transition-delay: 0.22s; }
+
+    .hero-v2-slide__title span:nth-child(2) {
+      color: var(--color-sky);
+    }
+
+    .hero-v2-slide__text {
+      margin-top: var(--space-3);
+      max-width: 46ch;
+      font-size: var(--text-body-lg);
+      color: var(--color-gray-500);
+    }
+
+    .hero-v2-slide__ctas {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-5);
+    }
+
+    /* btn--lg's full inline padding puts the pair over the width of a 45%
+       column — trimmed here so they stay on one line */
+    .hero-v2-slide__ctas .btn--lg {
+      padding-inline: var(--space-4);
+    }
+
+    /* Secondary action is a link, not a second button: two buttons of this
+       size wrap in a 45% column, and one clear primary reads better anyway */
+    .hero-v2-slide__link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: var(--space-1);
+      padding: var(--space-1) 0;
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-steel);
+      background: none;
+      border: none;
+      border-bottom: 1px solid color-mix(in srgb, var(--color-steel) 35%, transparent);
+      transition: color 0.18s ease, border-color 0.18s ease;
+    }
+
+    .hero-v2-slide__link::after {
+      content: "→";
+      font-size: 1.15em;
+      line-height: 1;
+      transition: transform 0.18s ease;
+    }
+
+    .hero-v2-slide__link:hover {
+      color: var(--color-sky);
+      border-bottom-color: var(--color-sky);
+      text-decoration: none;
+    }
+
+    .hero-v2-slide__link:hover::after {
+      transform: translateX(3px);
+    }
+
+    .hero-v2-slide__link:focus-visible {
+      outline: 2px solid var(--color-sky);
+      outline-offset: 3px;
+    }
+
+    /* Standing reassurance under the carousel — the same on every slide, so
+       it lives outside the stage and never animates */
+    .hero-v2__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2) var(--space-4);
+      max-width: 560px;
+      margin-top: var(--space-6);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--color-gray-100);
+      list-style: none;
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-medium);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+    }
+
+    .hero-v2__meta li {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    /* Hexagon bullet — the rail's motif at the smallest size it still reads */
+    .hero-v2__meta li::before {
+      content: "";
+      flex-shrink: 0;
+      width: 9px;
+      height: 10px;
+      background-color: var(--color-steel);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    }
+
+    /* ---- Right: the photograph ------------------------------------------- */
+    .hero-v2__media {
+      grid-column: 3;
+      position: relative;
+      overflow: hidden;
+      background-color: var(--color-navy);
+    }
+
+    .hero-v2__layer {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      /* Held over-scaled so the active layer can drift back to 1 across the
+         length of the slide */
+      transform: scale(1.08);
+      transition: opacity 0.9s ease;
+    }
+
+    .hero-v2__layer.is-active {
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity 0.9s ease, transform 10s linear;
+    }
+
+    /* Hexagon lattice, fading in from the seam so it never crowds the photo */
+    .hero-v2__lattice {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: var(--color-white);
+      stroke-width: 1;
+      opacity: 0.1;
+      -webkit-mask-image: linear-gradient(90deg, #000 0%, transparent 55%);
+      mask-image: linear-gradient(90deg, #000 0%, transparent 55%);
+    }
+
+    /* Navy graded into the seam edge and the corners — keeps the rail's
+       white shell off a busy photo and ties the picture to the dark nav */
+    .hero-v2__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--color-navy) 55%, transparent) 0%,
+          transparent 26%
+        ),
+        linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--color-navy) 30%, transparent) 0%,
+          transparent 28%,
+          transparent 62%,
+          color-mix(in srgb, var(--color-navy) 34%, transparent) 100%
+        );
+    }
+
+    /* ---- The rail: hexagon carousel navigation on the seam ---------------- */
+    .hex-rail {
+      --hex-w: 84px;
+      --hex-h: calc(var(--hex-w) / 0.866);
+      --rail-ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --rail-move: 0.55s;
+      grid-column: 2;
+      align-self: center;
+      justify-self: center;
+      position: relative;
+      z-index: 3;
+      /* The middle track is 0 wide, so the shell needs its own size to
+         centre against — it overhangs both halves equally */
+      width: max-content;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-1);
+      background-color: var(--color-white);
+      border: 1px solid var(--color-gray-100);
+      border-radius: var(--radius-pill);
+      box-shadow: 0 22px 45px color-mix(in srgb, var(--color-navy) 16%, transparent);
+    }
+
+    .hex-rail__count {
+      font-size: 11px;
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.14em;
+      color: var(--color-gray-500);
+    }
+
+    .hex-rail__count b {
+      font-weight: var(--weight-body-semibold);
+      color: var(--color-navy);
+    }
+
+    .hex-rail__stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    /* Inactive nodes give their unused footprint back with a negative
+       margin, so the stack closes up around whichever one is active */
+    .hexnode2 {
+      --hex-scale: 0.58;
+      position: relative;
+      flex: none;
+      width: var(--hex-w);
+      height: var(--hex-h);
+      margin-block: calc(var(--hex-h) * (var(--hex-scale) - 1) / 2);
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transform: scale(var(--hex-scale));
+      transition: transform var(--rail-move) var(--rail-ease),
+        margin var(--rail-move) var(--rail-ease);
+    }
+
+    .hexnode2.is-active {
+      --hex-scale: 1;
+      cursor: default;
+    }
+
+    .hexnode2:focus-visible {
+      outline: 2px solid var(--color-sky);
+      outline-offset: 3px;
+    }
+
+    .hexnode2__glow {
+      position: absolute;
+      inset: -4px;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background-color: var(--color-sky);
+      filter: blur(10px);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .hexnode2.is-active .hexnode2__glow {
+      opacity: 0.22;
+    }
+
+    /* Frame is the hexagon "border": the photo sits 2px inside it */
+    .hexnode2__frame {
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background-color: var(--color-gray-100);
+      transition: background-color 0.4s ease;
+    }
+
+    .hexnode2.is-active .hexnode2__frame {
+      background-color: var(--color-sky);
+    }
+
+    .hexnode2:not(.is-active):hover .hexnode2__frame {
+      background-color: var(--color-steel);
+    }
+
+    .hexnode2__media {
+      position: absolute;
+      inset: 2px;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background-color: var(--color-navy);
+    }
+
+    .hexnode2__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Inactive nodes read as thumbnails, not as competing focal points */
+    .hexnode2__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: color-mix(in srgb, var(--color-navy) 42%, transparent);
+      transition: background-color 0.4s ease;
+    }
+
+    .hexnode2.is-active .hexnode2__media::after {
+      background-color: color-mix(in srgb, var(--color-navy) 8%, transparent);
+    }
+
+    .hexnode2:not(.is-active):hover .hexnode2__media::after,
+    .hexnode2:not(.is-active):focus-visible .hexnode2__media::after {
+      background-color: color-mix(in srgb, var(--color-navy) 18%, transparent);
+    }
+
+    /* Autoplay countdown — a sky outline drawing itself around the active
+       hexagon, starting at the top vertex. The dial's arc, hexagonal. */
+    .hexnode2__ring {
+      position: absolute;
+      inset: -10px;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .hexnode2.is-active .hexnode2__ring {
+      opacity: 1;
+    }
+
+    .hexnode2__ring polygon {
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linejoin: round;
+    }
+
+    .hexnode2__ring-track {
+      stroke: var(--color-gray-100);
+    }
+
+    .hexnode2__ring-sweep {
+      stroke: var(--color-sky);
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+    }
+
+    .hex-rail.is-playing .hexnode2.is-active .hexnode2__ring-sweep {
+      animation: hexRailSweep var(--autoplay, 7000ms) linear forwards;
+    }
+
+    .hex-rail.is-paused .hexnode2.is-active .hexnode2__ring-sweep {
+      animation-play-state: paused;
+    }
+
+    @keyframes hexRailSweep {
+      from { stroke-dashoffset: 100; }
+      to   { stroke-dashoffset: 0; }
+    }
+
+    /* One label sits beside the rail, out over the photo. It names the slide
+       you're on — or, while you hover a hexagon, the one you'd get. */
+    .hex-rail__labels {
+      position: absolute;
+      left: calc(100% + var(--space-2));
+      top: 50%;
+      transform: translateY(-50%);
+      display: grid;
+      pointer-events: none;
+      /* js/hero-v2.js parks this level with the hexagon being named */
+      transition: top var(--rail-move) var(--rail-ease);
+    }
+
+    .hex-rail__label {
+      grid-area: 1 / 1;
+      justify-self: start;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-white);
+      background-color: color-mix(in srgb, var(--color-navy) 58%, transparent);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-pill);
+      padding: 7px var(--space-2);
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: opacity 0.35s ease, transform 0.35s ease, color 0.2s ease;
+    }
+
+    .hex-rail__label.is-active {
+      opacity: 1;
+      transform: none;
+      transition-delay: 0.1s;
+    }
+
+    /* Hovering an inactive hexagon previews its label without moving the rail */
+    .hex-rail__label.is-preview {
+      opacity: 1;
+      transform: none;
+      transition-delay: 0s;
+      color: var(--color-sky);
+      border-color: color-mix(in srgb, var(--color-sky) 55%, transparent);
+    }
+
+    /* ---- Responsive ------------------------------------------------------ */
+    @media (max-width: 1180px) {
+      .hex-rail {
+        --hex-w: 72px;
+      }
+
+      .hero-v2-slide__title {
+        font-size: clamp(36px, 4.6vw, 48px);
+      }
+    }
+
+    /* Below this the two halves can't both hold their content, so the split
+       unstacks: copy, then the rail riding the top edge of the photo. */
+    @media (max-width: 900px) {
+      .hero-v2__grid {
+        grid-template-columns: minmax(0, 1fr);
+        min-height: 0;
+        padding-left: 0;
+      }
+
+      .hero-v2__copy {
+        grid-column: 1;
+        padding-inline: var(--side-pad-mobile);
+        padding-block: var(--space-6) var(--space-5);
+      }
+
+      .hero-v2-slide,
+      .hero-v2__meta {
+        max-width: none;
+      }
+
+      .hero-v2__media {
+        grid-column: 1;
+        min-height: 380px;
+      }
+
+      .hero-v2__lattice {
+        -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 60%);
+        mask-image: linear-gradient(180deg, #000 0%, transparent 60%);
+      }
+
+      .hero-v2__media::after {
+        background: linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--color-navy) 55%, transparent) 0%,
+          transparent 30%,
+          color-mix(in srgb, var(--color-navy) 34%, transparent) 100%
+        );
+      }
+
+      /* The rail turns on its side and overlaps the photo's top edge, so it
+         still reads as the hinge between the two halves */
+      .hex-rail {
+        --hex-w: 60px;
+        grid-column: 1;
+        flex-direction: row;
+        gap: var(--space-2);
+        padding: var(--space-1) var(--space-3);
+        /* Rides down over the top edge of the photo */
+        margin-top: var(--space-2);
+        margin-bottom: calc(var(--space-5) * -1);
+      }
+
+      .hex-rail__stack {
+        flex-direction: row;
+      }
+
+      .hexnode2 {
+        margin-block: 0;
+        margin-inline: calc(var(--hex-w) * (var(--hex-scale) - 1) / 2);
+      }
+
+      .hex-rail__labels {
+        left: 50%;
+        top: calc(100% + var(--space-2));
+        transform: translateX(-50%);
+        justify-items: center;
+      }
+
+      .hex-rail__label {
+        justify-self: center;
+        transform: translateY(-8px);
+      }
+
+      .hex-rail__label.is-active,
+      .hex-rail__label.is-preview {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hex-rail {
+        --hex-w: 52px;
+        padding-inline: var(--space-2);
+      }
+
+      .hero-v2__media {
+        min-height: 300px;
+      }
+
+      .hero-v2-slide__ctas .btn--lg {
+        font-size: var(--text-body);
+        padding: var(--space-2) var(--space-3);
+      }
+    }
+
+    /* Motion is decorative here — the carousel still works without any of it */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-v2__layer,
+      .hero-v2-slide,
+      .hero-v2-slide__eyebrow,
+      .hero-v2-slide__text,
+      .hero-v2-slide__ctas,
+      .hero-v2-slide__title span,
+      .hex-rail__label,
+      .hexnode2 {
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+      }
+
+      .hero-v2__layer,
+      .hero-v2__layer.is-active {
+        transform: none;
+      }
+
+      .hero-v2-slide__title span {
+        clip-path: none;
+        transform: none;
+      }
+
+      .hex-rail.is-playing .hexnode2.is-active .hexnode2__ring-sweep {
+        animation: none;
+      }
+    }
+    /* ======================================================================
+       CATEGORY TABS
+       Six product categories on an auto-rotating tab strip. The sky bar
+       under the active tab is the countdown to the next one — the linear
+       cousin of the hero dial's arc — and it pauses on hover or focus the
+       same way. Panels are stacked in one grid cell so switching never
+       reflows the page.
+       ====================================================================== */
+    .cats {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Same lattice as the hero, reusing its pattern, so the two dark
+       sections read as one surface */
+    .cats__lattice {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: var(--color-white);
+      stroke-width: 1;
+      opacity: 0.045;
+      -webkit-mask-image: radial-gradient(70% 70% at 50% 40%, transparent 35%, #000 100%);
+      mask-image: radial-gradient(70% 70% at 50% 40%, transparent 35%, #000 100%);
+    }
+
+    .cats > .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---- Heading --------------------------------------------------------- */
+    .cats__head {
+      max-width: 760px;
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .cats__eyebrow {
+      margin-bottom: var(--space-3);
+    }
+
+    .cats__sub {
+      max-width: 620px;
+      margin-inline: auto;
+      margin-top: var(--space-3);
+      color: var(--color-gray-100);
+    }
+
+    /* ---- Tab strip ------------------------------------------------------- */
+    .cats__tabs {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      margin-top: var(--space-6);
+      border-block: 1px solid var(--color-border-light);
+    }
+
+    .cat-tab {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-2);
+      background: none;
+      border: none;
+      border-right: 1px solid var(--color-border-light);
+      color: color-mix(in srgb, var(--color-white) 62%, transparent);
+      cursor: pointer;
+      transition: color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .cats__tabs .cat-tab:last-child {
+      border-right: none;
+    }
+
+    .cat-tab:hover {
+      color: var(--color-white);
+      background-color: color-mix(in srgb, var(--color-white) 5%, transparent);
+    }
+
+    .cat-tab.is-active {
+      color: var(--color-white);
+      background-color: color-mix(in srgb, var(--color-white) 8%, transparent);
+      cursor: default;
+    }
+
+    .cat-tab:focus-visible {
+      outline: 2px solid var(--color-sky);
+      outline-offset: -2px;
+    }
+
+    .cat-tab__icon {
+      width: 30px;
+      height: 30px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cat-tab.is-active .cat-tab__icon {
+      color: var(--color-sky);
+      transform: translateY(-2px) scale(1.08);
+    }
+
+    .cat-tab__name {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      line-height: var(--leading-small);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    /* Countdown to the next tab, pinned to the strip's bottom rule */
+    .cat-tab__bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      background-color: var(--color-sky);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .cats.is-playing .cat-tab.is-active .cat-tab__bar {
+      animation: catSweep var(--autoplay, 6000ms) linear forwards;
+    }
+
+    .cats.is-paused .cat-tab.is-active .cat-tab__bar {
+      animation-play-state: paused;
+    }
+
+    @keyframes catSweep {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* ---- Panels ---------------------------------------------------------- */
+    .cats__panels {
+      display: grid;
+      margin-top: var(--space-6);
+    }
+
+    .cat-panel {
+      grid-area: 1 / 1;
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: var(--space-6);
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.4s ease, visibility 0.4s;
+    }
+
+    .cat-panel.is-active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition-duration: 0.5s;
+    }
+
+    .cat-panel__media {
+      position: relative;
+      aspect-ratio: 16 / 11;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      background-color: color-mix(in srgb, var(--color-steel) 22%, var(--color-navy));
+    }
+
+    .cat-panel__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.07);
+      transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cat-panel.is-active .cat-panel__media img {
+      transform: scale(1);
+    }
+
+    /* Hexagon badge — the hero's motif, carried down the page */
+    .cat-panel__badge {
+      position: absolute;
+      left: var(--space-4);
+      bottom: var(--space-4);
+      display: grid;
+      place-items: center;
+      width: 62px;
+      height: calc(62px / 0.866);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background-color: var(--color-sky);
+      color: var(--color-white);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cat-panel.is-active .cat-panel__badge {
+      opacity: 1;
+      transform: none;
+      transition-delay: 0.2s;
+    }
+
+    .cat-panel__badge svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Body copy rises in behind the panel fade */
+    .cat-panel__body > * {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.5s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cat-panel.is-active .cat-panel__body > * {
+      opacity: 1;
+      transform: none;
+    }
+
+    .cat-panel.is-active .cat-panel__body > :nth-child(1) { transition-delay: 0.1s; }
+    .cat-panel.is-active .cat-panel__body > :nth-child(2) { transition-delay: 0.18s; }
+    .cat-panel.is-active .cat-panel__body > :nth-child(3) { transition-delay: 0.26s; }
+    .cat-panel.is-active .cat-panel__body > :nth-child(4) { transition-delay: 0.34s; }
+
+    .cat-panel__kicker {
+      font-size: var(--text-small);
+      font-weight: var(--weight-body-semibold);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-sky);
+    }
+
+    .cat-panel__title {
+      margin-top: var(--space-2);
+    }
+
+    .cat-panel__text {
+      margin-top: var(--space-3);
+      color: var(--color-gray-100);
+    }
+
+    .cat-panel__cta {
+      margin-top: var(--space-4);
+    }
+
+    /* ---- Responsive ------------------------------------------------------ */
+    @media (max-width: 1100px) {
+      .cat-tab__name {
+        letter-spacing: 0.06em;
+      }
+    }
+
+    @media (max-width: 900px) {
+      /* Six columns stop fitting — the strip becomes a swipeable rail with
+         the active tab scrolled into view */
+      .cats__tabs {
+        display: flex;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        margin-inline: calc(var(--side-pad-mobile) * -1);
+        padding-inline: var(--side-pad-mobile);
+        scroll-padding-inline: var(--side-pad-mobile);
+      }
+
+      .cats__tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Fading the trailing edge is the only hint that the strip scrolls */
+      .cats__tabs {
+        -webkit-mask-image: linear-gradient(
+          90deg,
+          #000 0,
+          #000 calc(100% - 48px),
+          transparent 100%
+        );
+        mask-image: linear-gradient(
+          90deg,
+          #000 0,
+          #000 calc(100% - 48px),
+          transparent 100%
+        );
+      }
+
+      .cat-tab {
+        flex: 0 0 auto;
+        min-width: 124px;
+        scroll-snap-align: center;
+      }
+
+      .cat-panel {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+      }
+
+      .cat-panel__media {
+        aspect-ratio: 16 / 10;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .cats__tabs {
+        margin-top: var(--space-5);
+      }
+
+      .cats__panels {
+        margin-top: var(--space-5);
+      }
+
+      .cat-tab {
+        min-width: 108px;
+        padding: var(--space-3) var(--space-2);
+      }
+
+      .cat-tab__icon {
+        width: 26px;
+        height: 26px;
+      }
+
+      .cat-panel__media {
+        aspect-ratio: 3 / 2;
+      }
+
+      .cat-panel__badge {
+        left: var(--space-3);
+        bottom: var(--space-3);
+        width: 52px;
+        height: calc(52px / 0.866);
+      }
+
+      .cat-panel__badge svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .cat-panel__cta .btn {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cat-panel,
+      .cat-panel__body > *,
+      .cat-panel__badge,
+      .cat-panel__media img,
+      .cat-tab,
+      .cat-tab__icon {
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+      }
+
+      .cat-panel__media img,
+      .cat-panel.is-active .cat-panel__media img {
+        transform: none;
+      }
+
+      .cats.is-playing .cat-tab.is-active .cat-tab__bar {
+        animation: none;
+        transform: scaleX(1);
+      }
+    }
+
+
+    /* ======================================================================
+       HOW IT WORKS
+       Four steps as a grid of columns, each led by its own image. The
+       columns reveal on scroll in sequence so the order reads as an order.
+       ====================================================================== */
+    .how__head {
+      max-width: 760px;
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .how__eyebrow {
+      margin-bottom: var(--space-3);
+    }
+
+    .how__sub {
+      max-width: 660px;
+      margin-inline: auto;
+      margin-top: var(--space-3);
+      color: var(--color-gray-500);
+    }
+
+    .how__grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-5);
+      margin-top: var(--space-6);
+      list-style: none;
+    }
+
+    /* The columns are visible by default and only hide once js/main.js has
+       said it will animate them — so a failed script or a stalled observer
+       can never leave the section blank. */
+    .how__grid.is-animated .how-step {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .how__grid.is-animated.is-revealed .how-step {
+      opacity: 1;
+      transform: none;
+    }
+
+    .how__grid.is-revealed .how-step:nth-child(1) { transition-delay: 0s; }
+    .how__grid.is-revealed .how-step:nth-child(2) { transition-delay: 0.1s; }
+    .how__grid.is-revealed .how-step:nth-child(3) { transition-delay: 0.2s; }
+    .how__grid.is-revealed .how-step:nth-child(4) { transition-delay: 0.3s; }
+
+    .how-step__media {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      background-color: var(--color-white);
+      border: 1px solid var(--color-gray-100);
+    }
+
+    .how-step__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* The drum is a product shot on white — it sits in the card rather than
+       filling it, since the step is about what turns up at your door */
+    .how-step__media--product img {
+      object-fit: contain;
+      padding: var(--space-3);
+    }
+
+    .how-step:hover .how-step__media img {
+      transform: scale(1.04);
+    }
+
+    /* Step number in the hexagon badge the category tabs use */
+    .how-step__num {
+      position: absolute;
+      left: var(--space-2);
+      bottom: var(--space-2);
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: calc(42px / 0.866);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background-color: var(--color-sky);
+      color: var(--color-white);
+      font-family: var(--font-heading);
+      font-size: var(--text-h3);
+      font-weight: var(--weight-heading-bold);
+      line-height: 1;
+    }
+
+    .how-step__title {
+      margin-top: var(--space-3);
+      color: var(--color-heading-muted);
+    }
+
+    .how-step__text {
+      margin-top: var(--space-2);
+      color: var(--color-gray-500);
+    }
+
+    .how__cta {
+      display: flex;
+      justify-content: center;
+      margin-top: var(--space-6);
+    }
+
+    @media (max-width: 1100px) {
+      .how__grid {
+        gap: var(--space-4);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .how__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-5);
+        margin-top: var(--space-5);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .how__grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-5);
+      }
+
+      .how-step__media {
+        aspect-ratio: 16 / 10;
+      }
+
+      .how__cta {
+        margin-top: var(--space-5);
+      }
+
+      .how__cta .btn {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .how__grid.is-animated .how-step,
+      .how-step__media img {
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+      }
+
+      .how-step:hover .how-step__media img {
+        transform: none;
+      }
+    }
+
+    /* Products rail */
+    .products__header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .products__intro {
+      max-width: 560px;
+      margin-top: var(--space-2);
+      color: var(--color-gray-500);
+    }
+
+    .products__nav {
+      display: flex;
+      gap: var(--space-1);
+      flex-shrink: 0;
+    }
+
+    .products .pill-tabs {
+      margin-top: var(--space-4);
+    }
+
+    .products .rail {
+      margin-top: var(--space-3);
+    }
+
+    .products__eyebrow {
+      margin-bottom: var(--space-2);
+    }
+
+    /* Education / trust */
+    .edu__grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: start;
+      gap: var(--space-6);
+    }
+
+    .edu__eyebrow {
+      margin-bottom: var(--space-2);
+    }
+
+    .edu__media img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: var(--radius-card);
+    }
+
+    .edu__media-caption {
+      color: var(--color-gray-500);
+      margin-top: var(--space-2);
+    }
+
+    @media (max-width: 900px) {
+      .edu__grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+      }
+
+      .edu__media img {
+        height: 220px;
+      }
+    }
+
+    .edu__body {
+      max-width: 620px;
+      margin-top: var(--space-2);
+    }
+
+    /* Accordion sits on the blue surface — give it a white panel */
+    .edu__faq {
+      margin-top: var(--space-4);
+      background-color: var(--color-white);
+    }
+
+    /* Contact band — navy call-out closing the section */
+    .edu__contact {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      background-color: var(--color-navy);
+      color: var(--color-white);
+      border-radius: var(--radius-card);
+      padding: var(--space-4) var(--space-5);
+      margin-top: var(--space-6);
+    }
+
+    .edu__contact h3 {
+      color: var(--color-white);
+    }
+
+    .edu__contact p {
+      color: var(--color-gray-100);
+      margin-top: 4px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="promo-banner">
+    <div class="container">
+      Free shipping on orders over $500
+      <span class="promo-banner__sep">·</span>
+      <span class="promo-banner__secondary"
+        >Most in-stock items ship same day —
+        <a href="#products">shop now</a></span
+      >
+    </div>
+  </div>
+
+  <header class="site-header site-header--solid">
+    <div class="container">
+      <a class="site-header__logo" href="index-v2.html">
+        <img src="images/logo.svg" alt="ChemX Direct" />
+      </a>
+      <button
+        class="site-header__menu-btn"
+        type="button"
+        data-nav-toggle
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="site-nav"
+      >
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <div class="site-nav__item" data-mega-item>
+          <button
+            class="site-nav__link"
+            type="button"
+            data-mega-toggle
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-controls="mega-shop"
+          >
+            Shop
+            <svg class="site-nav__chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 4.5 6 8.5l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <!-- Filled in by js/main.js from the catalog data files -->
+          <div class="mega" id="mega-shop" data-mega></div>
+        </div>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="#">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 1. Split hero — copy left, photo right, hexagon carousel nav on the
+       seam. js/hero-v2.js drives the crossfade and the autoplay countdown. -->
+  <section
+    class="hero hero-v2"
+    data-hero2
+    aria-roledescription="carousel"
+    aria-label="ChemX Direct highlights"
+  >
+    <div class="hero-v2__grid">
+
+      <div class="hero-v2__copy">
+        <div class="hero-v2__stage">
+          <article
+            class="hero-v2-slide is-active"
+            id="hero2-slide-1"
+            role="tabpanel"
+            aria-labelledby="hero2-tab-1"
+            aria-roledescription="slide"
+          >
+            <p class="pill-outline hero-v2-slide__eyebrow">DIY industrial water treatment</p>
+            <h1 class="hero-v2-slide__title">
+              <span>Industrial-grade</span>
+              <span>chemistry, direct.</span>
+            </h1>
+            <p class="hero-v2-slide__text">
+              The same treatment chemicals the service companies use, sold
+              straight to you — with dose rates you can actually follow. No rep,
+              no contract, no minimum order.
+            </p>
+            <div class="hero-v2-slide__ctas">
+              <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
+              <a class="hero-v2-slide__link" href="#how">How it works</a>
+            </div>
+          </article>
+
+          <article
+            class="hero-v2-slide"
+            id="hero2-slide-2"
+            role="tabpanel"
+            aria-labelledby="hero2-tab-2"
+            aria-roledescription="slide"
+          >
+            <p class="pill-outline hero-v2-slide__eyebrow">Boilers</p>
+            <h1 class="hero-v2-slide__title">
+              <span>Scale and corrosion,</span>
+              <span>under control.</span>
+            </h1>
+            <p class="hero-v2-slide__text">
+              Oxygen scavengers, scale inhibitors and alkalinity builders for
+              low- and medium-pressure boilers — every drum labeled with what it
+              does and how much to feed.
+            </p>
+            <div class="hero-v2-slide__ctas">
+              <button class="btn btn--primary btn--lg btn--arrow" type="button" data-hero-cat="Boilers">Shop boiler chemistry</button>
+              <button class="hero-v2-slide__link" type="button" data-open-quiz>Not sure? Take the quiz</button>
+            </div>
+          </article>
+
+          <article
+            class="hero-v2-slide"
+            id="hero2-slide-3"
+            role="tabpanel"
+            aria-labelledby="hero2-tab-3"
+            aria-roledescription="slide"
+          >
+            <p class="pill-outline hero-v2-slide__eyebrow">Test kits &amp; feed equipment</p>
+            <h1 class="hero-v2-slide__title">
+              <span>Test it yourself.</span>
+              <span>Know it's working.</span>
+            </h1>
+            <p class="hero-v2-slide__text">
+              Test kits and feed equipment that tell you where your water stands,
+              so you're adjusting on numbers instead of guessing between service
+              visits.
+            </p>
+            <div class="hero-v2-slide__ctas">
+              <button class="btn btn--primary btn--lg btn--arrow" type="button" data-hero-cat="Test Equipment">Shop test equipment</button>
+              <button class="hero-v2-slide__link" type="button" data-open-quiz>Not sure? Take the quiz</button>
+            </div>
+          </article>
+        </div>
+
+        <ul class="hero-v2__meta">
+          <li>Ships same day</li>
+          <li>No account needed</li>
+          <li>SDS included</li>
+        </ul>
+      </div>
+
+      <!-- The hexagon rail: carousel navigation straddling the seam. The sky
+           outline drawing itself around the active hexagon is the countdown
+           to the next slide, and it pauses whenever the rail is hovered. -->
+      <div class="hex-rail" data-hero2-rail>
+        <p class="hex-rail__count">
+          <b data-hero2-num>01</b> / 03
+        </p>
+
+        <div
+          class="hex-rail__stack"
+          role="tablist"
+          aria-orientation="vertical"
+          aria-label="Choose a slide"
+          data-hero2-tabs
+        >
+          <button
+            class="hexnode2 is-active"
+            type="button"
+            role="tab"
+            id="hero2-tab-1"
+            aria-controls="hero2-slide-1"
+            aria-selected="true"
+            data-hero2-tab="0"
+          >
+            <span class="hexnode2__glow" aria-hidden="true"></span>
+            <span class="hexnode2__frame" aria-hidden="true">
+              <span class="hexnode2__media">
+                <img src="images/treatment-plant-aerial.jpg" alt="" />
+              </span>
+            </span>
+            <svg class="hexnode2__ring" viewBox="0 0 100 115.47" preserveAspectRatio="none" aria-hidden="true">
+              <polygon class="hexnode2__ring-track" points="50,0 100,28.87 100,86.6 50,115.47 0,86.6 0,28.87" vector-effect="non-scaling-stroke" />
+              <polygon class="hexnode2__ring-sweep" points="50,0 100,28.87 100,86.6 50,115.47 0,86.6 0,28.87" pathLength="100" vector-effect="non-scaling-stroke" />
+            </svg>
+            <span class="visually-hidden">The ChemX way</span>
+          </button>
+
+          <button
+            class="hexnode2"
+            type="button"
+            role="tab"
+            id="hero2-tab-2"
+            aria-controls="hero2-slide-2"
+            aria-selected="false"
+            tabindex="-1"
+            data-hero2-tab="1"
+          >
+            <span class="hexnode2__glow" aria-hidden="true"></span>
+            <span class="hexnode2__frame" aria-hidden="true">
+              <span class="hexnode2__media">
+                <img src="images/industrial-tanks.jpg" alt="" />
+              </span>
+            </span>
+            <svg class="hexnode2__ring" viewBox="0 0 100 115.47" preserveAspectRatio="none" aria-hidden="true">
+              <polygon class="hexnode2__ring-track" points="50,0 100,28.87 100,86.6 50,115.47 0,86.6 0,28.87" vector-effect="non-scaling-stroke" />
+              <polygon class="hexnode2__ring-sweep" points="50,0 100,28.87 100,86.6 50,115.47 0,86.6 0,28.87" pathLength="100" vector-effect="non-scaling-stroke" />
+            </svg>
+            <span class="visually-hidden">Boiler treatment</span>
+          </button>
+
+          <button
+            class="hexnode2"
+            type="button"
+            role="tab"
+            id="hero2-tab-3"
+            aria-controls="hero2-slide-3"
+            aria-selected="false"
+            tabindex="-1"
+            data-hero2-tab="2"
+          >
+            <span class="hexnode2__glow" aria-hidden="true"></span>
+            <span class="hexnode2__frame" aria-hidden="true">
+              <span class="hexnode2__media">
+                <img src="images/water-sampling.jpg" alt="" />
+              </span>
+            </span>
+            <svg class="hexnode2__ring" viewBox="0 0 100 115.47" preserveAspectRatio="none" aria-hidden="true">
+              <polygon class="hexnode2__ring-track" points="50,0 100,28.87 100,86.6 50,115.47 0,86.6 0,28.87" vector-effect="non-scaling-stroke" />
+              <polygon class="hexnode2__ring-sweep" points="50,0 100,28.87 100,86.6 50,115.47 0,86.6 0,28.87" pathLength="100" vector-effect="non-scaling-stroke" />
+            </svg>
+            <span class="visually-hidden">Testing &amp; proof</span>
+          </button>
+        </div>
+
+        <div class="hex-rail__labels" aria-hidden="true">
+          <p class="hex-rail__label is-active">The ChemX way</p>
+          <p class="hex-rail__label">Boiler treatment</p>
+          <p class="hex-rail__label">Testing &amp; proof</p>
+        </div>
+      </div>
+
+      <div class="hero-v2__media">
+        <div class="hero-v2__layer is-active" style="background-image: url('images/treatment-plant-aerial.jpg')"></div>
+        <div class="hero-v2__layer" style="background-image: url('images/industrial-tanks.jpg')"></div>
+        <div class="hero-v2__layer" style="background-image: url('images/water-sampling.jpg')"></div>
+        <!-- Hexagon lattice — the rail's motif, running quietly under the seam -->
+        <svg class="hero-v2__lattice" aria-hidden="true">
+          <defs>
+            <pattern id="hero-hex" width="56" height="97" patternUnits="userSpaceOnUse">
+              <path d="M28 0 56 16.2 56 48.5 28 64.7 0 48.5 0 16.2Z
+                       M0 48.5 28 64.7 28 97 0 113.2 -28 97 -28 64.7Z
+                       M56 48.5 84 64.7 84 97 56 113.2 28 97 28 64.7Z
+                       M0 -48.5 28 -32.3 28 0 0 16.2 -28 0 -28 -32.3Z
+                       M56 -48.5 84 -32.3 84 0 56 16.2 28 0 28 -32.3Z" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#hero-hex)" />
+        </svg>
+      </div>
+
+    </div>
+  </section>
+
+  <main>
+
+  <!-- Icon sprite for the category tabs; drawn once, referenced by <use> -->
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="ic-boiler" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="6" ry="2.4"/><path d="M6 6v11.6c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4V6"/><path d="M6 13.2h12"/></symbol>
+      <symbol id="ic-tower" viewBox="0 0 24 24"><path d="M7.4 3.5h9.2l-1.3 5.2H8.7z"/><path d="M8.7 8.7h6.6L18 20.5H6z"/><path d="M9.2 15.4h5.6"/></symbol>
+      <symbol id="ic-biocide" viewBox="0 0 24 24"><path d="M12 3.2c3.4 4.3 5.1 7 5.1 8.9a5.1 5.1 0 1 1-10.2 0c0-1.9 1.7-4.6 5.1-8.9z"/><path d="M9.8 12.5l1.7 1.7 3.1-3.3"/></symbol>
+      <symbol id="ic-loop" viewBox="0 0 24 24"><path d="M19 12a7 7 0 0 1-11.4 5.4"/><path d="M5 12a7 7 0 0 1 11.4-5.4"/><path d="M4.4 8.4 5.1 12l3.5-.8"/><path d="M19.6 15.6 18.9 12l-3.5.8"/></symbol>
+      <symbol id="ic-test" viewBox="0 0 24 24"><path d="M9.4 3h5.2"/><path d="M10.2 3v14a1.8 1.8 0 0 0 3.6 0V3"/><path d="M10.2 12.4h3.6"/><path d="M17.6 5.4c.9 1.2 1.4 2 1.4 2.5a1.4 1.4 0 0 1-2.8 0c0-.5.5-1.3 1.4-2.5z"/></symbol>
+      <symbol id="ic-pump" viewBox="0 0 24 24"><circle cx="9.8" cy="13.4" r="4.7"/><path d="M9.8 8.7V4.4h4.6"/><path d="M14.5 13.4H20"/><path d="m17.4 10.6 2.6 2.8-2.6 2.8"/></symbol>
+    </defs>
+  </svg>
+
+    <!-- 2. Category tabs — six product categories, auto-rotating -->
+    <section class="section section--navy cats" id="categories" data-cats>
+      <svg class="cats__lattice" aria-hidden="true">
+        <rect width="100%" height="100%" fill="url(#hero-hex)" />
+      </svg>
+
+      <div class="container">
+        <div class="cats__head">
+          <p class="pill-glass cats__eyebrow">What we carry</p>
+          <h2>Sorted by the system you run</h2>
+          <p class="text-body-lg cats__sub">
+            Six categories covering the chemistry, the test kits and the feed
+            equipment for boilers, cooling towers and closed loops — sold
+            direct, with no service contract attached.
+          </p>
+        </div>
+
+        <div class="cats__tabs" role="tablist" aria-label="Product categories" data-cats-tabs>
+          <button
+            class="cat-tab is-active"
+            type="button"
+            role="tab"
+            id="cat-tab-boilers"
+            aria-controls="cat-panel-boilers"
+            aria-selected="true"
+            data-cat-tab="0"
+          >
+            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-boiler" /></svg>
+            <span class="cat-tab__name">Boilers</span>
+            <span class="cat-tab__bar" aria-hidden="true"></span>
+          </button>
+          <button
+            class="cat-tab"
+            type="button"
+            role="tab"
+            id="cat-tab-towers"
+            aria-controls="cat-panel-towers"
+            aria-selected="false"
+            tabindex="-1"
+            data-cat-tab="1"
+          >
+            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-tower" /></svg>
+            <span class="cat-tab__name">Cooling Towers</span>
+            <span class="cat-tab__bar" aria-hidden="true"></span>
+          </button>
+          <button
+            class="cat-tab"
+            type="button"
+            role="tab"
+            id="cat-tab-biocides"
+            aria-controls="cat-panel-biocides"
+            aria-selected="false"
+            tabindex="-1"
+            data-cat-tab="2"
+          >
+            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-biocide" /></svg>
+            <span class="cat-tab__name">Biocides</span>
+            <span class="cat-tab__bar" aria-hidden="true"></span>
+          </button>
+          <button
+            class="cat-tab"
+            type="button"
+            role="tab"
+            id="cat-tab-loops"
+            aria-controls="cat-panel-loops"
+            aria-selected="false"
+            tabindex="-1"
+            data-cat-tab="3"
+          >
+            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-loop" /></svg>
+            <span class="cat-tab__name">Closed Loops</span>
+            <span class="cat-tab__bar" aria-hidden="true"></span>
+          </button>
+          <button
+            class="cat-tab"
+            type="button"
+            role="tab"
+            id="cat-tab-tests"
+            aria-controls="cat-panel-tests"
+            aria-selected="false"
+            tabindex="-1"
+            data-cat-tab="4"
+          >
+            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-test" /></svg>
+            <span class="cat-tab__name">Test Kits</span>
+            <span class="cat-tab__bar" aria-hidden="true"></span>
+          </button>
+          <button
+            class="cat-tab"
+            type="button"
+            role="tab"
+            id="cat-tab-feed"
+            aria-controls="cat-panel-feed"
+            aria-selected="false"
+            tabindex="-1"
+            data-cat-tab="5"
+          >
+            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-pump" /></svg>
+            <span class="cat-tab__name">Feed Equipment</span>
+            <span class="cat-tab__bar" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div class="cats__panels">
+        <article
+          class="cat-panel is-active"
+          id="cat-panel-boilers"
+          role="tabpanel"
+          aria-labelledby="cat-tab-boilers"
+        >
+          <div class="cat-panel__media">
+            <img src="images/industrial-tanks.jpg" alt="Industrial storage tanks at dusk" loading="lazy" decoding="async" />
+            <span class="cat-panel__badge" aria-hidden="true">
+              <svg><use href="#ic-boiler" /></svg>
+            </span>
+          </div>
+          <div class="cat-panel__body">
+            <p class="cat-panel__kicker">Boiler treatment</p>
+            <h3 class="cat-panel__title">Steam and hot water, held in range</h3>
+            <p class="cat-panel__text">Oxygen scavengers, water dispersants, steam treatments and all-in-one programs for steam and hot-water boilers. Which one you need comes down to your feedwater alkalinity and how long the boiler runs — the first two questions the selector asks.</p>
+            <div class="cat-panel__cta">
+              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your boiler product</button>
+            </div>
+          </div>
+        </article>
+        <article
+          class="cat-panel"
+          id="cat-panel-towers"
+          role="tabpanel"
+          aria-labelledby="cat-tab-towers"
+        >
+          <div class="cat-panel__media">
+            <img src="images/treatment-plant-aerial.jpg" alt="Aerial view of a water treatment plant" loading="lazy" decoding="async" />
+            <span class="cat-panel__badge" aria-hidden="true">
+              <svg><use href="#ic-tower" /></svg>
+            </span>
+          </div>
+          <div class="cat-panel__body">
+            <p class="cat-panel__kicker">Cooling tower treatment</p>
+            <h3 class="cat-panel__title">Scale and corrosion in open loops</h3>
+            <p class="cat-panel__text">Treatment for open recirculating towers, split by what comes out of your make-up line. Soft water and hard water need different chemistry, and running the wrong one shows up in the basin faster than you'd think.</p>
+            <div class="cat-panel__cta">
+              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your tower product</button>
+            </div>
+          </div>
+        </article>
+        <article
+          class="cat-panel"
+          id="cat-panel-biocides"
+          role="tabpanel"
+          aria-labelledby="cat-tab-biocides"
+        >
+          <div class="cat-panel__media">
+            <img src="images/hero-water.jpg" alt="Close-up of blue treatment chemistry" loading="lazy" decoding="async" />
+            <span class="cat-panel__badge" aria-hidden="true">
+              <svg><use href="#ic-biocide" /></svg>
+            </span>
+          </div>
+          <div class="cat-panel__body">
+            <p class="cat-panel__kicker">Biocides</p>
+            <h3 class="cat-panel__title">Two kill mechanisms, on rotation</h3>
+            <p class="cat-panel__text">Oxidizing biocides for a fast knockdown, non-oxidizing for the slower and more persistent kill — each in tablet or liquid. Most towers alternate between the two so the population never settles in around one of them.</p>
+            <div class="cat-panel__cta">
+              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your biocide</button>
+            </div>
+          </div>
+        </article>
+        <article
+          class="cat-panel"
+          id="cat-panel-loops"
+          role="tabpanel"
+          aria-labelledby="cat-tab-loops"
+        >
+          <div class="cat-panel__media">
+            <img src="images/clarifier-tank.jpg" alt="Aerial view of a circular clarifier tank" loading="lazy" decoding="async" />
+            <span class="cat-panel__badge" aria-hidden="true">
+              <svg><use href="#ic-loop" /></svg>
+            </span>
+          </div>
+          <div class="cat-panel__body">
+            <p class="cat-panel__kicker">Closed loop systems</p>
+            <h3 class="cat-panel__title">Almost no loss, so almost no dosing</h3>
+            <p class="cat-panel__text">Chilled and hot water loops lose next to nothing to evaporation, so they need an inhibitor held in range rather than a full feed program. Nitrite does the work, and a periodic reading is all it takes to prove it's still there.</p>
+            <div class="cat-panel__cta">
+              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your loop product</button>
+            </div>
+          </div>
+        </article>
+        <article
+          class="cat-panel"
+          id="cat-panel-tests"
+          role="tabpanel"
+          aria-labelledby="cat-tab-tests"
+        >
+          <div class="cat-panel__media">
+            <img src="images/water-sampling.jpg" alt="A gloved hand taking a water sample" loading="lazy" decoding="async" />
+            <span class="cat-panel__badge" aria-hidden="true">
+              <svg><use href="#ic-test" /></svg>
+            </span>
+          </div>
+          <div class="cat-panel__body">
+            <p class="cat-panel__kicker">Test kits</p>
+            <h3 class="cat-panel__title">The readings that prove it's working</h3>
+            <p class="cat-panel__text">Conductivity, pH, sulfite, total hardness, chlorine and PTSA fluorescein. Every product we sell lists the tests that go with it and the range you should be holding, so the kit and the chemistry arrive matched.</p>
+            <div class="cat-panel__cta">
+              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your test kit</button>
+            </div>
+          </div>
+        </article>
+        <article
+          class="cat-panel"
+          id="cat-panel-feed"
+          role="tabpanel"
+          aria-labelledby="cat-tab-feed"
+        >
+          <div class="cat-panel__media">
+            <img src="images/ibc-totes.jpg" alt="Stacked intermediate bulk containers" loading="lazy" decoding="async" />
+            <span class="cat-panel__badge" aria-hidden="true">
+              <svg><use href="#ic-pump" /></svg>
+            </span>
+          </div>
+          <div class="cat-panel__body">
+            <p class="cat-panel__kicker">Feed equipment</p>
+            <h3 class="cat-panel__title">What turns a program into a routine</h3>
+            <p class="cat-panel__text">Chemical feed pumps, injectors, foot valves and the fittings in between. If you're dosing by hand today, this is the shelf that takes the job off your calendar and puts it on a timer.</p>
+            <div class="cat-panel__cta">
+              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your feed setup</button>
+            </div>
+          </div>
+        </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. How it works — four DIY steps, revealed in sequence -->
+    <section class="section how" id="how">
+      <div class="container">
+        <div class="how__head">
+          <p class="pill-outline how__eyebrow">How it works</p>
+          <h2>Four steps you can do yourself</h2>
+          <p class="text-body-lg how__sub">
+            Tell us what kind of system you're treating and we'll recommend the
+            right product — plus the testing equipment you'll need to use it
+            correctly. No catalog to dig through, no guesswork.
+          </p>
+        </div>
+
+        <ol class="how__grid" data-how-grid>
+          <li class="how-step">
+            <div class="how-step__media">
+              <img src="images/plant-site.jpg" alt="Aerial view of a treatment facility" loading="lazy" decoding="async" />
+              <span class="how-step__num" aria-hidden="true">1</span>
+            </div>
+            <h3 class="how-step__title">Tell us what you're treating</h3>
+            <p class="how-step__text">Pick your system — boiler, cooling tower or closed loop — and answer a few plain questions about it. Takes about a minute, and you don't need to know the chemistry to answer them.</p>
+          </li>
+          <li class="how-step">
+            <div class="how-step__media how-step__media--product">
+              <img src="images/product-drum.png" alt="A ChemX Direct treatment drum" loading="lazy" decoding="async" />
+              <span class="how-step__num" aria-hidden="true">2</span>
+            </div>
+            <h3 class="how-step__title">Get your match</h3>
+            <p class="how-step__text">We come back with the right product for your water and the test kit that goes with it. One recommendation, one price, nothing to cross-reference in a catalog.</p>
+          </li>
+          <li class="how-step">
+            <div class="how-step__media">
+              <img src="images/tote-valve.jpg" alt="Close-up of a valve on a chemical tote" loading="lazy" decoding="async" />
+              <span class="how-step__num" aria-hidden="true">3</span>
+            </div>
+            <h3 class="how-step__title">Dose it yourself</h3>
+            <p class="how-step__text">It ships to your door with dosing instructions written for whoever is actually holding the drum. No training course, no service visit to book, nobody to wait on.</p>
+          </li>
+          <li class="how-step">
+            <div class="how-step__media">
+              <img src="images/dropper.jpg" alt="A dropper releasing a drop into a sample bottle" loading="lazy" decoding="async" />
+              <span class="how-step__num" aria-hidden="true">4</span>
+            </div>
+            <h3 class="how-step__title">Check it and know</h3>
+            <p class="how-step__text">Run the test, read the number, compare it to the range on the label. That's the whole job — and if the number looks off, we're one message away.</p>
+          </li>
+        </ol>
+
+        <div class="how__cta">
+          <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Start the quiz</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Product rail -->
+    <section class="section section--blue products" id="products">
+      <div class="container">
+        <div class="products__header">
+          <div>
+            <p class="pill-outline products__eyebrow">The catalog</p>
+            <h2>Shop treatment products</h2>
+            <p class="products__intro">
+              Around 20 focused products — chemicals, dosing hardware, and the
+              test equipment to run them. Pick a category or scroll through.
+            </p>
+          </div>
+          <div class="products__nav">
+            <button class="rail-btn" type="button" data-rail-prev aria-label="Scroll products left">←</button>
+            <button class="rail-btn" type="button" data-rail-next aria-label="Scroll products right">→</button>
+          </div>
+        </div>
+        <div class="pill-tabs" data-product-tabs role="group" aria-label="Filter products by category"></div>
+        <div class="rail" data-product-rail aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- 5. Education / trust -->
+    <section class="section section--blue" id="learn">
+      <div class="container">
+        <div class="edu__grid">
+          <div>
+            <p class="pill-outline edu__eyebrow">Learn as you go</p>
+            <h2>Every product page comes with a how-to, not just a how-much.</h2>
+            <p class="edu__body">
+              Dosing instructions, testing steps, and short videos showing the
+              process in action — so you know exactly what to do before the
+              product even arrives.
+            </p>
+            <div class="accordion edu__faq">
+              <div class="accordion__item is-open">
+                <button class="accordion__trigger" type="button" aria-expanded="true">
+                  How do I know how much to dose?
+                  <svg class="accordion__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <div class="accordion__panel">
+                  <p>
+                    Every product page lists a starting dose for your system
+                    volume. You test after 24 hours, then adjust up or down from
+                    there. The dosing chart does the math for you.
+                  </p>
+                </div>
+              </div>
+              <div class="accordion__item">
+                <button class="accordion__trigger" type="button" aria-expanded="false">
+                  What if I've never tested water before?
+                  <svg class="accordion__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <div class="accordion__panel">
+                  <p>
+                    Most of these are drop-count kits: fill the tube, add drops,
+                    count the color change. Each product page walks through its
+                    tests step by step, with video.
+                  </p>
+                </div>
+              </div>
+              <div class="accordion__item">
+                <button class="accordion__trigger" type="button" aria-expanded="false">
+                  What safety gear do I need?
+                  <svg class="accordion__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <div class="accordion__panel">
+                  <p>
+                    Splash goggles and nitrile gloves cover most of what we sell.
+                    Anything that needs more than that is flagged on the product
+                    page before you add it to your cart.
+                  </p>
+                </div>
+              </div>
+              <div class="accordion__item">
+                <button class="accordion__trigger" type="button" aria-expanded="false">
+                  What if I get stuck?
+                  <svg class="accordion__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <div class="accordion__panel">
+                  <p>
+                    Message us. A water treatment tech answers — no ticket queue,
+                    no upsell to a service contract.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="edu__media">
+            <img
+              src="images/water-sampling.jpg"
+              alt="Technician collecting a water sample for testing"
+              loading="lazy"
+            />
+            <p class="text-small edu__media-caption">
+              Pull a sample, run the test, adjust the dose. That's the whole
+              routine — about five minutes a week.
+            </p>
+          </div>
+        </div>
+        <div class="edu__contact">
+          <div>
+            <h3>Still have questions? We're one message away.</h3>
+            <p class="text-small">
+              Real techs, not a chatbot. Most replies land within one business day.
+            </p>
+          </div>
+          <a class="btn btn--primary btn--arrow" href="#">Contact us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 6. Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <div class="site-footer__cta">
+        <h2>Start with the right chemical.</h2>
+        <p class="text-body-lg">
+          Answer a few quick questions and we'll match your system to the
+          product that fits it — plus the test kit to prove it's working.
+        </p>
+        <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
+      </div>
+
+      <div class="site-footer__grid">
+        <div class="site-footer__brand">
+          <a class="site-footer__logo" href="index.html">
+            <img src="images/logo.svg" alt="ChemX Direct" />
+          </a>
+        </div>
+        <div>
+          <ul class="site-footer__list">
+            <li><a href="#products">Shop</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="site-footer__col-title">Contact Us</p>
+          <ul class="site-footer__list">
+            <li><a href="mailto:hello@chemxdirect.com">hello@chemxdirect.com</a></li>
+            <li><a href="#">Download SDS library</a></li>
+            <li><a href="#">Shipping &amp; returns</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="site-footer__col-title">Follow Us</p>
+          <ul class="site-footer__list">
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">YouTube</a></li>
+            <li><a href="#">Instagram</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="site-footer__bottom">
+        <p class="text-small">© 2026 ChemX Direct</p>
+        <p class="text-small site-footer__legal-links">
+          <a href="#">Privacy</a>
+          <span aria-hidden="true">|</span>
+          <a href="#">Terms &amp; Conditions</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Guided selector — slide-out quiz modal, driven by data/decision-tree.json
+       and data/product-test-equipment-map.json. Content is filled in by
+       js/main.js once those files load. -->
+  <div class="quiz-modal" data-quiz-modal aria-hidden="true">
+    <div class="quiz-modal__backdrop" data-quiz-close></div>
+    <div
+      class="quiz-modal__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="quiz-modal-title"
+    >
+      <div class="quiz-modal__header">
+        <div>
+          <p class="quiz-modal__eyebrow">Guided selector</p>
+          <h2 class="quiz-modal__title" id="quiz-modal-title">Find your product</h2>
+        </div>
+        <button class="quiz-modal__close" type="button" data-quiz-close aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M2 2l14 14M16 2 2 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="quiz-modal__body" data-quiz-body></div>
+    </div>
+  </div>
+
+  <script src="js/main.js?v=13"></script>
+  <script src="js/hero-v2.js?v=1"></script>
+</body>
+</html>
