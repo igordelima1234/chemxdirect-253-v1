@@ -71,10 +71,28 @@
 }
 
 .video-hero__title {
+  width: 100%;
   font-size: clamp(64px, 8.7vw, 144px);
   line-height: 1.05;
   letter-spacing: -0.025em;
   color: var(--color-white);
+}
+
+.video-hero__rotator {
+  position: relative;
+  height: 1.05em;
+  overflow: hidden;
+}
+.video-hero__rotator-item {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(0.2em);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+.video-hero__rotator-item.is-active {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .video-hero__title span {
@@ -186,4 +204,5 @@
   .video-hero__controls { opacity: 1; }
   .video-hero.is-scroll-ready + main .intro-reveal { margin-top: 0; }
   .intro-reveal__text.is-scroll-ready span { color: #000; transition: none; }
+  .video-hero__rotator-item { transition: none; }
 }

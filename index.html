@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="css/base.css?v=2" />
   <link rel="stylesheet" href="css/components.css?v=2" />
   <link rel="stylesheet" href="css/chrome.css?v=2" />
-  <link rel="stylesheet" href="css/hero-video.css?v=5" />
+  <link rel="stylesheet" href="css/hero-video.css?v=6" />
   <link rel="stylesheet" href="css/category-ring.css?v=4" />
 </head>
 <body>
@@ -79,9 +79,13 @@
         <div class="video-hero__scrim" aria-hidden="true"></div>
       </div>
       <section class="video-hero__content container" aria-labelledby="hero-title" data-video-copy>
-        <h1 class="video-hero__title" id="hero-title">
+        <h1 class="video-hero__title" id="hero-title" aria-label="Water treatment. Made simple.">
           <span>Water treatment.</span>
-          <span>Made simple.</span>
+          <span class="video-hero__rotator" data-hero-rotator aria-hidden="true">
+            <span class="video-hero__rotator-item is-active">Made simple.</span>
+            <span class="video-hero__rotator-item">Delivered direct.</span>
+            <span class="video-hero__rotator-item">Self-serve simple.</span>
+          </span>
         </h1>
         <button class="video-hero__cta" type="button" data-open-quiz>
           Find your product <span aria-hidden="true">↗</span>
@@ -296,7 +300,7 @@
   </div>
 
   <script src="js/main.js?v=14"></script>
-  <script src="js/hero-video.js?v=2"></script>
+  <script src="js/hero-video.js?v=3"></script>
   <script src="js/category-ring.js?v=1"></script>
 </body>
 </html>
