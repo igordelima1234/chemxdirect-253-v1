@@ -221,6 +221,17 @@
   .video-hero__statement-line > span { display: block; white-space: nowrap; }
   .video-hero__content { padding-bottom: 144px; }
   .video-hero__controls { bottom: var(--space-3); }
+  .intro-reveal__text { font-size: 28px; }
+}
+
+/* Landscape phones: fit the headline, CTA and controls in a short viewport. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .video-hero__sticky { min-height: 0; }
+  .video-hero__content { padding-top: 88px; padding-bottom: 72px; }
+  .video-hero__title { font-size: min(8.7vw, 16svh); }
+  .video-hero__cta { margin-top: var(--space-2); }
+  .video-hero__controls { bottom: var(--space-2); }
+  .intro-reveal__text { font-size: 28px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

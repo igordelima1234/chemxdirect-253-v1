@@ -121,13 +121,23 @@
   .video-feature__sticky { padding-block: var(--space-4); }
   .video-feature__panel { padding: var(--space-4); }
   .video-feature__panel p { font-size: var(--text-body); }
-  .video-feature__panel .btn { width: 100%; padding-inline: var(--space-3); white-space: nowrap; }
+  .video-feature__panel { width: 100%; }
+  .video-feature__panel .btn { width: 100%; padding-inline: var(--space-2); font-size: 14px; letter-spacing: 0.06em; }
   .video-feature__toggle {
     top: calc(var(--feature-inset-y) + var(--space-3));
     right: calc(var(--feature-inset-x) + var(--space-3));
     left: auto;
     bottom: auto;
   }
+}
+
+/* Landscape phones: the pinned panel must fit inside a short viewport. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .video-feature__sticky { min-height: 0; padding-block: var(--space-3); }
+  .video-feature__panel { max-width: 460px; padding: var(--space-3) var(--space-4); }
+  .video-feature__panel h2 { font-size: 28px; }
+  .video-feature__panel p { margin-top: var(--space-2); font-size: 15px; line-height: 1.5; }
+  .video-feature__panel .btn { margin-top: var(--space-3); padding-block: 14px; font-size: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

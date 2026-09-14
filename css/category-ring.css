@@ -78,6 +78,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  min-height: 44px;
   margin-top: var(--space-3);
   padding-top: var(--space-2);
   border: 0;
@@ -193,7 +194,7 @@
 .category-ring button:focus-visible { outline: 2px solid var(--color-steel); outline-offset: 4px; }
 
 @media (max-width: 640px) {
-  .category-ring { --ring-card-width: 290px; --ring-card-height: 460px; --ring-radius: 310px; padding-block: var(--space-6) var(--space-5); }
+  .category-ring { --ring-card-width: min(290px, calc(100vw - 48px)); --ring-card-height: 460px; --ring-radius: 310px; padding-block: var(--space-6) var(--space-5); }
   .category-ring__wheel { grid-template-columns: 1fr; }
   .category-ring.is-ready .category-ring__scene { height: 520px; perspective: 1000px; }
   .category-ring__head > p:last-child { font-size: var(--text-body); }
@@ -202,6 +203,18 @@
   .category-ring__body > p { font-size: 13px; }
   .category-ring__controls { gap: var(--space-2); }
   .category-ring__dot { width: 30px; }
+}
+
+/* Landscape phones: shrink the ring so a whole card fits the short viewport. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .category-ring { --ring-card-width: 260px; --ring-card-height: 340px; --ring-radius: 300px; padding-block: var(--space-4); }
+  .category-ring__head h2 { font-size: 32px; }
+  .category-ring__head > p:last-child { margin-top: var(--space-2); font-size: var(--text-body); }
+  .category-ring.is-ready .category-ring__scene { height: 380px; perspective: 1000px; }
+  .category-ring__body { padding: var(--space-3) 20px 16px; }
+  .category-ring__body h3 { font-size: 22px; }
+  .category-ring__body > p { margin-top: 6px; font-size: 13px; line-height: 1.5; }
+  .category-ring__cta { margin-top: var(--space-2); }
 }
 
 @media (prefers-reduced-motion: reduce) {
