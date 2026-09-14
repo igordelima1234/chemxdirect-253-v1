@@ -153,24 +153,29 @@
 .category-ring__dot span {
   position: relative;
   display: block;
-  width: 6px;
+  width: 28px;
   height: 6px;
   overflow: hidden;
   border-radius: var(--radius-pill);
   background: var(--color-gray-100);
-  transition: width 250ms ease, background 250ms ease;
+  transform: scaleX(0.214); /* collapsed to a 6px dot until active */
+  transform-origin: left center;
+  transition: transform 250ms ease, background 250ms ease;
 }
 .category-ring__dot[aria-pressed="true"] span {
-  width: 28px;
+  transform: scaleX(1);
   background: color-mix(in srgb, var(--color-steel) 22%, var(--color-white));
 }
 /* The fill sweeps left to right while its card is on screen, timed to
-   match the JS auto-rotate interval, so it doubles as a countdown. */
+   match the JS auto-rotate interval, so it doubles as a countdown.
+   Animating transform (not width) keeps it off the layout thread and
+   independent of the pill's own grow transition above. */
 .category-ring__dot span::after {
   content: "";
   position: absolute;
   inset: 0;
-  width: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
   border-radius: inherit;
   background: var(--color-steel);
 }
@@ -181,8 +186,8 @@
   animation-play-state: paused;
 }
 @keyframes ring-dot-progress {
-  from { width: 0; }
-  to { width: 100%; }
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 .category-ring__status { margin-top: var(--space-2); text-align: center; font-size: var(--text-small); color: var(--color-gray-500); }
 .category-ring button:focus-visible { outline: 2px solid var(--color-steel); outline-offset: 4px; }

@@ -14,8 +14,8 @@
   if (cards.length !== 6 || dots.length !== cards.length) return;
 
   // Auto-rotation: each card gets AUTO_MS on screen, shown by a fill bar on
-  // its dot. Paused (not reset) while hovered, focused, or the tab is
-  // hidden — tracked as a set of reasons so overlapping pauses behave.
+  // its dot. Paused (not reset) while dragging, keyboard-focused, or the
+  // tab is hidden — tracked as a set of reasons so overlapping pauses behave.
   var AUTO_MS = 5000;
   root.style.setProperty('--ring-autoplay-ms', AUTO_MS + 'ms');
   var timer = null;
@@ -129,8 +129,6 @@
     event.stopPropagation();
   }, true);
 
-  root.addEventListener('pointerenter', function () { pause('hover'); });
-  root.addEventListener('pointerleave', function () { resume('hover'); });
   root.addEventListener('focusin', function () { pause('focus'); });
   root.addEventListener('focusout', function () {
     window.setTimeout(function () {
