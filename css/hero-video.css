@@ -57,6 +57,26 @@
     color-mix(in srgb, var(--color-navy) 72%, transparent) 100%);
 }
 
+/* Fades in at the centre of the frame once the headline has gone. */
+.video-hero__statement {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-inline: calc(var(--hero-inset-x) + var(--space-4));
+  font-family: var(--font-heading);
+  font-size: clamp(32px, 4.4vw, 64px);
+  font-weight: var(--weight-heading-bold);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--color-white);
+  opacity: var(--hero-statement-opacity, 0);
+  transform: translateY(var(--hero-statement-y, 24px));
+  pointer-events: none;
+}
+
 .video-hero__content {
   position: relative;
   display: flex;
@@ -205,4 +225,5 @@
   .video-hero.is-scroll-ready + main .intro-reveal { margin-top: 0; }
   .intro-reveal__text.is-scroll-ready span { color: #000; transition: none; }
   .video-hero__rotator-item { transition: none; }
+  .video-hero__statement { display: none; }
 }

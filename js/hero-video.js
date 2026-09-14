@@ -56,6 +56,10 @@
     hero.style.setProperty('--hero-video-scale', 1 - eased * 0.08);
     hero.style.setProperty('--hero-copy-opacity', opacity);
     hero.style.setProperty('--hero-copy-y', (-progress * 80) + 'px');
+    // The centre statement takes over once the headline has faded out.
+    var statement = clamp((progress - 0.45) / 0.35);
+    hero.style.setProperty('--hero-statement-opacity', statement);
+    hero.style.setProperty('--hero-statement-y', ((1 - statement) * 24) + 'px');
     // Invisible controls must not remain in the keyboard focus order.
     copy.inert = opacity === 0;
     controls.inert = opacity === 0;
