@@ -1,0 +1,97 @@
+/* Full-bleed looping video with its copy in a glass panel, bottom right. */
+.video-feature {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-end;
+  min-height: 100svh;
+  padding-block: var(--space-6);
+  overflow: hidden;
+  background: var(--color-navy);
+  color: var(--color-white);
+}
+
+.video-feature__video,
+.video-feature__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+.video-feature__video { object-fit: cover; }
+
+/* Darkens toward the panel so the glass reads on bright frames. */
+.video-feature__scrim {
+  background: linear-gradient(135deg,
+    transparent 30%,
+    color-mix(in srgb, var(--color-navy) 55%, transparent) 100%);
+}
+
+.video-feature__inner {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.video-feature__panel {
+  max-width: 540px;
+  padding: var(--space-5);
+  border: 1px solid color-mix(in srgb, var(--color-white) 22%, transparent);
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--color-navy) 28%, transparent);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 24px 60px color-mix(in srgb, var(--color-navy) 35%, transparent);
+}
+
+.video-feature__panel h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(32px, 3.6vw, 52px);
+  font-weight: var(--weight-heading-bold);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--color-white);
+}
+
+.video-feature__panel p {
+  margin-top: var(--space-3);
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--color-white) 84%, transparent);
+}
+
+.video-feature__panel .btn { margin-top: var(--space-4); }
+
+.video-feature__toggle {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-4);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid color-mix(in srgb, var(--color-white) 30%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-navy) 30%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+.video-feature__toggle:hover { background: var(--color-navy); }
+.video-feature__toggle:focus-visible { outline: 2px solid var(--color-white); outline-offset: 4px; }
+
+.video-feature__toggle[hidden],
+.video-feature__toggle.is-playing .video-feature__play-icon,
+.video-feature__toggle:not(.is-playing) .video-feature__pause-icon { display: none; }
+
+@media (max-width: 640px) {
+  .video-feature { min-height: 85svh; padding-block: var(--space-4); }
+  .video-feature__panel { padding: var(--space-4); }
+  .video-feature__panel p { font-size: var(--text-body); }
+  .video-feature__panel .btn { width: 100%; padding-inline: var(--space-3); white-space: nowrap; }
+  .video-feature__toggle { top: var(--space-3); right: var(--space-3); left: auto; bottom: auto; }
+}

@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="css/chrome.css?v=2" />
   <link rel="stylesheet" href="css/hero-video.css?v=8" />
   <link rel="stylesheet" href="css/category-ring.css?v=6" />
+  <link rel="stylesheet" href="css/video-feature.css?v=2" />
 </head>
 <body>
   <div class="promo-banner">
@@ -220,62 +221,27 @@
       </div>
       <p class="category-ring__status" data-ring-status aria-live="polite" aria-atomic="true" hidden>01 / 06 — Boilers</p>
     </section>
+
+    <!-- Full-bleed video with its copy in a glass panel -->
+    <section class="video-feature" data-video-feature aria-labelledby="video-feature-title">
+      <video class="video-feature__video" muted loop playsinline preload="none"
+        poster="images/hero-water-poster.jpg" aria-hidden="true" tabindex="-1">
+        <source data-src="videos/hero-water.mp4" type="video/mp4" />
+      </video>
+      <div class="video-feature__scrim" aria-hidden="true"></div>
+      <div class="container video-feature__inner">
+        <div class="video-feature__panel">
+          <h2 id="video-feature-title">Treatment you can see working.</h2>
+          <p>Every product comes with plain-language dosing guidance and the test kit that proves it's doing its job, so you can run your own program with confidence.</p>
+          <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
+        </div>
+      </div>
+      <button class="video-feature__toggle" type="button" data-video-feature-toggle aria-label="Play background video" hidden>
+        <svg class="video-feature__pause-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 3h3v10H4zm5 0h3v10H9z" /></svg>
+        <svg class="video-feature__play-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="m5 2 9 6-9 6z" /></svg>
+      </button>
+    </section>
   </main>
-
-  <!-- 6. Footer -->
-  <footer class="site-footer" id="contact">
-    <div class="container">
-      <div class="site-footer__cta">
-        <h2>Start with the right chemical.</h2>
-        <p class="text-body-lg">
-          Answer a few quick questions and we'll match your system to the
-          product that fits it — plus the test kit to prove it's working.
-        </p>
-        <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
-      </div>
-
-      <div class="site-footer__grid">
-        <div class="site-footer__brand">
-          <a class="site-footer__logo" href="index.html">
-            <img src="images/logo.svg" alt="ChemX Direct" />
-          </a>
-        </div>
-        <div>
-          <ul class="site-footer__list">
-            <li><a href="#products">Shop</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">FAQ</a></li>
-          </ul>
-        </div>
-        <div>
-          <p class="site-footer__col-title">Contact Us</p>
-          <ul class="site-footer__list">
-            <li><a href="mailto:hello@chemxdirect.com">hello@chemxdirect.com</a></li>
-            <li><a href="#">Download SDS library</a></li>
-            <li><a href="#">Shipping &amp; returns</a></li>
-          </ul>
-        </div>
-        <div>
-          <p class="site-footer__col-title">Follow Us</p>
-          <ul class="site-footer__list">
-            <li><a href="#">LinkedIn</a></li>
-            <li><a href="#">YouTube</a></li>
-            <li><a href="#">Instagram</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="site-footer__bottom">
-        <p class="text-small">© 2026 ChemX Direct</p>
-        <p class="text-small site-footer__legal-links">
-          <a href="#">Privacy</a>
-          <span aria-hidden="true">|</span>
-          <a href="#">Terms &amp; Conditions</a>
-        </p>
-      </div>
-    </div>
-  </footer>
 
   <!-- Guided selector — slide-out quiz modal, driven by data/decision-tree.json
        and data/product-test-equipment-map.json. Content is filled in by
@@ -306,5 +272,6 @@
   <script src="js/main.js?v=14"></script>
   <script src="js/hero-video.js?v=4"></script>
   <script src="js/category-ring.js?v=3"></script>
+  <script src="js/video-feature.js?v=1"></script>
 </body>
 </html>
