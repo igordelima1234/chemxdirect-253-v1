@@ -149,7 +149,8 @@
   max-width: 1080px;
   margin-inline: auto;
   text-align: center;
-  font-size: clamp(26px, 3.4vw, 52px);
+  font-family: var(--font-heading);
+  font-size: 36px;
   font-weight: var(--weight-body-medium);
   line-height: 1.25;
   letter-spacing: -0.035em;
