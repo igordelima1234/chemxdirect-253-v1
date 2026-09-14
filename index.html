@@ -8,936 +8,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Public+Sans:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@700&family=Public+Sans:wght@400;500;600&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="css/variables.css" />
-  <link rel="stylesheet" href="css/base.css" />
-  <link rel="stylesheet" href="css/components.css" />
-  <link rel="stylesheet" href="css/chrome.css" />
-  <style>
-    /* Homepage-specific layout (tokens only — no raw values) */
-
-
-    /* Hero wrapper — full-bleed photo stage shared by the header and the
-       carousel below it. Each slide supplies its own background layer, so
-       the photo behind the nav changes with the slide. */
-    .page-hero {
-      position: relative;
-      isolation: isolate;
-      display: flex;
-      flex-direction: column;
-      /* Viewport-tall minus the promo banner, capped so it doesn't turn
-         into a canyon on very tall displays */
-      min-height: min(calc(100vh - 36px), 900px);
-      min-height: min(calc(100svh - 36px), 900px);
-      background-color: var(--color-navy);
-      color: var(--color-white);
-    }
-
-
-    /* ======================================================================
-       HERO CAROUSEL
-       Three slides sharing one full-bleed photo stage. The dial at the
-       bottom is the only control: three hexagons orbiting a common centre,
-       the active one enlarged at the top of the ring. Selecting one spins
-       the ring until it reaches the top; the sky arc around the orbit is
-       the autoplay countdown to the next spin.
-       ====================================================================== */
-
-    /* ---- Background: one layer per slide, crossfaded and slowly zoomed --- */
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden; /* contains the over-scaled layers */
-    }
-
-    /* Drifts on scroll; the extra 80px top and bottom is the slack that
-       keeps an edge from ever showing */
-    .hero-bg__inner {
-      position: absolute;
-      /* 100px of slack against a drift that stops at 80 — the extra 20 keeps
-         rounding from ever showing a seam at the top */
-      inset: -100px 0;
-      will-change: transform;
-    }
-
-    .hero-bg__layer {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      opacity: 0;
-      /* Held slightly over-scaled so the active layer can drift back to 1
-         for the length of the slide */
-      transform: scale(1.12);
-      transition: opacity 1s ease;
-    }
-
-    .hero-bg__layer.is-active {
-      opacity: 1;
-      transform: scale(1);
-      transition: opacity 1s ease, transform 12s linear;
-    }
-
-    /* Navy wash — same 80%-ish weight the flat overlay used, but graded so
-       the middle stays photographic and the base is dark enough for the dial */
-    .hero-bg__scrim {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(
-          120% 80% at 50% 38%,
-          transparent 0%,
-          color-mix(in srgb, var(--color-navy) 45%, transparent) 100%
-        ),
-        linear-gradient(
-          180deg,
-          color-mix(in srgb, var(--color-navy) 76%, transparent) 0%,
-          color-mix(in srgb, var(--color-navy) 58%, transparent) 34%,
-          color-mix(in srgb, var(--color-navy) 72%, transparent) 68%,
-          color-mix(in srgb, var(--color-navy) 92%, transparent) 100%
-        );
-    }
-
-    /* Fades out through the middle so the lattice reads at the edges of the
-       frame and never behind the headline */
-    .hero-lattice {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      fill: none;
-      stroke: var(--color-white);
-      stroke-width: 1;
-      opacity: 0.1;
-      -webkit-mask-image: radial-gradient(
-        80% 65% at 50% 45%,
-        transparent 45%,
-        #000 100%
-      );
-      mask-image: radial-gradient(
-        80% 65% at 50% 45%,
-        transparent 45%,
-        #000 100%
-      );
-    }
-
-    /* ---- Layout ---------------------------------------------------------- */
-    .hero {
-      position: relative;
-      z-index: 2;
-      flex: 1;
-      display: grid;
-      grid-template-rows: 1fr auto;
-      text-align: center;
-    }
-
-    /* All slides share one grid cell, so the stage is as tall as the
-       longest slide and nothing reflows between them */
-    .hero__stage {
-      display: grid;
-      align-content: center;
-      padding-block: var(--space-5) var(--space-4);
-    }
-
-    .hero-slide {
-      grid-area: 1 / 1;
-      max-width: 1040px;
-      margin-inline: auto;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity 0.4s ease, visibility 0.4s;
-    }
-
-    .hero-slide.is-active {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transition-duration: 0.5s;
-    }
-
-    /* Entrance stagger — the eyebrow, subhead and CTAs rise into place */
-    .hero-slide__eyebrow,
-    .hero-slide__ctas {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.5s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .hero-slide.is-active .hero-slide__eyebrow,
-    .hero-slide.is-active .hero-slide__ctas {
-      opacity: 1;
-      transform: none;
-    }
-
-    .hero-slide.is-active .hero-slide__eyebrow { transition-delay: 0.06s; }
-    .hero-slide.is-active .hero-slide__ctas    { transition-delay: 0.36s; }
-
-    .hero-slide__eyebrow {
-      margin-bottom: var(--space-3);
-    }
-
-    /* The pill's sky dot, breathing — the only always-on motion up here */
-    .hero-slide.is-active .hero-slide__eyebrow::before {
-      animation: heroDotPulse 3s ease-in-out infinite;
-    }
-
-    @keyframes heroDotPulse {
-      0%,
-      100% {
-        box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-sky) 55%, transparent);
-      }
-      70% {
-        box-shadow: 0 0 0 7px transparent;
-      }
-    }
-
-    /* Headline lines wipe up out of their own baseline */
-    .hero-slide__title span {
-      display: block;
-      clip-path: inset(0 -20% 105% -20%);
-      transform: translateY(0.12em);
-      transition: clip-path 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .hero-slide.is-active .hero-slide__title span {
-      clip-path: inset(-25% -20% -25% -20%);
-      transform: none;
-    }
-
-    .hero-slide.is-active .hero-slide__title span:nth-child(1) { transition-delay: 0.12s; }
-    .hero-slide.is-active .hero-slide__title span:nth-child(2) { transition-delay: 0.24s; }
-
-    .hero-slide__title span:nth-child(2) {
-      color: var(--color-sky);
-    }
-
-    .hero-slide__ctas {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: var(--space-3);
-      margin-top: var(--space-5);
-    }
-
-    /* ---- The dial -------------------------------------------------------- */
-    .hero-dial {
-      --dial-r: 86px;   /* orbit radius — also the SVG's outer circle */
-      --hex-w: 98px;    /* width of the active hexagon */
-      --dial-spin: 0.95s;
-      --dial-ease: cubic-bezier(0.68, 0, 0.32, 1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-bottom: var(--space-5);
-    }
-
-    .hero-dial__labels {
-      display: grid;
-      justify-items: center;
-    }
-
-    .hero-dial__label {
-      grid-area: 1 / 1;
-      font-size: var(--text-small);
-      font-weight: var(--weight-body-semibold);
-      line-height: var(--leading-small);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: color-mix(in srgb, var(--color-white) 72%, transparent);
-      opacity: 0;
-      transform: translateY(6px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-
-    .hero-dial__label.is-active {
-      opacity: 1;
-      transform: none;
-      transition-delay: 0.15s;
-    }
-
-    /* Hovering an inactive hexagon previews its label without moving the ring */
-    .hero-dial__label.is-preview {
-      opacity: 1;
-      transform: none;
-      transition-delay: 0s;
-      color: var(--color-sky);
-    }
-
-    /* The hexagons overhang the top of the orbit box, so reserve room */
-    .hero-dial__orbit {
-      position: relative;
-      width: calc(var(--dial-r) * 2);
-      height: calc(var(--dial-r) * 2);
-      margin-top: calc(var(--hex-w) * 0.62);
-    }
-
-    .hero-dial__rings {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-    }
-
-    .hero-dial__spoke-line {
-      stroke: color-mix(in srgb, var(--color-white) 26%, transparent);
-      stroke-width: 1;
-    }
-
-    .hero-dial__track {
-      fill: none;
-      stroke: color-mix(in srgb, var(--color-white) 28%, transparent);
-      stroke-width: 1;
-    }
-
-    /* Autoplay countdown — sweeps the orbit once per slide */
-    .hero-dial__progress {
-      fill: none;
-      stroke: var(--color-sky);
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-dasharray: 100;
-      stroke-dashoffset: 100;
-      transform: rotate(-90deg);
-      transform-origin: 50% 50%;
-    }
-
-    .hero-dial.is-playing .hero-dial__progress {
-      animation: heroDialSweep var(--autoplay, 7000ms) linear forwards;
-    }
-
-    .hero-dial.is-paused .hero-dial__progress {
-      animation-play-state: paused;
-    }
-
-    @keyframes heroDialSweep {
-      from { stroke-dashoffset: 100; }
-      to   { stroke-dashoffset: 0; }
-    }
-
-    /* The ring carries the rotation; every node counter-rotates by the same
-       amount over the same curve, so the photos never tilt */
-    .hero-dial__ring {
-      position: absolute;
-      inset: 0;
-      transform: rotate(var(--rot, 0deg));
-      transition: transform var(--dial-spin) var(--dial-ease);
-    }
-
-    .hero-dial__spoke {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 0;
-      height: 0;
-      transform: rotate(var(--slot, 0deg)) translateY(calc(var(--dial-r) * -1));
-    }
-
-    .hexnode {
-      --hex-h: calc(var(--hex-w) / 0.866);
-      --hex-scale: 0.6;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: var(--hex-w);
-      height: var(--hex-h);
-      margin-left: calc(var(--hex-w) / -2);
-      margin-top: calc(var(--hex-h) / -2);
-      padding: 0;
-      background: none;
-      border: none;
-      cursor: pointer;
-      /* Undo the ring's rotation plus this spoke's own angle */
-      transform: rotate(calc(0deg - var(--rot, 0deg) - var(--slot, 0deg)))
-        scale(var(--hex-scale));
-      transition: transform var(--dial-spin) var(--dial-ease);
-    }
-
-    .hexnode.is-active {
-      --hex-scale: 1;
-      cursor: default;
-    }
-
-    .hexnode:focus-visible {
-      outline: 2px solid var(--color-sky);
-      outline-offset: 4px;
-    }
-
-    .hexnode__glow {
-      position: absolute;
-      inset: -8px;
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      background-color: var(--color-sky);
-      filter: blur(10px);
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-
-    .hexnode.is-active .hexnode__glow {
-      opacity: 0.4;
-    }
-
-    /* Frame is the hexagon "border": the media sits 2px inside it */
-    .hexnode__frame {
-      position: absolute;
-      inset: 0;
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      background-color: color-mix(in srgb, var(--color-white) 40%, transparent);
-      transition: background-color 0.5s ease;
-    }
-
-    .hexnode.is-active .hexnode__frame {
-      background-color: var(--color-sky);
-    }
-
-    .hexnode__media {
-      position: absolute;
-      inset: 2px;
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      background-color: var(--color-navy);
-    }
-
-    .hexnode__media img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Inactive nodes read as thumbnails, not as competing focal points */
-    .hexnode__media::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-color: color-mix(in srgb, var(--color-navy) 62%, transparent);
-      transition: background-color 0.5s ease;
-    }
-
-    .hexnode.is-active .hexnode__media::after {
-      background-color: color-mix(in srgb, var(--color-navy) 12%, transparent);
-    }
-
-    .hexnode:not(.is-active):hover .hexnode__media::after,
-    .hexnode:not(.is-active):focus-visible .hexnode__media::after {
-      background-color: color-mix(in srgb, var(--color-navy) 34%, transparent);
-    }
-
-    .hexnode:not(.is-active):hover .hexnode__frame {
-      background-color: color-mix(in srgb, var(--color-white) 75%, transparent);
-    }
-
-    /* ---- Scroll affordance ----------------------------------------------
-       The dial owns the centre, so the cue that there's more below sits in
-       the corner where it can't compete with it. */
-    .hero-scroll {
-      position: absolute;
-      right: var(--space-5);
-      bottom: var(--space-5);
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--space-2);
-      color: color-mix(in srgb, var(--color-white) 74%, transparent);
-      transition: color 0.2s ease;
-    }
-
-    .hero-scroll:hover,
-    .hero-scroll:focus-visible {
-      color: var(--color-white);
-      text-decoration: none;
-    }
-
-    .hero-scroll__label {
-      writing-mode: vertical-rl;
-      font-size: 11px;
-      font-weight: var(--weight-body-semibold);
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-    }
-
-    .hero-scroll__line {
-      position: relative;
-      width: 1px;
-      height: 56px;
-      overflow: hidden;
-      background-color: color-mix(in srgb, var(--color-white) 22%, transparent);
-    }
-
-    /* A sky segment falling down the rail, on a loop */
-    .hero-scroll__line::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      width: 1px;
-      height: 20px;
-      background-color: var(--color-sky);
-      animation: heroScrollDrop 2.4s cubic-bezier(0.6, 0, 0.4, 1) infinite;
-    }
-
-    @keyframes heroScrollDrop {
-      from { transform: translateY(-20px); }
-      to   { transform: translateY(56px); }
-    }
-
-    /* ---- Responsive ------------------------------------------------------ */
-    @media (max-width: 900px) {
-      .hero__stage {
-        padding-block: var(--space-4) var(--space-3);
-      }
-
-      .hero-dial {
-        --dial-r: 68px;
-        --hex-w: 78px;
-        padding-bottom: var(--space-4);
-      }
-
-      /* Too close to the dial to be worth keeping at this width */
-      .hero-scroll {
-        display: none;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .page-hero {
-        min-height: min(calc(100vh - 36px), 760px);
-        min-height: min(calc(100svh - 36px), 760px);
-      }
-
-      .hero-slide__ctas {
-        gap: var(--space-2);
-      }
-
-      .hero-dial {
-        --dial-r: 54px;
-        --hex-w: 62px;
-      }
-
-      .hero-dial__label {
-        letter-spacing: 0.12em;
-      }
-    }
-
-    /* Motion is decorative here — the carousel still works without any of it */
-    @media (prefers-reduced-motion: reduce) {
-      .hero-bg__layer,
-      .hero-slide,
-      .hero-slide__eyebrow,
-      .hero-slide__ctas,
-      .hero-slide__title span,
-      .hero-dial__label,
-      .hero-dial__ring,
-      .hexnode {
-        transition-duration: 0.01ms !important;
-        transition-delay: 0ms !important;
-      }
-
-      .hero-bg__layer,
-      .hero-bg__layer.is-active {
-        transform: none;
-      }
-
-      .hero-slide__title span {
-        clip-path: none;
-        transform: none;
-      }
-
-      .hero-dial.is-playing .hero-dial__progress,
-      .hero-slide.is-active .hero-slide__eyebrow::before,
-      .hero-scroll__line::after {
-        animation: none;
-      }
-
-      .hero-bg__inner {
-        transform: none !important;
-      }
-    }
-
-
-    /* ======================================================================
-       CATEGORY TABS
-       Six product categories on an auto-rotating tab strip. The sky bar
-       under the active tab is the countdown to the next one — the linear
-       cousin of the hero dial's arc — and it pauses on hover or focus the
-       same way. Panels are stacked in one grid cell so switching never
-       reflows the page.
-       ====================================================================== */
-    .cats {
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Same lattice as the hero, reusing its pattern, so the two dark
-       sections read as one surface */
-    .cats__lattice {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      fill: none;
-      stroke: var(--color-white);
-      stroke-width: 1;
-      opacity: 0.045;
-      -webkit-mask-image: radial-gradient(70% 70% at 50% 40%, transparent 35%, #000 100%);
-      mask-image: radial-gradient(70% 70% at 50% 40%, transparent 35%, #000 100%);
-    }
-
-    .cats > .container {
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ---- Heading --------------------------------------------------------- */
-    .cats__head {
-      max-width: 760px;
-      margin-inline: auto;
-      text-align: center;
-    }
-
-    .cats__eyebrow {
-      margin-bottom: var(--space-3);
-    }
-
-    .cats__sub {
-      max-width: 620px;
-      margin-inline: auto;
-      margin-top: var(--space-3);
-      color: var(--color-gray-100);
-    }
-
-    /* ---- Tab strip ------------------------------------------------------- */
-    .cats__tabs {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      margin-top: var(--space-6);
-      border-block: 1px solid var(--color-border-light);
-    }
-
-    .cat-tab {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--space-2);
-      padding: var(--space-3) var(--space-2);
-      background: none;
-      border: none;
-      border-right: 1px solid var(--color-border-light);
-      color: color-mix(in srgb, var(--color-white) 62%, transparent);
-      cursor: pointer;
-      transition: color 0.25s ease, background-color 0.25s ease;
-    }
-
-    .cats__tabs .cat-tab:last-child {
-      border-right: none;
-    }
-
-    .cat-tab:hover {
-      color: var(--color-white);
-      background-color: color-mix(in srgb, var(--color-white) 5%, transparent);
-    }
-
-    .cat-tab.is-active {
-      color: var(--color-white);
-      background-color: color-mix(in srgb, var(--color-white) 8%, transparent);
-      cursor: default;
-    }
-
-    .cat-tab:focus-visible {
-      outline: 2px solid var(--color-sky);
-      outline-offset: -2px;
-    }
-
-    .cat-tab__icon {
-      width: 30px;
-      height: 30px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .cat-tab.is-active .cat-tab__icon {
-      color: var(--color-sky);
-      transform: translateY(-2px) scale(1.08);
-    }
-
-    .cat-tab__name {
-      font-size: var(--text-small);
-      font-weight: var(--weight-body-semibold);
-      line-height: var(--leading-small);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-align: center;
-    }
-
-    /* Countdown to the next tab, pinned to the strip's bottom rule */
-    .cat-tab__bar {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -1px;
-      height: 2px;
-      background-color: var(--color-sky);
-      transform: scaleX(0);
-      transform-origin: left center;
-    }
-
-    .cats.is-playing .cat-tab.is-active .cat-tab__bar {
-      animation: catSweep var(--autoplay, 6000ms) linear forwards;
-    }
-
-    .cats.is-paused .cat-tab.is-active .cat-tab__bar {
-      animation-play-state: paused;
-    }
-
-    @keyframes catSweep {
-      from { transform: scaleX(0); }
-      to   { transform: scaleX(1); }
-    }
-
-    /* ---- Panels ---------------------------------------------------------- */
-    .cats__panels {
-      display: grid;
-      margin-top: var(--space-6);
-    }
-
-    .cat-panel {
-      grid-area: 1 / 1;
-      display: grid;
-      grid-template-columns: 1.02fr 0.98fr;
-      gap: var(--space-6);
-      align-items: center;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity 0.4s ease, visibility 0.4s;
-    }
-
-    .cat-panel.is-active {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transition-duration: 0.5s;
-    }
-
-    .cat-panel__media {
-      position: relative;
-      aspect-ratio: 16 / 11;
-      border-radius: var(--radius-card);
-      overflow: hidden;
-      background-color: color-mix(in srgb, var(--color-steel) 22%, var(--color-navy));
-    }
-
-    .cat-panel__media img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scale(1.07);
-      transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .cat-panel.is-active .cat-panel__media img {
-      transform: scale(1);
-    }
-
-    /* Hexagon badge — the hero's motif, carried down the page */
-    .cat-panel__badge {
-      position: absolute;
-      left: var(--space-4);
-      bottom: var(--space-4);
-      display: grid;
-      place-items: center;
-      width: 62px;
-      height: calc(62px / 0.866);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      background-color: var(--color-sky);
-      color: var(--color-white);
-      opacity: 0;
-      transform: translateY(12px);
-      transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .cat-panel.is-active .cat-panel__badge {
-      opacity: 1;
-      transform: none;
-      transition-delay: 0.2s;
-    }
-
-    .cat-panel__badge svg {
-      width: 28px;
-      height: 28px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    /* Body copy rises in behind the panel fade */
-    .cat-panel__body > * {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.5s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .cat-panel.is-active .cat-panel__body > * {
-      opacity: 1;
-      transform: none;
-    }
-
-    .cat-panel.is-active .cat-panel__body > :nth-child(1) { transition-delay: 0.1s; }
-    .cat-panel.is-active .cat-panel__body > :nth-child(2) { transition-delay: 0.18s; }
-    .cat-panel.is-active .cat-panel__body > :nth-child(3) { transition-delay: 0.26s; }
-    .cat-panel.is-active .cat-panel__body > :nth-child(4) { transition-delay: 0.34s; }
-
-    .cat-panel__kicker {
-      font-size: var(--text-small);
-      font-weight: var(--weight-body-semibold);
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--color-sky);
-    }
-
-    .cat-panel__title {
-      margin-top: var(--space-2);
-    }
-
-    .cat-panel__text {
-      margin-top: var(--space-3);
-      color: var(--color-gray-100);
-    }
-
-    .cat-panel__cta {
-      margin-top: var(--space-4);
-    }
-
-    /* ---- Responsive ------------------------------------------------------ */
-    @media (max-width: 1100px) {
-      .cat-tab__name {
-        letter-spacing: 0.06em;
-      }
-    }
-
-    @media (max-width: 900px) {
-      /* Six columns stop fitting — the strip becomes a swipeable rail with
-         the active tab scrolled into view */
-      .cats__tabs {
-        display: flex;
-        overflow-x: auto;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-        margin-inline: calc(var(--side-pad-mobile) * -1);
-        padding-inline: var(--side-pad-mobile);
-        scroll-padding-inline: var(--side-pad-mobile);
-      }
-
-      .cats__tabs::-webkit-scrollbar {
-        display: none;
-      }
-
-      /* Fading the trailing edge is the only hint that the strip scrolls */
-      .cats__tabs {
-        -webkit-mask-image: linear-gradient(
-          90deg,
-          #000 0,
-          #000 calc(100% - 48px),
-          transparent 100%
-        );
-        mask-image: linear-gradient(
-          90deg,
-          #000 0,
-          #000 calc(100% - 48px),
-          transparent 100%
-        );
-      }
-
-      .cat-tab {
-        flex: 0 0 auto;
-        min-width: 124px;
-        scroll-snap-align: center;
-      }
-
-      .cat-panel {
-        grid-template-columns: 1fr;
-        gap: var(--space-4);
-      }
-
-      .cat-panel__media {
-        aspect-ratio: 16 / 10;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .cats__tabs {
-        margin-top: var(--space-5);
-      }
-
-      .cats__panels {
-        margin-top: var(--space-5);
-      }
-
-      .cat-tab {
-        min-width: 108px;
-        padding: var(--space-3) var(--space-2);
-      }
-
-      .cat-tab__icon {
-        width: 26px;
-        height: 26px;
-      }
-
-      .cat-panel__media {
-        aspect-ratio: 3 / 2;
-      }
-
-      .cat-panel__badge {
-        left: var(--space-3);
-        bottom: var(--space-3);
-        width: 52px;
-        height: calc(52px / 0.866);
-      }
-
-      .cat-panel__badge svg {
-        width: 24px;
-        height: 24px;
-      }
-
-      .cat-panel__cta .btn {
-        width: 100%;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .cat-panel,
-      .cat-panel__body > *,
-      .cat-panel__badge,
-      .cat-panel__media img,
-      .cat-tab,
-      .cat-tab__icon {
-        transition-duration: 0.01ms !important;
-        transition-delay: 0ms !important;
-      }
-
-      .cat-panel__media img,
-      .cat-panel.is-active .cat-panel__media img {
-        transform: none;
-      }
-
-      .cats.is-playing .cat-tab.is-active .cat-tab__bar {
-        animation: none;
-        transform: scaleX(1);
-      }
-    }
-
-  </style>
+  <link rel="stylesheet" href="css/variables.css?v=2" />
+  <link rel="stylesheet" href="css/base.css?v=2" />
+  <link rel="stylesheet" href="css/components.css?v=2" />
+  <link rel="stylesheet" href="css/chrome.css?v=2" />
+  <link rel="stylesheet" href="css/hero-video.css?v=4" />
+  <link rel="stylesheet" href="css/category-ring.css?v=3" />
 </head>
 <body>
   <div class="promo-banner">
@@ -951,32 +30,7 @@
     </div>
   </div>
 
-  <div class="page-hero">
-    <div class="hero-bg" aria-hidden="true">
-      <!-- Inner frame is taller than the box it sits in, so it can drift on
-           scroll without ever exposing an edge -->
-      <div class="hero-bg__inner" data-hero-parallax>
-        <div class="hero-bg__layer is-active" style="background-image: url('images/treatment-plant-aerial.jpg')"></div>
-        <div class="hero-bg__layer" style="background-image: url('images/industrial-tanks.jpg')"></div>
-        <div class="hero-bg__layer" style="background-image: url('images/water-sampling.jpg')"></div>
-      </div>
-      <div class="hero-bg__scrim"></div>
-      <!-- Hexagon lattice — the dial's motif, running quietly under everything
-           and masked away from the middle so it never fights the headline -->
-      <svg class="hero-lattice">
-        <defs>
-          <pattern id="hero-hex" width="56" height="97" patternUnits="userSpaceOnUse">
-            <path d="M28 0 56 16.2 56 48.5 28 64.7 0 48.5 0 16.2Z
-                     M0 48.5 28 64.7 28 97 0 113.2 -28 97 -28 64.7Z
-                     M56 48.5 84 64.7 84 97 56 113.2 28 97 28 64.7Z
-                     M0 -48.5 28 -32.3 28 0 0 16.2 -28 0 -28 -32.3Z
-                     M56 -48.5 84 -32.3 84 0 56 16.2 28 0 28 -32.3Z" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#hero-hex)" />
-      </svg>
-    </div>
-
+  <div class="video-hero" data-video-hero>
     <header class="site-header">
       <div class="container">
         <a class="site-header__logo" href="index.html">
@@ -1016,173 +70,54 @@
         </nav>
       </div>
     </header>
-
-    <!-- 1. Hero carousel — slides are declared here; js/main.js drives the
-         crossfade, the dial rotation and the autoplay countdown. -->
-    <section
-      class="hero"
-      data-hero
-      aria-roledescription="carousel"
-      aria-label="ChemX Direct highlights"
-    >
-      <div class="container hero__stage">
-        <article
-          class="hero-slide is-active"
-          id="hero-slide-1"
-          role="tabpanel"
-          aria-labelledby="hero-tab-1"
-          aria-roledescription="slide"
-        >
-          <p class="pill-glass hero-slide__eyebrow">
-            DIY industrial water treatment
-          </p>
-          <h1 class="hero-slide__title">
-            <span>Industrial-grade chemistry.</span>
-            <span>Self-serve simplicity.</span>
-          </h1>
-          <div class="hero-slide__ctas">
-            <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
-          </div>
-        </article>
-
-        <article
-          class="hero-slide"
-          id="hero-slide-2"
-          role="tabpanel"
-          aria-labelledby="hero-tab-2"
-          aria-roledescription="slide"
-        >
-          <p class="pill-glass hero-slide__eyebrow">Boilers</p>
-          <h1 class="hero-slide__title">
-            <span>Scale and corrosion,</span>
-            <span>under control.</span>
-          </h1>
-          <div class="hero-slide__ctas">
-            <button class="btn btn--primary btn--lg btn--arrow" type="button" data-hero-cat="Boilers">Shop boiler chemistry</button>
-          </div>
-        </article>
-
-        <article
-          class="hero-slide"
-          id="hero-slide-3"
-          role="tabpanel"
-          aria-labelledby="hero-tab-3"
-          aria-roledescription="slide"
-        >
-          <p class="pill-glass hero-slide__eyebrow">Test kits &amp; feed equipment</p>
-          <h1 class="hero-slide__title">
-            <span>Test it yourself.</span>
-            <span>Know it's working.</span>
-          </h1>
-          <div class="hero-slide__ctas">
-            <button class="btn btn--primary btn--lg btn--arrow" type="button" data-hero-cat="Test Equipment">Shop test equipment</button>
-          </div>
-        </article>
+    <div class="video-hero__sticky">
+      <div class="video-hero__frame" data-video-frame>
+        <video class="video-hero__video" data-hero-video muted loop playsinline preload="none"
+          poster="images/hero-water-poster.jpg" aria-hidden="true" tabindex="-1">
+          <source data-src="videos/hero-water.mp4" type="video/mp4" />
+        </video>
+        <div class="video-hero__scrim" aria-hidden="true"></div>
       </div>
-
-      <a class="hero-scroll" href="#categories">
-        <span class="hero-scroll__label">Scroll</span>
-        <span class="hero-scroll__line" aria-hidden="true"></span>
-      </a>
-
-      <!-- Dial: three hexagons on one orbit. The ring rotates until the
-           chosen slide's hexagon reaches the top. -->
-      <div class="hero-dial" data-hero-dial>
-        <div class="hero-dial__labels" aria-hidden="true">
-          <p class="hero-dial__label is-active">The ChemX way</p>
-          <p class="hero-dial__label">Boiler treatment</p>
-          <p class="hero-dial__label">Testing &amp; proof</p>
-        </div>
-
-        <div class="hero-dial__orbit">
-          <svg class="hero-dial__rings" viewBox="0 0 200 200" aria-hidden="true">
-            <!-- Spokes are 120° apart, so they look identical at every
-                 rotation and can stay still while the ring turns -->
-            <line class="hero-dial__spoke-line" x1="100" y1="100" x2="100" y2="4" vector-effect="non-scaling-stroke" />
-            <line class="hero-dial__spoke-line" x1="100" y1="100" x2="183.1" y2="148" vector-effect="non-scaling-stroke" />
-            <line class="hero-dial__spoke-line" x1="100" y1="100" x2="16.9" y2="148" vector-effect="non-scaling-stroke" />
-            <circle class="hero-dial__track" cx="100" cy="100" r="100" pathLength="100" vector-effect="non-scaling-stroke" />
-            <circle class="hero-dial__progress" cx="100" cy="100" r="100" pathLength="100" vector-effect="non-scaling-stroke" />
-          </svg>
-
-          <div
-            class="hero-dial__ring"
-            style="--rot: 0deg"
-            role="tablist"
-            aria-label="Choose a slide"
-            data-hero-ring
-          >
-            <div class="hero-dial__spoke" style="--slot: 0deg">
-              <button
-                class="hexnode is-active"
-                type="button"
-                role="tab"
-                id="hero-tab-1"
-                aria-controls="hero-slide-1"
-                aria-selected="true"
-                data-hero-tab="0"
-              >
-                <span class="hexnode__glow" aria-hidden="true"></span>
-                <span class="hexnode__frame" aria-hidden="true">
-                  <span class="hexnode__media">
-                    <img src="images/treatment-plant-aerial.jpg" alt="" />
-                  </span>
-                </span>
-                <span class="visually-hidden">The ChemX way</span>
-              </button>
-            </div>
-            <div class="hero-dial__spoke" style="--slot: -120deg">
-              <button
-                class="hexnode"
-                type="button"
-                role="tab"
-                id="hero-tab-2"
-                aria-controls="hero-slide-2"
-                aria-selected="false"
-                tabindex="-1"
-                data-hero-tab="1"
-              >
-                <span class="hexnode__glow" aria-hidden="true"></span>
-                <span class="hexnode__frame" aria-hidden="true">
-                  <span class="hexnode__media">
-                    <img src="images/industrial-tanks.jpg" alt="" />
-                  </span>
-                </span>
-                <span class="visually-hidden">Boiler treatment</span>
-              </button>
-            </div>
-            <div class="hero-dial__spoke" style="--slot: -240deg">
-              <button
-                class="hexnode"
-                type="button"
-                role="tab"
-                id="hero-tab-3"
-                aria-controls="hero-slide-3"
-                aria-selected="false"
-                tabindex="-1"
-                data-hero-tab="2"
-              >
-                <span class="hexnode__glow" aria-hidden="true"></span>
-                <span class="hexnode__frame" aria-hidden="true">
-                  <span class="hexnode__media">
-                    <img src="images/water-sampling.jpg" alt="" />
-                  </span>
-                </span>
-                <span class="visually-hidden">Testing &amp; proof</span>
-              </button>
-            </div>
-          </div>
-        </div>
+      <section class="video-hero__content container" aria-labelledby="hero-title" data-video-copy>
+        <h1 class="video-hero__title" id="hero-title">
+          <span>Water treatment.</span>
+          <span>Made simple.</span>
+        </h1>
+        <button class="video-hero__cta" type="button" data-open-quiz>
+          Find your product <span aria-hidden="true">↗</span>
+        </button>
+      </section>
+      <div class="video-hero__controls container" data-video-controls>
+        <a class="video-hero__scroll" href="#categories" aria-label="Scroll to product categories">
+          <span>Explore</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6" stroke="currentColor" stroke-width="1.5" /></svg>
+        </a>
+        <button class="video-hero__toggle" type="button" data-video-toggle aria-label="Play background video" hidden>
+          <svg class="video-hero__pause-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 3h3v10H4zm5 0h3v10H9z" /></svg>
+          <svg class="video-hero__play-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="m5 2 9 6-9 6z" /></svg>
+        </button>
       </div>
-    </section>
-
+    </div>
   </div>
 
   <main>
 
+    <section class="intro-reveal" aria-label="The ChemX approach">
+      <div class="container">
+        <p class="intro-reveal__text" data-scroll-sentence>Industrial-grade water treatment, delivered direct and made simple enough to manage yourself.</p>
+      </div>
+    </section>
+
   <!-- Icon sprite for the category tabs; drawn once, referenced by <use> -->
   <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
     <defs>
+          <pattern id="hero-hex" width="56" height="97" patternUnits="userSpaceOnUse">
+            <path d="M28 0 56 16.2 56 48.5 28 64.7 0 48.5 0 16.2Z
+                     M0 48.5 28 64.7 28 97 0 113.2 -28 97 -28 64.7Z
+                     M56 48.5 84 64.7 84 97 56 113.2 28 97 28 64.7Z
+                     M0 -48.5 28 -32.3 28 0 0 16.2 -28 0 -28 -32.3Z
+                     M56 -48.5 84 -32.3 84 0 56 16.2 28 0 28 -32.3Z" />
+          </pattern>
       <symbol id="ic-boiler" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="6" ry="2.4"/><path d="M6 6v11.6c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4V6"/><path d="M6 13.2h12"/></symbol>
       <symbol id="ic-tower" viewBox="0 0 24 24"><path d="M7.4 3.5h9.2l-1.3 5.2H8.7z"/><path d="M8.7 8.7h6.6L18 20.5H6z"/><path d="M9.2 15.4h5.6"/></symbol>
       <symbol id="ic-biocide" viewBox="0 0 24 24"><path d="M12 3.2c3.4 4.3 5.1 7 5.1 8.9a5.1 5.1 0 1 1-10.2 0c0-1.9 1.7-4.6 5.1-8.9z"/><path d="M9.8 12.5l1.7 1.7 3.1-3.3"/></symbol>
@@ -1192,238 +127,102 @@
     </defs>
   </svg>
 
-    <!-- 2. Category tabs — six product categories, auto-rotating -->
-    <section class="section section--navy cats" id="categories" data-cats>
-      <svg class="cats__lattice" aria-hidden="true">
-        <rect width="100%" height="100%" fill="url(#hero-hex)" />
-      </svg>
-
-      <div class="container">
-        <div class="cats__head">
-          <p class="pill-glass cats__eyebrow">What we carry</p>
-          <h2>Sorted by the system you run</h2>
-          <p class="text-body-lg cats__sub">
-            Six categories covering the chemistry, the test kits and the feed
-            equipment for boilers, cooling towers and closed loops — sold
-            direct, with no service contract attached.
-          </p>
-        </div>
-
-        <div class="cats__tabs" role="tablist" aria-label="Product categories" data-cats-tabs>
-          <button
-            class="cat-tab is-active"
-            type="button"
-            role="tab"
-            id="cat-tab-boilers"
-            aria-controls="cat-panel-boilers"
-            aria-selected="true"
-            data-cat-tab="0"
-          >
-            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-boiler" /></svg>
-            <span class="cat-tab__name">Boilers</span>
-            <span class="cat-tab__bar" aria-hidden="true"></span>
-          </button>
-          <button
-            class="cat-tab"
-            type="button"
-            role="tab"
-            id="cat-tab-towers"
-            aria-controls="cat-panel-towers"
-            aria-selected="false"
-            tabindex="-1"
-            data-cat-tab="1"
-          >
-            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-tower" /></svg>
-            <span class="cat-tab__name">Cooling Towers</span>
-            <span class="cat-tab__bar" aria-hidden="true"></span>
-          </button>
-          <button
-            class="cat-tab"
-            type="button"
-            role="tab"
-            id="cat-tab-biocides"
-            aria-controls="cat-panel-biocides"
-            aria-selected="false"
-            tabindex="-1"
-            data-cat-tab="2"
-          >
-            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-biocide" /></svg>
-            <span class="cat-tab__name">Biocides</span>
-            <span class="cat-tab__bar" aria-hidden="true"></span>
-          </button>
-          <button
-            class="cat-tab"
-            type="button"
-            role="tab"
-            id="cat-tab-loops"
-            aria-controls="cat-panel-loops"
-            aria-selected="false"
-            tabindex="-1"
-            data-cat-tab="3"
-          >
-            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-loop" /></svg>
-            <span class="cat-tab__name">Closed Loops</span>
-            <span class="cat-tab__bar" aria-hidden="true"></span>
-          </button>
-          <button
-            class="cat-tab"
-            type="button"
-            role="tab"
-            id="cat-tab-tests"
-            aria-controls="cat-panel-tests"
-            aria-selected="false"
-            tabindex="-1"
-            data-cat-tab="4"
-          >
-            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-test" /></svg>
-            <span class="cat-tab__name">Test Kits</span>
-            <span class="cat-tab__bar" aria-hidden="true"></span>
-          </button>
-          <button
-            class="cat-tab"
-            type="button"
-            role="tab"
-            id="cat-tab-feed"
-            aria-controls="cat-panel-feed"
-            aria-selected="false"
-            tabindex="-1"
-            data-cat-tab="5"
-          >
-            <svg class="cat-tab__icon" aria-hidden="true"><use href="#ic-pump" /></svg>
-            <span class="cat-tab__name">Feed Equipment</span>
-            <span class="cat-tab__bar" aria-hidden="true"></span>
-          </button>
-        </div>
-
-        <div class="cats__panels">
-        <article
-          class="cat-panel is-active"
-          id="cat-panel-boilers"
-          role="tabpanel"
-          aria-labelledby="cat-tab-boilers"
-        >
-          <div class="cat-panel__media">
-            <img src="images/industrial-tanks.jpg" alt="Industrial storage tanks at dusk" loading="lazy" decoding="async" />
-            <span class="cat-panel__badge" aria-hidden="true">
-              <svg><use href="#ic-boiler" /></svg>
-            </span>
-          </div>
-          <div class="cat-panel__body">
-            <p class="cat-panel__kicker">Boiler treatment</p>
-            <h3 class="cat-panel__title">Steam and hot water, held in range</h3>
-            <p class="cat-panel__text">Oxygen scavengers, water dispersants, steam treatments and all-in-one programs for steam and hot-water boilers. Which one you need comes down to your feedwater alkalinity and how long the boiler runs — the first two questions the selector asks.</p>
-            <div class="cat-panel__cta">
-              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your boiler product</button>
+    <!-- Six category cards share one rotating 3D ring. -->
+    <section class="category-ring" id="categories" data-category-ring aria-labelledby="category-ring-title">
+      <div class="container category-ring__head">
+        <p class="category-ring__eyebrow">What we carry</p>
+        <h2 id="category-ring-title">Made for your system.</h2>
+        <p>Explore the chemistry, testing and equipment that keep it running.</p>
+      </div>
+      <div class="category-ring__scene" data-ring-scene>
+        <div class="category-ring__wheel" data-ring-wheel>
+          <article class="category-ring__card" data-ring-card data-category-name="Boilers" style="--card-angle: 0deg" aria-labelledby="ring-card-title-0">
+            <div class="category-ring__image">
+              <img src="images/industrial-tanks.jpg" alt="" loading="lazy" decoding="async" draggable="false" />
+              <span class="category-ring__number">01 / 06</span>
+              <span class="category-ring__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#ic-boiler" /></svg></span>
             </div>
-          </div>
-        </article>
-        <article
-          class="cat-panel"
-          id="cat-panel-towers"
-          role="tabpanel"
-          aria-labelledby="cat-tab-towers"
-        >
-          <div class="cat-panel__media">
-            <img src="images/treatment-plant-aerial.jpg" alt="Aerial view of a water treatment plant" loading="lazy" decoding="async" />
-            <span class="cat-panel__badge" aria-hidden="true">
-              <svg><use href="#ic-tower" /></svg>
-            </span>
-          </div>
-          <div class="cat-panel__body">
-            <p class="cat-panel__kicker">Cooling tower treatment</p>
-            <h3 class="cat-panel__title">Scale and corrosion in open loops</h3>
-            <p class="cat-panel__text">Treatment for open recirculating towers, split by what comes out of your make-up line. Soft water and hard water need different chemistry, and running the wrong one shows up in the basin faster than you'd think.</p>
-            <div class="cat-panel__cta">
-              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your tower product</button>
+            <div class="category-ring__body">
+              <h3 id="ring-card-title-0">Boilers</h3>
+              <p>Keep steam and hot-water systems running with scale and corrosion under control.</p>
+              <button class="category-ring__cta" type="button" data-open-quiz aria-label="Find your boiler product">Find your product <span aria-hidden="true">↗</span></button>
             </div>
-          </div>
-        </article>
-        <article
-          class="cat-panel"
-          id="cat-panel-biocides"
-          role="tabpanel"
-          aria-labelledby="cat-tab-biocides"
-        >
-          <div class="cat-panel__media">
-            <img src="images/hero-water.jpg" alt="Close-up of blue treatment chemistry" loading="lazy" decoding="async" />
-            <span class="cat-panel__badge" aria-hidden="true">
-              <svg><use href="#ic-biocide" /></svg>
-            </span>
-          </div>
-          <div class="cat-panel__body">
-            <p class="cat-panel__kicker">Biocides</p>
-            <h3 class="cat-panel__title">Two kill mechanisms, on rotation</h3>
-            <p class="cat-panel__text">Oxidizing biocides for a fast knockdown, non-oxidizing for the slower and more persistent kill — each in tablet or liquid. Most towers alternate between the two so the population never settles in around one of them.</p>
-            <div class="cat-panel__cta">
-              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your biocide</button>
+          </article>
+          <article class="category-ring__card" data-ring-card data-category-name="Cooling towers" style="--card-angle: 60deg" aria-labelledby="ring-card-title-1">
+            <div class="category-ring__image">
+              <img src="images/treatment-plant-aerial.jpg" alt="" loading="lazy" decoding="async" draggable="false" />
+              <span class="category-ring__number">02 / 06</span>
+              <span class="category-ring__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#ic-tower" /></svg></span>
             </div>
-          </div>
-        </article>
-        <article
-          class="cat-panel"
-          id="cat-panel-loops"
-          role="tabpanel"
-          aria-labelledby="cat-tab-loops"
-        >
-          <div class="cat-panel__media">
-            <img src="images/clarifier-tank.jpg" alt="Aerial view of a circular clarifier tank" loading="lazy" decoding="async" />
-            <span class="cat-panel__badge" aria-hidden="true">
-              <svg><use href="#ic-loop" /></svg>
-            </span>
-          </div>
-          <div class="cat-panel__body">
-            <p class="cat-panel__kicker">Closed loop systems</p>
-            <h3 class="cat-panel__title">Almost no loss, so almost no dosing</h3>
-            <p class="cat-panel__text">Chilled and hot water loops lose next to nothing to evaporation, so they need an inhibitor held in range rather than a full feed program. Nitrite does the work, and a periodic reading is all it takes to prove it's still there.</p>
-            <div class="cat-panel__cta">
-              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your loop product</button>
+            <div class="category-ring__body">
+              <h3 id="ring-card-title-1">Cooling towers</h3>
+              <p>The right chemistry for your make-up water, from the first fill to daily operation.</p>
+              <button class="category-ring__cta" type="button" data-open-quiz aria-label="Find your tower product">Find your product <span aria-hidden="true">↗</span></button>
             </div>
-          </div>
-        </article>
-        <article
-          class="cat-panel"
-          id="cat-panel-tests"
-          role="tabpanel"
-          aria-labelledby="cat-tab-tests"
-        >
-          <div class="cat-panel__media">
-            <img src="images/water-sampling.jpg" alt="A gloved hand taking a water sample" loading="lazy" decoding="async" />
-            <span class="cat-panel__badge" aria-hidden="true">
-              <svg><use href="#ic-test" /></svg>
-            </span>
-          </div>
-          <div class="cat-panel__body">
-            <p class="cat-panel__kicker">Test kits</p>
-            <h3 class="cat-panel__title">The readings that prove it's working</h3>
-            <p class="cat-panel__text">Conductivity, pH, sulfite, total hardness, chlorine and PTSA fluorescein. Every product we sell lists the tests that go with it and the range you should be holding, so the kit and the chemistry arrive matched.</p>
-            <div class="cat-panel__cta">
-              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your test kit</button>
+          </article>
+          <article class="category-ring__card" data-ring-card data-category-name="Biocides" style="--card-angle: 120deg" aria-labelledby="ring-card-title-2">
+            <div class="category-ring__image">
+              <img src="images/hero-water.jpg" alt="" loading="lazy" decoding="async" draggable="false" />
+              <span class="category-ring__number">03 / 06</span>
+              <span class="category-ring__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#ic-biocide" /></svg></span>
             </div>
-          </div>
-        </article>
-        <article
-          class="cat-panel"
-          id="cat-panel-feed"
-          role="tabpanel"
-          aria-labelledby="cat-tab-feed"
-        >
-          <div class="cat-panel__media">
-            <img src="images/ibc-totes.jpg" alt="Stacked intermediate bulk containers" loading="lazy" decoding="async" />
-            <span class="cat-panel__badge" aria-hidden="true">
-              <svg><use href="#ic-pump" /></svg>
-            </span>
-          </div>
-          <div class="cat-panel__body">
-            <p class="cat-panel__kicker">Feed equipment</p>
-            <h3 class="cat-panel__title">What turns a program into a routine</h3>
-            <p class="cat-panel__text">Chemical feed pumps, injectors, foot valves and the fittings in between. If you're dosing by hand today, this is the shelf that takes the job off your calendar and puts it on a timer.</p>
-            <div class="cat-panel__cta">
-              <button class="btn btn--primary btn--arrow" type="button" data-open-quiz>Find your feed setup</button>
+            <div class="category-ring__body">
+              <h3 id="ring-card-title-2">Biocides</h3>
+              <p>Keep algae and bacteria in check with oxidizing and non-oxidizing treatments.</p>
+              <button class="category-ring__cta" type="button" data-open-quiz aria-label="Find your biocide">Find your product <span aria-hidden="true">↗</span></button>
             </div>
-          </div>
-        </article>
+          </article>
+          <article class="category-ring__card" data-ring-card data-category-name="Closed loops" style="--card-angle: 180deg" aria-labelledby="ring-card-title-3">
+            <div class="category-ring__image">
+              <img src="images/clarifier-tank.jpg" alt="" loading="lazy" decoding="async" draggable="false" />
+              <span class="category-ring__number">04 / 06</span>
+              <span class="category-ring__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#ic-loop" /></svg></span>
+            </div>
+            <div class="category-ring__body">
+              <h3 id="ring-card-title-3">Closed loops</h3>
+              <p>Long-lasting protection for the water that stays in your heating and cooling loops.</p>
+              <button class="category-ring__cta" type="button" data-open-quiz aria-label="Find your loop product">Find your product <span aria-hidden="true">↗</span></button>
+            </div>
+          </article>
+          <article class="category-ring__card" data-ring-card data-category-name="Test kits" style="--card-angle: 240deg" aria-labelledby="ring-card-title-4">
+            <div class="category-ring__image">
+              <img src="images/water-sampling.jpg" alt="" loading="lazy" decoding="async" draggable="false" />
+              <span class="category-ring__number">05 / 06</span>
+              <span class="category-ring__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#ic-test" /></svg></span>
+            </div>
+            <div class="category-ring__body">
+              <h3 id="ring-card-title-4">Test kits</h3>
+              <p>Simple readings that tell you what your water needs — and prove treatment is working.</p>
+              <button class="category-ring__cta" type="button" data-open-quiz aria-label="Find your test kit">Find your product <span aria-hidden="true">↗</span></button>
+            </div>
+          </article>
+          <article class="category-ring__card" data-ring-card data-category-name="Feed equipment" style="--card-angle: 300deg" aria-labelledby="ring-card-title-5">
+            <div class="category-ring__image">
+              <img src="images/ibc-totes.jpg" alt="" loading="lazy" decoding="async" draggable="false" />
+              <span class="category-ring__number">06 / 06</span>
+              <span class="category-ring__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#ic-pump" /></svg></span>
+            </div>
+            <div class="category-ring__body">
+              <h3 id="ring-card-title-5">Feed equipment</h3>
+              <p>Pumps, injectors and fittings that make the right dose part of your daily routine.</p>
+              <button class="category-ring__cta" type="button" data-open-quiz aria-label="Find your feed setup">Find your product <span aria-hidden="true">↗</span></button>
+            </div>
+          </article>
         </div>
       </div>
+      <div class="category-ring__controls" data-ring-controls hidden>
+        <button class="category-ring__arrow" type="button" data-ring-prev aria-label="Previous category"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6" stroke="currentColor" stroke-width="1.5" /></svg></button>
+        <div class="category-ring__dots" role="group" aria-label="Choose a product category">
+          <button class="category-ring__dot" type="button" data-ring-go="0" aria-label="Show boilers" aria-pressed="true"><span></span></button>
+          <button class="category-ring__dot" type="button" data-ring-go="1" aria-label="Show cooling towers" aria-pressed="false"><span></span></button>
+          <button class="category-ring__dot" type="button" data-ring-go="2" aria-label="Show biocides" aria-pressed="false"><span></span></button>
+          <button class="category-ring__dot" type="button" data-ring-go="3" aria-label="Show closed loops" aria-pressed="false"><span></span></button>
+          <button class="category-ring__dot" type="button" data-ring-go="4" aria-label="Show test kits" aria-pressed="false"><span></span></button>
+          <button class="category-ring__dot" type="button" data-ring-go="5" aria-label="Show feed equipment" aria-pressed="false"><span></span></button>
+        </div>
+        <button class="category-ring__arrow" type="button" data-ring-next aria-label="Next category"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.5" /></svg></button>
+      </div>
+      <p class="category-ring__status" data-ring-status aria-live="polite" aria-atomic="true" hidden>01 / 06 — Boilers</p>
     </section>
   </main>
 
@@ -1509,5 +308,7 @@
   </div>
 
   <script src="js/main.js?v=14"></script>
+  <script src="js/hero-video.js?v=2"></script>
+  <script src="js/category-ring.js?v=1"></script>
 </body>
 </html>
