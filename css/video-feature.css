@@ -1,26 +1,51 @@
-/* Full-bleed looping video with its copy in a glass panel, bottom right. */
+/* The reverse of the hero: the video starts inset and grows to full bleed
+   as it pins, then its copy fades in. Progress is set by video-feature.js. */
 .video-feature {
+  --feature-inset-x: 0px;
+  --feature-inset-y: 0px;
+  --feature-radius: 0px;
+  --feature-copy-opacity: 1;
+  --feature-copy-y: 0px;
   position: relative;
-  isolation: isolate;
+  background: var(--color-white);
+  color: var(--color-white);
+}
+
+.video-feature.is-scroll-ready {
+  height: calc(100svh + 85svh);
+}
+
+.video-feature__sticky {
+  position: sticky;
+  top: 0;
   display: flex;
   align-items: flex-end;
-  min-height: 100svh;
+  height: 100svh;
+  min-height: 480px;
   padding-block: var(--space-6);
   overflow: hidden;
+}
+
+.video-feature__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
   background: var(--color-navy);
-  color: var(--color-white);
+  clip-path: inset(var(--feature-inset-y) var(--feature-inset-x) round var(--feature-radius));
 }
 
 .video-feature__video,
 .video-feature__scrim {
   position: absolute;
   inset: 0;
-  z-index: -1;
   width: 100%;
   height: 100%;
 }
 
-.video-feature__video { object-fit: cover; }
+.video-feature__video {
+  object-fit: cover;
+  transform: scale(var(--feature-video-scale, 1));
+}
 
 /* Darkens toward the panel so the glass reads on bright frames. */
 .video-feature__scrim {
@@ -30,9 +55,12 @@
 }
 
 .video-feature__inner {
+  position: relative;
   display: flex;
   justify-content: flex-end;
   width: 100%;
+  opacity: var(--feature-copy-opacity);
+  transform: translateY(var(--feature-copy-y));
 }
 
 .video-feature__panel {
@@ -64,10 +92,11 @@
 
 .video-feature__panel .btn { margin-top: var(--space-4); }
 
+/* Rides the frame's bottom-left corner as it grows. */
 .video-feature__toggle {
   position: absolute;
-  left: var(--space-4);
-  bottom: var(--space-4);
+  left: calc(var(--feature-inset-x) + var(--space-4));
+  bottom: calc(var(--feature-inset-y) + var(--space-4));
   display: grid;
   place-items: center;
   width: 44px;
@@ -89,9 +118,22 @@
 .video-feature__toggle:not(.is-playing) .video-feature__pause-icon { display: none; }
 
 @media (max-width: 640px) {
-  .video-feature { min-height: 85svh; padding-block: var(--space-4); }
+  .video-feature__sticky { padding-block: var(--space-4); }
   .video-feature__panel { padding: var(--space-4); }
   .video-feature__panel p { font-size: var(--text-body); }
   .video-feature__panel .btn { width: 100%; padding-inline: var(--space-3); white-space: nowrap; }
-  .video-feature__toggle { top: var(--space-3); right: var(--space-3); left: auto; bottom: auto; }
+  .video-feature__toggle {
+    top: calc(var(--feature-inset-y) + var(--space-3));
+    right: calc(var(--feature-inset-x) + var(--space-3));
+    left: auto;
+    bottom: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-feature.is-scroll-ready { height: auto; }
+  .video-feature__sticky { position: relative; }
+  .video-feature__frame { clip-path: none; }
+  .video-feature__video { transform: none; }
+  .video-feature__inner { opacity: 1; transform: none; }
 }
