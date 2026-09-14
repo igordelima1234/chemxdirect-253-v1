@@ -1,0 +1,311 @@
+/* V2 only. Six hexagons orbit on a tilted ring and counter-rotate so each
+   always faces the viewer; the one in front grows and shows its copy.
+   Driven by js/category-ring.js through the shared data-ring-* hooks. */
+.hex-ring {
+  --hex-w: 360px;
+  --ring-radius: 520px;
+  --hex-tilt: -9deg;
+  --hex-ease: cubic-bezier(0.22, 1.15, 0.36, 1);
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--space-5) var(--space-6);
+  background: var(--color-white);
+  overflow: clip;
+}
+
+.hex-ring__lattice {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  opacity: 0.07;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 55%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 55%, #000 30%, transparent 75%);
+}
+
+.hex-ring__head { text-align: center; }
+.hex-ring__eyebrow {
+  margin-bottom: var(--space-2);
+  color: var(--color-steel);
+  font-size: var(--text-small);
+  font-weight: var(--weight-body-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hex-ring__head h2 {
+  font-size: clamp(32px, 4vw, 56px);
+  letter-spacing: -0.035em;
+}
+.hex-ring__head > p:last-child {
+  margin-top: var(--space-3);
+  color: var(--color-gray-500);
+  font-size: var(--text-body-lg);
+}
+
+/* Without JS: a plain grid of hexagons with their copy showing. */
+.hex-ring__wheel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 320px));
+  justify-content: center;
+  gap: var(--space-4);
+  margin: var(--space-5) auto;
+  padding-inline: var(--side-pad-mobile);
+}
+
+.hex-ring__card {
+  position: relative;
+  aspect-ratio: 100 / 115.47;
+  min-width: 0;
+}
+
+.hex-ring__float {
+  position: absolute;
+  inset: 0;
+}
+
+.hex-ring__shape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  overflow: visible;
+}
+
+.hex-ring__shade { transition: opacity 600ms ease; }
+.hex-ring__tint {
+  fill: var(--color-navy);
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+.hex-ring__edge {
+  fill: none;
+  stroke: var(--color-white);
+  stroke-opacity: 0.45;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Copy sits in the hexagon's wide middle band, low over the shade. */
+.hex-ring__body {
+  position: absolute;
+  inset: 30% 14% 18%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  color: var(--color-white);
+  transition: opacity 500ms ease, visibility 500ms;
+}
+.hex-ring__body h3 {
+  font-size: 26px;
+  letter-spacing: -0.025em;
+  color: var(--color-white);
+}
+.hex-ring__body > p {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--color-white) 82%, transparent);
+}
+.hex-ring__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 44px;
+  margin-top: 6px;
+  padding-inline: var(--space-2);
+  border: 0;
+  background: none;
+  color: var(--color-white);
+  font-size: 14px;
+  font-weight: var(--weight-body-semibold);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-white) 45%, transparent);
+  text-underline-offset: 5px;
+}
+.hex-ring__cta span { font-size: 18px; line-height: 1; text-decoration: none; }
+.hex-ring__cta:hover { text-decoration-color: var(--color-white); }
+
+/* ---- The orbit ---- */
+.hex-ring.is-ready .hex-ring__scene {
+  position: relative;
+  height: 600px;
+  margin-bottom: var(--space-3);
+  perspective: 1400px;
+  perspective-origin: 50% 42%;
+  touch-action: pan-y pinch-zoom;
+  cursor: grab;
+}
+.hex-ring.is-ready .hex-ring__wheel {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--hex-w);
+  height: calc(var(--hex-w) * 1.1547);
+  margin: 0;
+  padding: 0;
+  transform-style: preserve-3d;
+  transform: translate(-50%, -50%) translateZ(calc(-1 * var(--ring-radius))) rotateX(var(--hex-tilt)) rotateY(var(--ring-angle, 0deg));
+  transition: transform 850ms var(--hex-ease);
+}
+/* Undoing the wheel's tilt and spin after moving out to the rim keeps every
+   hexagon flat to the viewer; both transitions share one timing, so they
+   stay in step mid-turn. */
+.hex-ring.is-ready .hex-ring__card {
+  --hex-scale: 0.42;
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+  opacity: 0.4;
+  transform:
+    rotateY(var(--card-angle))
+    translateZ(var(--ring-radius))
+    rotateY(calc(-1 * (var(--card-angle) + var(--ring-angle, 0deg))))
+    rotateX(calc(-1 * var(--hex-tilt)))
+    scale(var(--hex-scale));
+  transition: transform 850ms var(--hex-ease), opacity 700ms ease;
+}
+.hex-ring.is-ready .hex-ring__card.is-neighbor { --hex-scale: 0.56; opacity: 0.85; }
+.hex-ring.is-ready .hex-ring__card.is-active { --hex-scale: 1; opacity: 1; }
+
+.hex-ring.is-ready .hex-ring__float {
+  animation: hex-ring-float 3.6s ease-in-out infinite alternate;
+}
+.hex-ring__card:nth-child(2) .hex-ring__float { animation-delay: -0.6s; }
+.hex-ring__card:nth-child(3) .hex-ring__float { animation-delay: -1.2s; }
+.hex-ring__card:nth-child(4) .hex-ring__float { animation-delay: -1.8s; }
+.hex-ring__card:nth-child(5) .hex-ring__float { animation-delay: -2.4s; }
+.hex-ring__card:nth-child(6) .hex-ring__float { animation-delay: -3s; }
+@keyframes hex-ring-float {
+  from { transform: translateY(-8px); }
+  to { transform: translateY(8px); }
+}
+
+.hex-ring.is-ready .hex-ring__card:not(.is-active) .hex-ring__shade { opacity: 0; }
+.hex-ring.is-ready .hex-ring__card:not(.is-active) .hex-ring__tint { opacity: 0.18; }
+.hex-ring.is-ready .hex-ring__card:not(.is-active) .hex-ring__body { opacity: 0; visibility: hidden; }
+.hex-ring.is-ready .hex-ring__card.is-active .hex-ring__shape {
+  filter: drop-shadow(0 22px 40px rgba(4, 14, 26, 0.3));
+}
+.hex-ring.is-ready .hex-ring__card.is-active .hex-ring__edge { stroke-opacity: 0.7; }
+
+/* ---- Controls: arrows, countdown dots, status ---- */
+.hex-ring__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+}
+.hex-ring__controls[hidden], .hex-ring__status[hidden] { display: none; }
+.hex-ring__arrow {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--color-gray-100);
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-navy);
+}
+.hex-ring__arrow:hover { color: var(--color-white); background: var(--color-navy); border-color: var(--color-navy); }
+.hex-ring__dots { display: flex; align-items: center; }
+.hex-ring__dot {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 44px;
+  border: 0;
+  background: none;
+}
+.hex-ring__dot span {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--color-gray-100);
+  transform: scaleX(0.214);
+  transform-origin: left center;
+  transition: transform 250ms ease, background 250ms ease;
+}
+.hex-ring__dot[aria-pressed="true"] span {
+  transform: scaleX(1);
+  background: color-mix(in srgb, var(--color-steel) 22%, var(--color-white));
+}
+.hex-ring__dot span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  border-radius: inherit;
+  background: var(--color-steel);
+}
+.hex-ring__dot.is-progressing span::after {
+  animation: hex-ring-progress var(--ring-autoplay-ms, 5000ms) linear forwards;
+}
+.hex-ring.is-autoplay-paused .hex-ring__dot.is-progressing span::after {
+  animation-play-state: paused;
+}
+@keyframes hex-ring-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.hex-ring__status { margin-top: var(--space-2); text-align: center; font-size: var(--text-small); color: var(--color-gray-500); }
+.hex-ring button:focus-visible { outline: 2px solid var(--color-steel); outline-offset: 4px; }
+.hex-ring__body .hex-ring__cta:focus-visible { outline-color: var(--color-white); }
+
+@media (max-width: 900px) {
+  .hex-ring__wheel { grid-template-columns: repeat(2, minmax(0, 300px)); }
+}
+
+@media (max-width: 640px) {
+  .hex-ring {
+    --hex-w: min(290px, calc(100vw - 72px));
+    --ring-radius: 230px;
+    padding-block: var(--space-6) var(--space-5);
+  }
+  .hex-ring__wheel { grid-template-columns: minmax(0, 300px); }
+  .hex-ring.is-ready .hex-ring__scene { height: 450px; perspective: 1000px; }
+  .hex-ring.is-ready .hex-ring__card.is-neighbor { --hex-scale: 0.5; opacity: 0.7; }
+  .hex-ring__head > p:last-child { font-size: var(--text-body); }
+  .hex-ring__body { inset: 28% 12% 17%; }
+  .hex-ring__body h3 { font-size: 22px; }
+  .hex-ring__body > p { font-size: 13px; }
+  .hex-ring__controls { gap: var(--space-2); }
+}
+
+/* Small phones: the hexagon is under 260px, so tighten the copy to keep it
+   inside the slanted edges. */
+@media (max-width: 360px) {
+  .hex-ring__body { inset: 22% 11% 19%; }
+  .hex-ring__body h3 { font-size: 19px; }
+  .hex-ring__body > p { margin-top: 4px; font-size: 12px; line-height: 1.4; }
+  .hex-ring__cta { margin-top: 0; font-size: 13px; }
+}
+
+/* Landscape phones: a smaller orbit so the focused hexagon fits. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hex-ring { --hex-w: 250px; --ring-radius: 400px; padding-block: var(--space-4); }
+  .hex-ring__head h2 { font-size: 32px; }
+  .hex-ring__head > p:last-child { margin-top: var(--space-2); font-size: var(--text-body); }
+  .hex-ring.is-ready .hex-ring__scene { height: 390px; margin-bottom: var(--space-4); perspective: 1100px; }
+  .hex-ring__body { inset: 26% 12% 17%; }
+  .hex-ring__body h3 { font-size: 19px; }
+  .hex-ring__body > p { margin-top: 4px; font-size: 12px; line-height: 1.4; }
+  .hex-ring__cta { margin-top: 0; font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hex-ring.is-ready .hex-ring__wheel,
+  .hex-ring.is-ready .hex-ring__card,
+  .hex-ring__dot span { transition: none; }
+  .hex-ring.is-ready .hex-ring__float,
+  .hex-ring__dot span::after { animation: none; }
+}
