@@ -1,7 +1,7 @@
 .category-ring {
-  --ring-card-width: 340px;
-  --ring-card-height: 440px;
-  --ring-radius: 410px;
+  --ring-card-width: 380px;
+  --ring-card-height: 520px;
+  --ring-radius: 460px;
   padding-block: var(--space-5) var(--space-6);
   background: var(--color-white);
   overflow: clip;
@@ -36,85 +36,63 @@
   padding-inline: var(--side-pad-mobile);
 }
 .category-ring__card {
+  position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   min-width: 0;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
-  border: 1px solid var(--color-gray-100);
-  border-radius: 16px;
-  background: var(--color-white);
+  border-radius: 8px;
+  background: var(--color-navy);
 }
 .category-ring__image {
-  position: relative;
-  height: 184px;
-  flex-shrink: 0;
-  background: var(--color-navy);
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 .category-ring__image::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--color-navy) 35%, transparent), transparent 60%);
+  background: linear-gradient(180deg, transparent 35%, rgba(4, 14, 26, 0.55) 65%, rgba(4, 14, 26, 0.92) 100%);
 }
 .category-ring__image img { width: 100%; height: 100%; object-fit: cover; }
-.category-ring__number {
-  position: absolute;
-  z-index: 1;
-  top: var(--space-2);
-  left: var(--space-3);
-  color: var(--color-white);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  font-weight: var(--weight-body-semibold);
-}
-.category-ring__icon {
-  position: absolute;
-  z-index: 1;
-  right: var(--space-3);
-  bottom: -22px;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--color-gray-100);
-  border-radius: var(--radius-card);
-  color: var(--color-steel);
-  background: var(--color-white);
-}
-.category-ring__icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.5; }
 .category-ring__body {
+  position: relative;
+  z-index: 1;
   display: flex;
-  flex: 1;
   flex-direction: column;
-  padding: var(--space-4) var(--space-3) var(--space-3);
+  padding: var(--space-5) var(--space-3) var(--space-3);
+  color: var(--color-white);
 }
-.category-ring__body h3 { font-size: 28px; letter-spacing: -0.025em; }
+.category-ring__body h3 { font-size: 28px; letter-spacing: -0.025em; color: var(--color-white); }
 .category-ring__body > p {
   margin-top: 12px;
   font-size: 14px;
   line-height: 1.6;
-  color: var(--color-gray-500);
+  color: color-mix(in srgb, var(--color-white) 78%, transparent);
 }
 .category-ring__cta {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-top: auto;
+  margin-top: var(--space-3);
   padding-top: var(--space-2);
   border: 0;
-  border-top: 1px solid var(--color-gray-100);
+  border-top: 1px solid color-mix(in srgb, var(--color-white) 25%, transparent);
   background: none;
-  color: var(--color-navy);
+  color: var(--color-white);
   font-size: 14px;
   font-weight: var(--weight-body-semibold);
 }
-.category-ring__cta span { color: var(--color-steel); font-size: 22px; line-height: 1; }
-.category-ring__cta:hover { color: var(--color-steel); }
+.category-ring__cta span { color: var(--color-white); font-size: 22px; line-height: 1; }
+.category-ring__cta:hover { color: color-mix(in srgb, var(--color-white) 65%, transparent); }
 
 .category-ring.is-ready .category-ring__scene {
   position: relative;
-  height: 550px;
+  height: 620px;
   perspective: 1400px;
   perspective-origin: 50% 45%;
   touch-action: pan-y pinch-zoom;
@@ -138,12 +116,12 @@
   inset: 0;
   transform: rotateY(var(--card-angle)) translateZ(var(--ring-radius));
   opacity: 0.12;
-  transition: opacity 700ms ease, border-color 700ms ease;
+  transition: opacity 700ms ease, box-shadow 700ms ease;
 }
 .category-ring.is-ready .category-ring__card.is-neighbor { opacity: 0.5; }
 .category-ring.is-ready .category-ring__card.is-active {
   opacity: 1;
-  border-color: color-mix(in srgb, var(--color-steel) 38%, var(--color-white));
+  box-shadow: 0 20px 60px rgba(4, 14, 26, 0.35);
 }
 .category-ring__controls {
   display: flex;
@@ -185,11 +163,10 @@
 .category-ring button:focus-visible { outline: 2px solid var(--color-steel); outline-offset: 4px; }
 
 @media (max-width: 640px) {
-  .category-ring { --ring-card-width: 260px; --ring-card-height: 410px; --ring-radius: 280px; padding-block: var(--space-6) var(--space-5); }
+  .category-ring { --ring-card-width: 290px; --ring-card-height: 460px; --ring-radius: 310px; padding-block: var(--space-6) var(--space-5); }
   .category-ring__wheel { grid-template-columns: 1fr; }
-  .category-ring.is-ready .category-ring__scene { height: 490px; perspective: 1000px; }
+  .category-ring.is-ready .category-ring__scene { height: 520px; perspective: 1000px; }
   .category-ring__head > p:last-child { font-size: var(--text-body); }
-  .category-ring__image { height: 155px; }
   .category-ring__body { padding: var(--space-4) 20px 20px; }
   .category-ring__body h3 { font-size: 24px; }
   .category-ring__body > p { font-size: 13px; }
