@@ -44,7 +44,13 @@
 
 .video-feature__video {
   object-fit: cover;
-  transform: scale(var(--feature-video-scale, 1));
+  transform: scale(calc(var(--feature-video-scale, 1) * var(--feature-video-zoom, 1)));
+}
+
+/* The clip has 64px black bars baked into each side of its 2048px frame.
+   Screens wider than 16:9 stop cropping them away, so zoom past them. */
+@media (min-aspect-ratio: 16/9) {
+  .video-feature__video { --feature-video-zoom: 1.07; }
 }
 
 /* Darkens toward the panel so the glass reads on bright frames. */
