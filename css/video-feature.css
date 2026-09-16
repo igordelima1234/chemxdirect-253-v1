@@ -11,8 +11,9 @@
   color: var(--color-white);
 }
 
+/* Frame and scroll length both sit 20% under a full viewport. */
 .video-feature.is-scroll-ready {
-  height: calc(100svh + 85svh);
+  height: calc(80svh + 68svh);
 }
 
 .video-feature__sticky {
@@ -20,8 +21,8 @@
   top: 0;
   display: flex;
   align-items: flex-end;
-  height: 100svh;
-  min-height: 480px;
+  height: 80svh;
+  min-height: 384px;
   padding-block: var(--space-6);
   overflow: hidden;
 }

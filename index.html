@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="css/hero-video.css?v=9" />
   <link rel="stylesheet" href="css/category-ring.css?v=7" />
   <link rel="stylesheet" href="css/video-feature.css?v=5" />
+  <link rel="stylesheet" href="css/home-sections.css?v=1" />
 </head>
 <body>
   <div class="promo-banner">
@@ -222,6 +223,45 @@
       <p class="category-ring__status" data-ring-status aria-live="polite" aria-atomic="true" hidden>01 / 06 — Boilers</p>
     </section>
 
+    <!-- Client logos on a two-track belt; swap the placeholder SVGs in
+         images/logos/ for the real marks. -->
+    <section class="logo-marquee" aria-labelledby="logo-marquee-title">
+      <div class="container">
+        <p class="logo-marquee__eyebrow" id="logo-marquee-title">Companies we work with</p>
+      </div>
+      <div class="logo-marquee__viewport">
+        <ul class="logo-marquee__track">
+            <li class="logo-marquee__item"><img src="images/logos/client-01.svg" alt="Client 01" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-02.svg" alt="Client 02" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-03.svg" alt="Client 03" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-04.svg" alt="Client 04" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-05.svg" alt="Client 05" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-06.svg" alt="Client 06" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-07.svg" alt="Client 07" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-08.svg" alt="Client 08" width="208" height="40" decoding="async" /></li>
+        </ul>
+        <ul class="logo-marquee__track" aria-hidden="true">
+            <li class="logo-marquee__item"><img src="images/logos/client-01.svg" alt="Client 01" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-02.svg" alt="Client 02" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-03.svg" alt="Client 03" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-04.svg" alt="Client 04" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-05.svg" alt="Client 05" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-06.svg" alt="Client 06" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-07.svg" alt="Client 07" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-08.svg" alt="Client 08" width="208" height="40" decoding="async" /></li>
+        </ul>
+        <ul class="logo-marquee__track" aria-hidden="true">
+            <li class="logo-marquee__item"><img src="images/logos/client-01.svg" alt="Client 01" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-02.svg" alt="Client 02" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-03.svg" alt="Client 03" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-04.svg" alt="Client 04" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-05.svg" alt="Client 05" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-06.svg" alt="Client 06" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-07.svg" alt="Client 07" width="208" height="40" decoding="async" /></li>
+            <li class="logo-marquee__item"><img src="images/logos/client-08.svg" alt="Client 08" width="208" height="40" decoding="async" /></li>
+        </ul>
+      </div>
+    </section>
     <!-- Video grows from an inset frame to full bleed; copy in a glass panel -->
     <section class="video-feature" data-video-feature aria-labelledby="video-feature-title">
       <div class="video-feature__sticky">
@@ -243,6 +283,37 @@
           <svg class="video-feature__pause-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 3h3v10H4zm5 0h3v10H9z" /></svg>
           <svg class="video-feature__play-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="m5 2 9 6-9 6z" /></svg>
         </button>
+      </div>
+    </section>
+
+    <!-- Two-column about: copy left, photo right -->
+    <section class="about" aria-labelledby="about-title">
+      <div class="container about__grid">
+        <div class="about__copy">
+          <p class="about__eyebrow">About the company</p>
+          <h2 id="about-title">Built for the people who run the system.</h2>
+          <p>ChemX Direct sells industrial-grade water treatment chemistry straight to the people responsible for it — plant operators, facility managers and maintenance teams — without the service contract that usually comes attached.</p>
+          <p>Every product page explains what the chemical does, when to use it and how much to dose, in the same plain language we would use on the phone.</p>
+          <ul class="about__list">
+            <li>Industrial-grade chemistry, sold direct</li>
+            <li>Plain-language dosing guidance with every product</li>
+            <li>Test kits to prove the program is working</li>
+            <li>Most in-stock items ship the same day</li>
+          </ul>
+          <button class="btn btn--secondary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
+        </div>
+        <div class="about__media">
+          <img src="images/plant-site.jpg" alt="Treatment equipment on a plant site" loading="lazy" decoding="async" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing CTA -->
+    <section class="final-cta" aria-labelledby="final-cta-title">
+      <div class="container final-cta__inner">
+        <h2 id="final-cta-title">Start with the right chemical.</h2>
+        <p class="text-body-lg">Answer a few quick questions and we'll match your system to the product that fits it — plus the test kit to prove it's working.</p>
+        <button class="btn btn--primary btn--lg btn--arrow" type="button" data-open-quiz>Find your product</button>
       </div>
     </section>
   </main>

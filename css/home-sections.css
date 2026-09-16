@@ -1,0 +1,202 @@
+/* Logo marquee, About and closing CTA — the flat sections between the
+   homepage's video and carousel set pieces. */
+
+/* ---- Logo marquee ---- */
+.logo-marquee {
+  padding-block: var(--space-6);
+  background: var(--color-white);
+  border-block: 1px solid var(--color-gray-100);
+  overflow: hidden;
+}
+
+.logo-marquee__eyebrow {
+  margin-bottom: var(--space-4);
+  color: var(--color-steel);
+  font-size: var(--text-small);
+  font-weight: var(--weight-body-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Two identical tracks scroll as one belt: when the first has moved exactly
+   its own width, the second sits where it started, so the loop never jumps. */
+.logo-marquee__viewport {
+  display: flex;
+  width: 100%;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.logo-marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: clamp(40px, 6vw, 88px);
+  margin: 0;
+  padding: 0 clamp(20px, 3vw, 44px) 0 0;
+  list-style: none;
+  animation: logo-marquee-scroll 42s linear infinite;
+}
+
+.logo-marquee__viewport:hover .logo-marquee__track,
+.logo-marquee__viewport:focus-within .logo-marquee__track {
+  animation-play-state: paused;
+}
+
+.logo-marquee__item { flex-shrink: 0; }
+
+.logo-marquee__item img {
+  display: block;
+  width: auto;
+  height: 34px;
+  opacity: 0.55;
+  filter: grayscale(1);
+  transition: opacity 200ms ease, filter 200ms ease;
+}
+
+.logo-marquee__item img:hover {
+  opacity: 1;
+  filter: grayscale(0);
+}
+
+@keyframes logo-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+/* ---- About ---- */
+.about {
+  padding-block: var(--space-7);
+  background: var(--color-white);
+}
+
+.about__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+}
+
+.about__eyebrow {
+  margin-bottom: var(--space-2);
+  color: var(--color-steel);
+  font-size: var(--text-small);
+  font-weight: var(--weight-body-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.about__copy h2 {
+  font-size: clamp(30px, 3.4vw, 46px);
+  letter-spacing: -0.03em;
+}
+
+.about__copy > p {
+  margin-top: var(--space-3);
+  color: var(--color-gray-500);
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+}
+
+.about__list {
+  margin-top: var(--space-4);
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.about__list li {
+  position: relative;
+  padding-left: 30px;
+  line-height: 1.5;
+}
+
+/* Hexagon bullet, echoing the brand mark */
+.about__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 12px;
+  height: 13px;
+  background: var(--color-steel);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.about__copy .btn { margin-top: var(--space-5); }
+
+.about__media {
+  position: relative;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background: var(--color-navy);
+}
+
+.about__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---- Closing CTA ---- */
+.final-cta {
+  padding-block: var(--space-7);
+  background: var(--color-navy);
+  color: var(--color-white);
+  text-align: center;
+}
+
+.final-cta__inner {
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.final-cta h2 {
+  font-size: clamp(32px, 4vw, 52px);
+  letter-spacing: -0.03em;
+  color: var(--color-sky);
+}
+
+.final-cta p {
+  margin-top: var(--space-3);
+  color: var(--color-gray-100);
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+}
+
+.final-cta .btn { margin-top: var(--space-5); }
+
+@media (max-width: 900px) {
+  .about__grid { grid-template-columns: 1fr; }
+  .about__media { aspect-ratio: 3 / 2; order: -1; }
+}
+
+@media (max-width: 640px) {
+  .about { padding-block: var(--space-6); }
+  .about__copy > p { font-size: var(--text-body); }
+  .final-cta { padding-block: var(--space-6); }
+  .final-cta p { font-size: var(--text-body); }
+  .logo-marquee__item img { height: 28px; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .about { padding-block: var(--space-5); }
+  .final-cta { padding-block: var(--space-5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* No belt: wrap the first track and drop the duplicate. */
+  .logo-marquee__viewport { -webkit-mask-image: none; mask-image: none; }
+  .logo-marquee__track {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: var(--space-4);
+    padding-inline: var(--side-pad-mobile);
+    animation: none;
+  }
+  .logo-marquee__track[aria-hidden="true"] { display: none; }
+  .logo-marquee__item img { transition: none; }
+}
