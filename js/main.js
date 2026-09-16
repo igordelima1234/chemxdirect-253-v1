@@ -1241,7 +1241,7 @@ document.querySelectorAll(".accordion__trigger").forEach(function (trigger) {
         // Any [data-open-quiz] outside the mega is already bound to the
         // modal by the quiz module — borrow the first one.
         var opener = document.querySelector(
-          ".hero [data-open-quiz], main [data-open-quiz], .site-footer [data-open-quiz]"
+          ".hero [data-open-quiz], main [data-open-quiz]"
         );
         if (opener) opener.click();
       });

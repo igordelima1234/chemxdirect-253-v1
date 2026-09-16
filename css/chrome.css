@@ -275,7 +275,7 @@
   font-weight: var(--weight-heading-bold);
   font-size: var(--text-h3);
   line-height: var(--leading-h3);
-  text-transform: uppercase;
+  text-transform: none;
   color: var(--color-heading-muted);
   padding-bottom: var(--space-1);
   border-bottom: 1px solid var(--color-gray-100);
@@ -409,130 +409,6 @@
   .mega__promo {
     padding: var(--space-3);
   }
-}
-
-/* ==========================================================================
-   FOOTER
-   ========================================================================== */
-
-/* Footer — aerial treatment-plant photo under a near-solid navy wash,
-   so it reads as texture rather than photography */
-.site-footer {
-  background-image: linear-gradient(
-      color-mix(in srgb, var(--color-navy) 95%, transparent),
-      color-mix(in srgb, var(--color-navy) 95%, transparent)
-    ),
-    url("../images/treatment-plant-aerial.jpg");
-  background-size: cover;
-  background-position: center;
-  color: var(--color-white);
-  padding-block: var(--space-7) var(--space-4);
-}
-
-/* Centered closing call to action */
-.site-footer__cta {
-  max-width: 720px;
-  margin-inline: auto;
-  text-align: center;
-  padding-bottom: var(--space-7);
-}
-
-.site-footer__cta h2 {
-  color: var(--color-sky);
-}
-
-.site-footer__cta p {
-  color: var(--color-gray-100);
-  margin-top: var(--space-2);
-}
-
-.site-footer__cta .btn {
-  margin-top: var(--space-4);
-}
-
-/* Logo + link columns */
-.site-footer__grid {
-  display: grid;
-  grid-template-columns: auto repeat(3, 1fr);
-  gap: var(--space-5);
-  border-top: 1px solid var(--color-border-light);
-  padding-top: var(--space-6);
-}
-
-@media (max-width: 900px) {
-  .site-footer__grid {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-4);
-  }
-
-  .site-footer__brand {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 480px) {
-  .site-footer__grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.site-footer__brand {
-  padding-right: var(--space-5);
-}
-
-.site-footer__logo img {
-  height: 56px;
-  width: auto;
-  display: block;
-}
-
-.site-footer__col-title {
-  color: var(--color-sky);
-  font-weight: var(--weight-body-medium);
-  margin-bottom: var(--space-3);
-}
-
-.site-footer__list {
-  list-style: none;
-  display: grid;
-  gap: var(--space-3);
-}
-
-.site-footer__list a {
-  color: var(--color-gray-100);
-}
-
-.site-footer__list a:hover {
-  color: var(--color-sky);
-  text-decoration: none;
-}
-
-/* Legal bar */
-.site-footer__bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  color: var(--color-gray-500);
-  border-top: 1px solid var(--color-border-light);
-  padding-top: var(--space-3);
-  margin-top: var(--space-6);
-}
-
-.site-footer__legal-links {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.site-footer__legal-links a {
-  color: var(--color-gray-500);
-}
-
-.site-footer__legal-links a:hover {
-  color: var(--color-sky);
-  text-decoration: none;
 }
 
 /* ==========================================================================
@@ -770,7 +646,7 @@
 
 .quiz-result__price {
   font-family: var(--font-heading);
-  font-weight: var(--weight-heading-extrabold);
+  font-weight: var(--weight-heading-bold);
   font-size: var(--text-h3);
   color: var(--color-navy);
 }
