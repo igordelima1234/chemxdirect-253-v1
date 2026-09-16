@@ -24,6 +24,22 @@
   padding: var(--space-1) var(--space-3);
 }
 
+/* ---- Eyebrow: the site-wide section label — just the word ---- */
+
+.eyebrow {
+  color: var(--color-steel);
+  font-size: var(--text-small);
+  font-weight: var(--weight-body-semibold);
+  line-height: var(--leading-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* On navy or photo backgrounds, where steel goes muddy */
+.eyebrow--light {
+  color: var(--color-sky);
+}
+
 /* ---- Outline pill (eyebrow label over plain/light backgrounds) ---- */
 
 .pill-outline {

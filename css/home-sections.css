@@ -172,7 +172,7 @@
   margin-inline: auto;
 }
 
-.final-cta__eyebrow { margin-bottom: var(--space-4); }
+.final-cta__eyebrow { margin-bottom: var(--space-3); }
 
 .final-cta h2 {
   font-size: clamp(34px, 4.6vw, 60px);
@@ -195,34 +195,6 @@
 }
 
 .final-cta .btn { margin-top: var(--space-5); }
-
-/* Three reassurances under the button, hexagon-bulleted */
-.final-cta__points {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-2) var(--space-5);
-  margin-top: var(--space-5);
-  padding: 0;
-  list-style: none;
-  font-size: var(--text-small);
-  color: color-mix(in srgb, var(--color-white) 62%, transparent);
-}
-
-.final-cta__points li {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-}
-
-.final-cta__points li::before {
-  content: "";
-  width: 9px;
-  height: 10px;
-  flex-shrink: 0;
-  background: var(--color-sky);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-}
 
 @media (max-width: 900px) {
   .about__grid { grid-template-columns: 1fr; }
